@@ -1,4 +1,7 @@
 {
   "version": 2,
-  "projects": {}
+  "projects": {
+    "d2-visualizer": "packages/d2-visualizer",
+    "demo": "demo"
+  }
 }
