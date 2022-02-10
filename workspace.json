@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "d2-visualizer": "packages/d2-visualizer",
-    "demo": "demo"
+    "demo": "demo",
+    "demo-e2e": "demo/e2e"
   }
 }

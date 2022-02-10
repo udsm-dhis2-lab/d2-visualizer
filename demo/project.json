@@ -1,22 +1,21 @@
 {
+  "projectType": "application",
   "root": "demo",
   "sourceRoot": "demo/src",
-  "projectType": "application",
+  "prefix": "iapps",
   "targets": {
     "build": {
-      "executor": "@nrwl/web:webpack",
+      "executor": "@angular-devkit/build-angular:browser",
       "outputs": [
         "{options.outputPath}"
       ],
-      "defaultConfiguration": "production",
       "options": {
-        "compiler": "babel",
         "outputPath": "dist/demo",
         "index": "demo/src/index.html",
-        "baseHref": "/",
-        "main": "demo/src/main.tsx",
+        "main": "demo/src/main.ts",
         "polyfills": "demo/src/polyfills.ts",
         "tsConfig": "demo/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
         "assets": [
           "demo/src/favicon.ico",
           "demo/src/assets"
@@ -24,54 +23,72 @@
         "styles": [
           "demo/src/styles.scss"
         ],
-        "scripts": [],
-        "webpackConfig": "@nrwl/react/plugins/webpack"
+        "scripts": []
       },
       "configurations": {
         "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
           "fileReplacements": [
             {
               "replace": "demo/src/environments/environment.ts",
               "with": "demo/src/environments/environment.prod.ts"
             }
           ],
-          "optimization": true,
-          "outputHashing": "all",
-          "sourceMap": false,
-          "namedChunks": false,
-          "extractLicenses": true,
-          "vendorChunk": false
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
         }
-      }
+      },
+      "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@nrwl/web:dev-server",
-      "options": {
-        "buildTarget": "demo:build",
-        "hmr": true
-      },
+      "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "buildTarget": "demo:build:production",
-          "hmr": false
+          "browserTarget": "demo:build:production"
+        },
+        "development": {
+          "browserTarget": "demo:build:development"
         }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "demo:build"
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
       "options": {
         "lintFilePatterns": [
-          "demo/**/*.{ts,tsx,js,jsx}"
+          "demo/src/**/*.ts",
+          "demo/src/**/*.html"
         ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": [
-        "coverage/packages/demo"
+        "coverage/demo"
       ],
       "options": {
         "jestConfig": "demo/jest.config.js",
