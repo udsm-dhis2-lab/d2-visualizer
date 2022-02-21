@@ -25,6 +25,8 @@ export function drawChart(
    * Extend chart options depending on type
    */
 
+  const newChartConfiguration = _.clone(chartConfiguration);
+
   switch (chartConfiguration.type) {
     case 'radar':
       chartObject = extendSpiderWebChartOptions(
@@ -41,7 +43,6 @@ export function drawChart(
       );
       break;
     case 'gauge':
-      const newChartConfiguration = _.clone(chartConfiguration);
       newChartConfiguration.type = 'solidgauge';
       chartObject = extendSolidGaugeChartOptions(
         chartObject,
@@ -347,7 +348,7 @@ function extendOtherChartOptions(
 function updateSeriesWithAxisOptions(
   series: any[],
   multiAxisOptions: any[],
-  touched: boolean = false
+  touched = false
 ) {
   return _.map(series, (seriesObject: any) => {
     const newSeriesObject: any = _.clone(seriesObject);
@@ -744,7 +745,7 @@ function getDataLabelsOptions(chartConfiguration: any) {
 function getAxisItemsNew(
   analyticsObject: any,
   axisTypeArray: any[],
-  isCategory: boolean = false
+  isCategory = false
 ) {
   let items: any[] = [];
   const metadataNames = analyticsObject.metaData.names;
@@ -779,7 +780,7 @@ function getAxisItemsNew(
 function getAxisItems(
   analyticsObject: any,
   axisType: string,
-  isCategory: boolean = false
+  isCategory = false
 ) {
   let items: any[] = [];
   const metadataNames = analyticsObject.metaData.names;

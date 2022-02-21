@@ -3,7 +3,7 @@ import * as Highcharts from 'highcharts';
 import { drawChart } from './helpers/draw-chart.helper';
 import { VisualizationLayout } from '../../shared/visualization-layout';
 import { DownloadFormat } from '../../shared/download-format';
-import { ChartType, VisualizationType } from '../../shared/visualization-type';
+import { VisualizationType } from '../../shared/visualization-type';
 
 declare const require: any;
 const HighchartsGroupedCategories = require('highcharts-grouped-categories')(
@@ -17,41 +17,84 @@ const HighchartsGroupedCategories = require('highcharts-grouped-categories')(
   HighchartGauge = require('highcharts/modules/solid-gauge.js')(Highcharts),
   HighchartDrilldown = require('highcharts/modules/drilldown.js')(Highcharts);
 
+  /**
+   * 
+   */
 export class ChartVisualization {
-  private _type: ChartType = 'COLUMN';
+  private _visualizationType: VisualizationType = 'CHART';
   private _data: any;
   private _config?: VisualizationConfiguration;
   private _id!: string;
   private _layout: VisualizationLayout = new VisualizationLayout();
   private _chart: any;
 
+  /**
+   *
+   * @param id
+   * @returns
+   */
   setId(id: string) {
     this._id = id;
     return this;
   }
 
-  setType(type: ChartType) {
-    this._type = type;
+  /**
+   *
+   * @param visualizationType
+   * @returns
+   */
+  setVisualizationType(visualizationType: VisualizationType) {
+    this._visualizationType = visualizationType;
     return this;
   }
 
+  /**
+   *
+   * @param chartType
+   * @returns
+   */
+  setChartType(chartType: string) {
+    this._chart = chartType;
+    return this;
+  }
+
+  /**
+   *
+   * @param data
+   * @returns
+   */
   setData(data: any) {
     this._data = data;
     return this;
   }
 
+  /**
+   *
+   * @param config
+   * @returns
+   */
   setConfig(config: VisualizationConfiguration) {
     this._config = config;
     return this;
   }
 
+  /**
+   *
+   */
   draw() {
-    const chartObject = drawChart(this._data, this._config);
+    const chartObject = drawChart(this._data, {
+      ...this._config,
+      type: this._chart ? this._chart : 'column',
+    });
     setTimeout(() => {
       this._chart = Highcharts.chart(chartObject);
     }, 20);
   }
 
+  /**
+   *
+   * @param downloadFormat
+   */
   download(downloadFormat: DownloadFormat) {
     const filename = this._config?.name || 'chart-data';
     switch (downloadFormat) {

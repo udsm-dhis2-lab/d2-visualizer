@@ -6,9 +6,11 @@ import { ChartType, VisualizationType } from './shared/visualization-type';
 
 export class D2Visualizer {
   dataSelections: any[] = [];
+  dataAnalytics: unknown = null;
   type!: VisualizationType;
   visualizationType!: VisualizationType;
   config!: VisualizationConfiguration;
+  chartType!: any;
   id!: string;
   /**
    * @description Set id to be used in rendering intended visualization
@@ -17,6 +19,16 @@ export class D2Visualizer {
    */
   setId(id: string) {
     this.id = id;
+    return this;
+  }
+
+  /**
+   *
+   * @param chartType
+   * @returns
+   */
+  setChartType(chartType: string) {
+    this.chartType = chartType;
     return this;
   }
 
@@ -47,6 +59,16 @@ export class D2Visualizer {
    */
   setConfig(config: any) {
     this.config = new VisualizationConfiguration(config);
+    return this;
+  }
+
+  /**
+   *
+   * @param analytics
+   * @returns
+   */
+  setData(analytics: any) {
+    this.dataAnalytics = analytics;
     return this;
   }
 
@@ -109,18 +131,29 @@ export class D2Visualizer {
   }
 
   async draw(): Promise<any> {
-    const data = await this.getData();
+    if (this.dataAnalytics) {
+      return new ChartVisualization()
+        .setId(this.id)
+        .setConfig(this.config.config)
+        .setData(this.dataAnalytics)
+        .setVisualizationType(this.visualizationType as ChartType)
+        .setChartType(this.chartType)
+        .draw();
+    } else {
+      const data = await this.getData();
 
-    switch (this.visualizationType) {
-      case 'CHART':
-        return new ChartVisualization()
-          .setId(this.id)
-          .setConfig(this.config)
-          .setData(data.data)
-          .setType(this.visualizationType as ChartType)
-          .draw();
-      default:
-        return null;
+      switch (this.visualizationType) {
+        case 'CHART':
+          return new ChartVisualization()
+            .setId(this.id)
+            .setConfig(this.config)
+            .setData(data.data)
+            .setVisualizationType(this.visualizationType as ChartType)
+            .setChartType(this.chartType)
+            .draw();
+        default:
+          return null;
+      }
     }
   }
 
@@ -133,7 +166,7 @@ export class D2Visualizer {
           .setId(this.id)
           .setConfig(this.config)
           .setData(data.data)
-          .setType(this.visualizationType as ChartType)
+          .setVisualizationType(this.visualizationType as ChartType)
           .download(downloadFormat);
       default:
         return null;
