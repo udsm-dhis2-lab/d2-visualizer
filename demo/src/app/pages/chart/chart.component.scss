@@ -1,0 +1,15 @@
+mat-drawer-container {
+  font-size: 0.9rem !important;
+
+  height: 95vh;
+  top: 48px;
+
+  mat-drawer {
+    width: 20vw;
+    height: 100vh;
+  }
+
+  .visualization-card-control {
+    padding: 10px;
+  }
+}

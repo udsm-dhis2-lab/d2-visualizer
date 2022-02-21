@@ -1,0 +1,21 @@
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened fixedInViewport>
+    <mat-list>
+      <div mat-subheader>Chart Visualization Types</div>
+      <mat-list-item (click)="onMenuClick(chartConfig)" *ngFor="let chartConfig of chartConfigs">
+        <mat-icon mat-list-icon>{{ chartConfig.icon }}</mat-icon>
+        <div mat-line>{{ chartConfig.name }}</div>
+      </mat-list-item>
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <iapps-menu (onOpenDrawer)="onOpenDrawer($event)"></iapps-menu>
+    <iapps-visualization></iapps-visualization>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+<iapps-ngx-drawer
+  (cancel)="onInfoClose($event)"
+  [sourceCodeConfig]="sourceCodeConfig"
+  [isInfoOpen]="isInfoOpen"
+></iapps-ngx-drawer>
