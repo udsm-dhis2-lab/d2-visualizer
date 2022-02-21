@@ -3,7 +3,7 @@
     <mat-list>
       <div mat-subheader>Chart Visualization Types</div>
       <mat-list-item (click)="onMenuClick(chartConfig)" *ngFor="let chartConfig of chartConfigs">
-        <mat-icon mat-list-icon>{{ chartConfig.icon }}</mat-icon>
+        <img mat-list-icon class="side-menu-icon" [src]="chartConfig.icon" [alt]="chartConfig.name">
         <div mat-line>{{ chartConfig.name }}</div>
       </mat-list-item>
     </mat-list>
