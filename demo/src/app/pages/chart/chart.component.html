@@ -2,8 +2,17 @@
   <mat-drawer mode="side" opened fixedInViewport>
     <mat-list>
       <div mat-subheader>Chart Visualization Types</div>
-      <mat-list-item (click)="onMenuClick(chartConfig)" *ngFor="let chartConfig of chartConfigs">
-        <img mat-list-icon class="side-menu-icon" [src]="chartConfig.icon" [alt]="chartConfig.name">
+      <mat-list-item
+        [routerLinkActive]="'active'"
+        (click)="onMenuClick(chartConfig)"
+        *ngFor="let chartConfig of chartConfigs"
+      >
+        <img
+          mat-list-icon
+          class="side-menu-icon"
+          [src]="chartConfig.icon"
+          [alt]="chartConfig.name"
+        />
         <div mat-line>{{ chartConfig.name }}</div>
       </mat-list-item>
     </mat-list>

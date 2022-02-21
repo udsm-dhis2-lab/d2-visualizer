@@ -6,6 +6,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 export const MaterialDeps = [
   MatIconModule,
@@ -17,4 +18,5 @@ export const MaterialDeps = [
   MatIconModule,
   MatDialogModule,
   MatButtonModule,
+  MatBottomSheetModule,
 ];
