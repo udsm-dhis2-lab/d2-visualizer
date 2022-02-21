@@ -10,6 +10,7 @@ export class AppComponent implements OnInit {
   title = 'demo';
 
   ngOnInit(): void {
-    const visualizer = new D2Visualizer().setId('vis').draw();
+    // Initializer for D2 Visualizer
+    // const visualizer = new D2Visualizer().setId('vis').draw();
   }
 }

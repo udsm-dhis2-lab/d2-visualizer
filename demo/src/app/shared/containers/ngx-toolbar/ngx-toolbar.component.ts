@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import * as _ from 'lodash';
 import { menuConfigs } from '../../config/menu.config';
 import { MenuConfig } from '../../model/menu.model';
@@ -17,10 +17,19 @@ export class NgxToolbarComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.url.subscribe((url) => {
-      console.log('URL::: ', JSON.stringify(url));
-    });
+    this.selectedMenuConfig = this.getMenuConfigName();
+  }
 
+  getNavigationUrl() {
+    return _.trim(_.last(_.split(window.location.href, '/')));
+  }
+
+  getMenuConfigName(): string {
+    return _.head(
+      _.filter(menuConfigs, (menuConfig: MenuConfig) => {
+        return _.trim(menuConfig.route) === _.trim(this.getNavigationUrl());
+      })
+    )?.name as string;
   }
 
   onSelectionChange(menuName: string) {
