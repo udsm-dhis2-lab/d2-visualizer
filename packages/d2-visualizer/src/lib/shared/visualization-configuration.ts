@@ -145,4 +145,19 @@ export class VisualizationConfiguration {
   get zAxisType(): string[] {
     return this.config?.filterDimensions;
   }
+
+  get zoom(): number {
+    return this.config?.zoom;
+  }
+
+  get fillColor(): string {
+    return this.config?.fillColor;
+  }
+
+  get latitude(): string {
+    return this.config?.latitude;
+  }
+  get longitude(): string {
+    return this.config?.longitude;
+  }
 }
