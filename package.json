@@ -1,5 +1,5 @@
 {
-  "name": "iapps",
+  "name": "@iapps/d2-visualizer",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
