@@ -1,6 +1,6 @@
 {
-  "name": "iapps",
-  "version": "0.0.0",
+  "name": "@iapps/d2-visualizer",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "start:docs": "cd docs && npm start",
