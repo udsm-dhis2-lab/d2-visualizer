@@ -36,10 +36,6 @@ const d2visualizer = new D2Visualizer()
         .draw()
 ```
 
-Methods available in d2-visualizer
-
-Call the method **`GenerateCascadeGraph()`** as pass the following parameters
-
 - **setConfig()**: Receive `json` configuration. *(See example below)*
 
     ```json
