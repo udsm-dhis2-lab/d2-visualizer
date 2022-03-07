@@ -718,7 +718,7 @@ Call the method **`GenerateCascadeGraph()`** as pass the following parameters
 - **setId()**: Receive DOM element ID. *(See example below)*
 
     ```html
-    <div id="visualization-container"></div >
+    <div id="visualization-container"></div>
     ```
 
 - **setType()**: Receive a `string` configuration which define type of visualization to be presented . *(See example below)*
@@ -732,4 +732,5 @@ Call the method **`GenerateCascadeGraph()`** as pass the following parameters
     - **column**
     - **bar**
 <br />
+
 - **draw()**: Receive no configuration. It initiate process for drawing visualization as per configuration supplied.
