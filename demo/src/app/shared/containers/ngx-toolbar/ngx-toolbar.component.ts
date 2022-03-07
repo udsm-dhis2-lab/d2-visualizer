@@ -21,7 +21,9 @@ export class NgxToolbarComponent implements OnInit {
   }
 
   getNavigationUrl() {
-    return _.trim(_.last(_.split(window.location.href, '/')));
+    return _.trim(
+      _.head(_.split(_.last(_.split(window.location.href, '/')), '?'))
+    );
   }
 
   getMenuConfigName(): string {
@@ -35,7 +37,9 @@ export class NgxToolbarComponent implements OnInit {
   onSelectionChange(menuName: string) {
     this.selectedMenuConfig = menuName;
     const menuConfig = this.getSelectedMenu(menuName);
-    this.router.navigate(['./', menuConfig?.route]);
+    this.router.navigate(['./', menuConfig?.route], {
+      queryParams: { ps: menuConfig?.index },
+    });
   }
 
   getSelectedMenu(menuName: string) {

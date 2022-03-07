@@ -12,4 +12,33 @@ mat-drawer-container {
   .visualization-card-control {
     padding: 10px;
   }
+
+  .side-menu-icon {
+    height: 20px;
+    width: 20px;
+  }
+
+  mat-list-item {
+    // height: 40px !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+  }
+
+  mat-list-item:hover {
+    background-color: #eee !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
+  }
+}
+
+.active {
+  background-color: #eee !important;
+  cursor: pointer !important;
+  font-weight: bold !important;
+}
+
+.mat-form-field + .mat-form-field {
+  margin-left: 8px;
 }

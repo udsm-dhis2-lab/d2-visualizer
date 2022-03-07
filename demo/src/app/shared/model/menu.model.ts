@@ -3,4 +3,5 @@ export interface MenuConfig {
     name: string;
     icon: string;
     route: string;
+    index: number;
 }

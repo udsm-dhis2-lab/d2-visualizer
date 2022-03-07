@@ -6,23 +6,27 @@ export const menuConfigs: MenuConfig[] = [
     name: 'Chart Visualization Demo',
     icon: '',
     route: 'chart',
-  },
-  {
-    id: 'table',
-    name: 'Table Visualization Demo',
-    icon: '',
-    route: 'table',
+    index: 0,
   },
   {
     id: 'map',
     name: 'Map Visualization Demo',
     icon: '',
     route: 'map',
+    index: 1,
   },
   {
-    id: 'dictionary',
-    name: 'Dictionary Visualization Demo',
+    id: 'table',
+    name: 'Table Visualization Demo',
     icon: '',
-    route: 'dictionary',
-  }
+    route: 'table',
+    index: 2,
+  },
+  // {
+  //   id: 'dictionary',
+  //   name: 'Dictionary Visualization Demo',
+  //   icon: '',
+  //   route: 'dictionary',
+  //   index: 3,
+  // },
 ];
