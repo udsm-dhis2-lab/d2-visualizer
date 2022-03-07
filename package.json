@@ -1,6 +1,6 @@
 {
   "name": "@iapps/d2-visualizer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "scripts": {
     "start:docs": "cd docs && npm start",
@@ -8,6 +8,24 @@
     "postinstall": "ngcc --properties es2015 browser module main"
   },
   "private": true,
+  "author": "UDSM DHIS2 Project <udsm.dhis.project@gmail.com>",
+	"bugs": {
+		"url": "https://github.com/dhis2-club-tanzania/d2-visualizer/issues"
+	},
+	"homepage": "https://github.com/dhis2-club-tanzania/d2-visualizer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:dhis2-club-tanzania/d2-visualizer.git"
+  },
+  "keywords": [
+    "90-90-90-cascade-graph",
+    "dhis2",
+    "nacp",
+    "codebible",
+    "hisptz",
+    "udsm",
+    "cascade"
+  ],
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.2.0",
     "@angular-eslint/eslint-plugin": "~13.0.1",
