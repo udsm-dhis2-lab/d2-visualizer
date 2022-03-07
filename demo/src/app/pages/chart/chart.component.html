@@ -1,21 +1,62 @@
 <mat-drawer-container class="example-container">
   <mat-drawer mode="side" opened fixedInViewport>
-    <mat-list>
-      <div mat-subheader>Chart Visualization Types</div>
-      <mat-list-item
-        [routerLinkActive]="'active'"
-        (click)="onMenuClick(chartConfig)"
-        *ngFor="let chartConfig of chartConfigs"
+    <mat-accordion>
+      <!-- Chart Visualization Menu  -->
+      <mat-expansion-panel
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+        [expanded]="step === 0"
+        (opened)="setStep('chart', 0)"
       >
-        <img
-          mat-list-icon
-          class="side-menu-icon"
-          [src]="chartConfig.icon"
-          [alt]="chartConfig.name"
-        />
-        <div mat-line>{{ chartConfig.name }}</div>
-      </mat-list-item>
-    </mat-list>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div mat-subheader>Chart Visualization Module</div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list>
+          <mat-list-item
+            [routerLinkActive]="'active'"
+            (click)="onMenuClick(chartConfig)"
+            *ngFor="let chartConfig of chartConfigs"
+          >
+            <img
+              mat-list-icon
+              class="side-menu-icon"
+              [src]="chartConfig.icon"
+              [alt]="chartConfig.name"
+            />
+            <div mat-line>{{ chartConfig.name }}</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-expansion-panel>
+      <!-- Map Visualization Menu  -->
+      <mat-expansion-panel
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+        [expanded]="step === 1"
+        (opened)="setStep('map', 1)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div mat-subheader>Map Visualization Module</div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <!-- Table Visualization Module  -->
+      <mat-expansion-panel
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+        [expanded]="step === 2"
+        (opened)="setStep('table', 2)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div mat-subheader>Table Visualization Module</div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <!-- Dictionary Visualization Module  -->
+    </mat-accordion>
   </mat-drawer>
   <mat-drawer-content>
     <iapps-menu (onOpenDrawer)="onOpenDrawer($event)"></iapps-menu>
