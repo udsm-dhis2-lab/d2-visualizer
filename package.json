@@ -5,14 +5,17 @@
   "scripts": {
     "start:docs": "cd docs && npm start",
     "build:docs": "cd docs && npm run build",
+    "start:demo": "cd demo && npm start",
+    "build:demo": "cd demo && npm run build",
+    "build:demo-prod": "cd demo && npm run build --prod",
     "postinstall": "ngcc --properties es2015 browser module main"
   },
   "private": true,
   "author": "UDSM DHIS2 Project <udsm.dhis.project@gmail.com>",
-	"bugs": {
-		"url": "https://github.com/dhis2-club-tanzania/d2-visualizer/issues"
-	},
-	"homepage": "https://github.com/dhis2-club-tanzania/d2-visualizer#readme",
+  "bugs": {
+    "url": "https://github.com/dhis2-club-tanzania/d2-visualizer/issues"
+  },
+  "homepage": "https://github.com/dhis2-club-tanzania/d2-visualizer#readme",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com:dhis2-club-tanzania/d2-visualizer.git"
@@ -84,6 +87,7 @@
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
     "@iapps/function-analytics": "^1.0.0-beta.24",
+    "angular-cli-ghpages": "^1.0.0",
     "core-js": "^3.6.5",
     "highcharts": "^7.2.2",
     "highcharts-grouped-categories": "^1.2.0",
