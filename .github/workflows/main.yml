@@ -55,7 +55,7 @@ jobs:
           npm ci
       - name: Build
         run: |
-          npm run build:demo-prod
+          nx build
 #       - name: Lint
 #         run: |
 #           npm run lint
