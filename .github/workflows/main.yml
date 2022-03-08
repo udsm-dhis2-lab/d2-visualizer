@@ -61,7 +61,8 @@ jobs:
         run: npm i angular-cli-ghpages --save-dev
       - name: Build
         run: |
-          nx build --prod --base-href 'https://dhis2-club-tanzania.github.io/d2-visualizer/
+          nx build --prod --base-href "https://dhis2-club-tanzania.github.io/d2-visualizer/"
+          
       #       - name: Lint
       #         run: |
       #           npm run lint
