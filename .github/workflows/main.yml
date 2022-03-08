@@ -59,6 +59,10 @@ jobs:
         run: npm i -g angular-cli-ghpages
       - name: Install GITHUB PAGES Local
         run: npm i angular-cli-ghpages --save-dev
+      - name: Install NPX Global
+        run: npm install -g npx
+      - name: Install NPX Global
+        run: npm install npx
       - name: Build
         run: |
           nx build --prod --base-href "https://dhis2-club-tanzania.github.io/d2-visualizer/"
