@@ -6,20 +6,20 @@ name: Angular GitHub Pages CI
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-    
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   ci:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    
+
     # The job runs on node v14.x
     strategy:
       matrix:
@@ -29,12 +29,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-          
+
       - name: Cache node modules
         id: cache-nodemodules
         uses: actions/cache@v2
@@ -53,21 +53,22 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: |
           npm ci
+        run: npm install -g nx
       - name: Build
         run: |
           nx build
-#       - name: Lint
-#         run: |
-#           npm run lint
-#       - name: Test
-#         run: |
-#           npm run test -- --prod
+      #       - name: Lint
+      #         run: |
+      #           npm run lint
+      #       - name: Test
+      #         run: |
+      #           npm run test -- --prod
       - name: Conventional Changelog Action
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ${{ secrets.TOKEN_GITHUB_ACTION }}
-          output-file: "false"
+          output-file: 'false'
 
       - name: Create Release
         uses: actions/create-release@v1
