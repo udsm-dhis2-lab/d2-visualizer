@@ -8,7 +8,8 @@
     "start:demo": "cd demo && npm start",
     "build:demo": "cd demo && npm run build",
     "build:demo-prod": "cd demo && npm run build --prod",
-    "postinstall": "ngcc --properties es2015 browser module main"
+    "postinstall": "ngcc --properties es2015 browser module main",
+    "publish:d2-visualizer":"nx build d2-visualizer && cd dist/packages/d2-visualizer && && npm publish --access public && cd ../../../"
   },
   "private": true,
   "author": "UDSM DHIS2 Project <udsm.dhis.project@gmail.com>",
