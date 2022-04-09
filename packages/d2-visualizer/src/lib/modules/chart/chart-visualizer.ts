@@ -17,9 +17,9 @@ const HighchartsGroupedCategories = require('highcharts-grouped-categories')(
   HighchartGauge = require('highcharts/modules/solid-gauge.js')(Highcharts),
   HighchartDrilldown = require('highcharts/modules/drilldown.js')(Highcharts);
 
-  /**
-   * 
-   */
+/**
+ *
+ */
 export class ChartVisualization {
   private _visualizationType: VisualizationType = 'CHART';
   private _data: any;
@@ -27,6 +27,7 @@ export class ChartVisualization {
   private _id!: string;
   private _layout: VisualizationLayout = new VisualizationLayout();
   private _chart: any;
+  private _dataSelections: any;
 
   /**
    *
@@ -65,6 +66,16 @@ export class ChartVisualization {
    */
   setData(data: any) {
     this._data = data;
+    return this;
+  }
+
+  /**
+   * @description Set data selection criterias
+   * @param dataSelections {any[]}
+   * @returns {D2Visualizer}
+   */
+  setSelections(dataSelections: any[]) {
+    this._dataSelections = dataSelections;
     return this;
   }
 

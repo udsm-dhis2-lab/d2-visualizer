@@ -8,6 +8,8 @@ import { Chart } from '../chart/models/chart.model';
 import { D2Visualizer } from '@iapps/d2-visualizer';
 import { chartVisualizationAnalytics } from '../chart/config/analytic-viz.config';
 import { getQueryParamValue } from '../../shared/helpers/param.helper';
+import { MapCodeConfig } from './models/map-config.model';
+import { dhisAnalytics, dhisGeofeatures } from './config/map-constants';
 
 @Component({
   selector: 'iapps-map',
@@ -17,7 +19,8 @@ import { getQueryParamValue } from '../../shared/helpers/param.helper';
 export class MapComponent implements OnInit {
   chartConfigurations: ChartConfiguration = chartConfigurations;
   chartConfigs: Chart[] = chartConfigs;
-
+  mapCodeConfig: MapCodeConfig | null = null;
+  isInfoOpen = false;
   panelOpenState = false;
   step? = 0;
 
@@ -42,23 +45,91 @@ export class MapComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    const visualizer = new D2Visualizer()
-      .setConfig(this.chartConfigurations)
-      .setData(chartVisualizationAnalytics)
-      .setId('visualization-container')
-      .setType('CHART')
-      .draw();
+    // const visualizer = new D2Visualizer()
+    //   .setConfig(this.chartConfigurations)
+    //   .setData(chartVisualizationAnalytics)
+    //   .setId('visualization-container')
+    //   .setType('CHART')
+    //   .draw();
   }
 
-  onMenuClick(chartConfig: Chart) {
-    if (chartConfig) {
-      const visualizer = new D2Visualizer()
-        .setConfig(this.chartConfigurations)
-        .setData(chartVisualizationAnalytics)
-        .setId('visualization-container')
-        .setType('CHART')
-        .setChartType(chartConfig.id)
-        .draw();
-    }
+  // onMenuClick(chartConfig: Chart) {
+  //   if (chartConfig) {
+  //     const visualizer = new D2Visualizer()
+  //       .setConfig(this.chartConfigurations)
+  //       .setData(chartVisualizationAnalytics)
+  //       .setId('visualization-container')
+  //       .setType('CHART')
+  //       .setChartType(chartConfig.id)
+  //       .draw();
+  //   }
+  // }
+
+  onOpenInfo() {
+    this.isInfoOpen = !this.isInfoOpen;
+  }
+
+  onInfoClose(status: boolean) {
+    this.isInfoOpen = status ? status : false;
+  }
+
+  onMapConfigTabClick() {
+    this.isInfoOpen = !this.isInfoOpen;
+  }
+
+  onOpenDrawer(mapCodeConfig: MapCodeConfig) {
+    this.isInfoOpen = true;
+    this.mapCodeConfig = mapCodeConfig;
+  }
+
+  onMapTypeChange() {
+    const mapconfig = {
+      latitude: -5.66901,
+      longitude: 34.8888,
+      zoom: 5.8,
+      fillColor: '#b2acfa',
+      mapboxApiKey: '',
+      mapboxStyle: '',
+      width: '500px',
+      height: '500px',
+    };
+    const selections = [
+      {
+        dimension: 'dx',
+        items: [
+          {
+            id: 'dy1a1mseGR7',
+          },
+        ],
+      },
+      {
+        dimension: 'pe',
+        items: [
+          {
+            id: '2020',
+          },
+        ],
+      },
+      {
+        dimension: 'ou',
+        items: [
+          {
+            id: 'ImspTQPwCqd;LEVEL-2',
+          },
+        ],
+      },
+    ];
+
+    const visualizer = new D2Visualizer()
+      .setConfig(mapconfig)
+      // .setData(chartVisualizationAnalytics)
+
+      .setId('map-container')
+      .setType('MAP')
+      .setChartType('map')
+      // .setSelections(selections)
+      .setData(dhisAnalytics)
+      .setGeoFeatures(dhisGeofeatures)
+      .draw();
   }
 }

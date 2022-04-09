@@ -1,11 +1,13 @@
 import { Fn } from '@iapps/function-analytics';
 import { ChartVisualization } from './modules/chart/chart-visualizer';
+import { MapVisualization } from './modules/map/map-visualizer';
 import { VisualizationConfiguration } from './shared/visualization-configuration';
 import { VisualizationLayout } from './shared/visualization-layout';
 import { ChartType, VisualizationType } from './shared/visualization-type';
 
 export class D2Visualizer {
   dataSelections: any[] = [];
+  geoFeatures: any[] = [];
   dataAnalytics: unknown = null;
   type!: VisualizationType;
   visualizationType!: VisualizationType;
@@ -73,6 +75,16 @@ export class D2Visualizer {
   }
 
   /**
+   *
+   * @param geoFeatures
+   * @returns
+   */
+  setGeoFeatures(geoFeatures: any) {
+    this.geoFeatures = geoFeatures;
+    return this;
+  }
+
+  /**
    * @description Get data selection layout orientation
    * @returns {VisualizationLayout}
    */
@@ -132,16 +144,29 @@ export class D2Visualizer {
 
   async draw(): Promise<any> {
     if (this.dataAnalytics) {
-      return new ChartVisualization()
-        .setId(this.id)
-        .setConfig(this.config.config)
-        .setData(this.dataAnalytics)
-        .setVisualizationType(this.visualizationType as ChartType)
-        .setChartType(this.chartType)
-        .draw();
-    } else {
-      const data = await this.getData();
+      switch (this.visualizationType) {
+        case 'CHART':
+          return new ChartVisualization()
+            .setId(this.id)
+            .setConfig(this.config.config)
+            .setData(this.dataAnalytics)
+            .setVisualizationType(this.visualizationType as ChartType)
+            .setChartType(this.chartType)
+            .draw();
+        case 'MAP':
+          return new MapVisualization()
+            .setId(this.id)
+            .setConfig(this.config)
+            .setData(this.dataAnalytics)
+            .setGeoFeatures(this.geoFeatures)
+            .draw();
+        default:
+          return null;
+      }
+    }
 
+    if (!this.dataAnalytics) {
+      const data = await this.getData();
       switch (this.visualizationType) {
         case 'CHART':
           return new ChartVisualization()
@@ -150,6 +175,13 @@ export class D2Visualizer {
             .setData(data.data)
             .setVisualizationType(this.visualizationType as ChartType)
             .setChartType(this.chartType)
+            .draw();
+        case 'MAP':
+          return new MapVisualization()
+            .setId(this.id)
+            .setConfig(this.config)
+            .setSelections(this.dataSelections)
+            .setGeoFeatures(this.geoFeatures)
             .draw();
         default:
           return null;
