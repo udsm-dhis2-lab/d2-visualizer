@@ -76,8 +76,8 @@ export class MapVisualization {
       let map = new mapboxgl.Map({
         container: this._id,
         style: style,
-        center: [this._config.longitude, this._config.latitude],
-        zoom: this._config.zoom,
+        center: [this._config?.longitude, this._config?.latitude],
+        zoom: this._config?.zoom,
       });
       // Add zoom and rotation controls to the map.
       map.addControl(new mapboxgl.NavigationControl());
@@ -104,7 +104,9 @@ export class MapVisualization {
 
         // Add a new layer to visualize the polygon.
         const innerLayer = `${mapSourcename}_layer_${1}`;
-        const fillColor = this._config?.fillColor || '#b2acfa';
+        const fillColor = this._config?.fillColor
+          ? this._config?.fillColor
+          : '#b2acfa';
         const rowItems = analyticsItemIndexes(this._data);
         const maxValueRange: number = Math.max.apply(
           null,

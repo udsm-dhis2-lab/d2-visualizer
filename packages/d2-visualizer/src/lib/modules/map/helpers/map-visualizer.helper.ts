@@ -20,7 +20,7 @@ export function createMapFeatures(
         coordinates: JSON.parse(orgunitCoordinateItem.co),
       },
       properties: {
-        datavalue: row[rowItems.valueIndex],
+        datavalue: parseFloat(row[rowItems.valueIndex]),
         popupContents: `
         <h5>${orgunitCoordinateItem?.na}</h5>
         <p style="color: #6c757d">

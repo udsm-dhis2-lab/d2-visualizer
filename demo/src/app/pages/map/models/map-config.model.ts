@@ -1,5 +1,6 @@
 export interface MapCodeConfig {
   title: string;
   language: string;
-  snippet: string;
+  theme?: string;
+  snippet: any;
 }

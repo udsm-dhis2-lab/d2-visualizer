@@ -73,8 +73,46 @@ export class MapComponent implements OnInit {
     this.isInfoOpen = status ? status : false;
   }
 
-  onMapConfigTabClick() {
+  onMapConfigTabClick(configType: string) {
     this.isInfoOpen = !this.isInfoOpen;
+
+    if (configType === 'analytics') {
+      this.mapCodeConfig = {
+        title: 'Analytics',
+        language: 'json',
+        snippet: dhisAnalytics,
+      };
+    }
+    if (configType === 'geoFeatures') {
+      this.mapCodeConfig = {
+        title: 'GeoFeatures',
+        language: 'json',
+        snippet: dhisGeofeatures,
+      };
+    }
+    if (configType === 'mapConfigurations') {
+      this.mapCodeConfig = {
+        title: 'GeoFeatures',
+        language: 'json',
+        snippet: {
+          latitude: -5.66901,
+          longitude: 34.8888,
+          zoom: 5.8,
+          fillColor: '#b2acfa',
+          mapboxApiKey: '',
+          mapboxStyle: '',
+        },
+      };
+    }
+    if (configType === 'mapCode') {
+      this.mapCodeConfig = {
+        title: 'Map Code',
+        language: 'javascript',
+        theme: 'vs-white',
+        snippet:
+          "const visualizer = new D2Visualizer()\n\t.setConfig(mapconfig)\n\t.setId('map-container')\n\t.setType('MAP')\n\t.setChartType('map')\n\t.setData(dhisAnalytics)\n\t.setGeoFeatures(dhisGeofeatures)\n\t.draw();",
+      };
+    }
   }
 
   onOpenDrawer(mapCodeConfig: MapCodeConfig) {
@@ -87,7 +125,7 @@ export class MapComponent implements OnInit {
       latitude: -5.66901,
       longitude: 34.8888,
       zoom: 5.8,
-      fillColor: '#b2acfa',
+      fillColor: '#ff9900',
       mapboxApiKey: '',
       mapboxStyle: '',
       width: '500px',

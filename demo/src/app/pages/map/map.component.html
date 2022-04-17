@@ -65,13 +65,21 @@
   <mat-drawer-content>
     <div class="row mx-0 w-100">
         <nav mat-tab-nav-bar>
-          <a mat-tab-link (click)="onMapConfigTabClick()">
+          <a mat-tab-link (click)="onMapConfigTabClick('analytics')">
             <mat-icon>analytics</mat-icon>
             &nbsp; DHIS2 Analytics Configuration
           </a>
-          <a mat-tab-link (click)="onMapConfigTabClick()">
+          <a mat-tab-link (click)="onMapConfigTabClick('geoFeatures')">
+            <mat-icon>analytics</mat-icon>
+            &nbsp; DHIS2 GeoFeatures
+          </a>
+          <a mat-tab-link (click)="onMapConfigTabClick('mapConfigurations')">
             <mat-icon>vertical_split</mat-icon>
-            &nbsp; Chart Configuration
+            &nbsp; Map Configuration
+          </a>
+          <a mat-tab-link (click)="onMapConfigTabClick('mapCode')">
+            <mat-icon>vertical_split</mat-icon>
+            &nbsp; Map Code
           </a>
         </nav>
     </div>
