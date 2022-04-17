@@ -6,7 +6,6 @@ import { chartConfigs } from '../chart/config/chart.config';
 import { ChartConfiguration } from '../chart/models/chart-viz.model';
 import { Chart } from '../chart/models/chart.model';
 import { D2Visualizer } from '@iapps/d2-visualizer';
-import { chartVisualizationAnalytics } from '../chart/config/analytic-viz.config';
 import { getQueryParamValue } from '../../shared/helpers/param.helper';
 import { MapCodeConfig } from './models/map-config.model';
 import { dhisAnalytics, dhisGeofeatures } from './config/map-constants';
@@ -44,26 +43,7 @@ export class MapComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    // const visualizer = new D2Visualizer()
-    //   .setConfig(this.chartConfigurations)
-    //   .setData(chartVisualizationAnalytics)
-    //   .setId('visualization-container')
-    //   .setType('CHART')
-    //   .draw();
-  }
-
-  // onMenuClick(chartConfig: Chart) {
-  //   if (chartConfig) {
-  //     const visualizer = new D2Visualizer()
-  //       .setConfig(this.chartConfigurations)
-  //       .setData(chartVisualizationAnalytics)
-  //       .setId('visualization-container')
-  //       .setType('CHART')
-  //       .setChartType(chartConfig.id)
-  //       .draw();
-  //   }
-  // }
+  ngAfterViewInit(): void {}
 
   onOpenInfo() {
     this.isInfoOpen = !this.isInfoOpen;

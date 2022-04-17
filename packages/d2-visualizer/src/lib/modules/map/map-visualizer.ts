@@ -86,13 +86,6 @@ export class MapVisualization {
         // Add a data source containing GeoJSON data.
         const mapSourcename = 'map_source';
 
-        // const mapFeatures: MapFeatures = {
-        //   id: '',
-        //   type: '',
-        //   geometry: { type: 'Polygon', coordinates: this._geoFeatures || [] },
-        //   properties: { datavalue: '', popupContents: '' },
-        // };
-
         const mapFeatures = createMapFeatures(this._data, this._geoFeatures);
         map.addSource(mapSourcename, {
           type: 'geojson',
@@ -144,7 +137,6 @@ export class MapVisualization {
             .addTo(map);
         });
 
-        // this.visualizationEntity.data.forEach((mapData, index: number) => {
         (this._data?.rows || []).forEach((row: string[], index: number) => {
           let hoveredStateId: any = null;
 
