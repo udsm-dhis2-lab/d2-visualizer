@@ -1,6 +1,8 @@
 import { Fn } from '@iapps/function-analytics';
 import { ChartVisualization } from './modules/chart/chart-visualizer';
-import { MapVisualization } from './modules/map/map-visualizer';
+import { LegendSet } from './modules/map/models/legend-set.model';
+import { MapAnalytic } from './modules/map/models/map-analytic.model';
+import { MapUtil } from './modules/map/utils/map.util';
 import { VisualizationConfiguration } from './shared/visualization-configuration';
 import { VisualizationLayout } from './shared/visualization-layout';
 import { ChartType, VisualizationType } from './shared/visualization-type';
@@ -9,6 +11,7 @@ export class D2Visualizer {
   dataSelections: any[] = [];
   geoFeatures: any[] = [];
   dataAnalytics: unknown = null;
+  legendSet: LegendSet | undefined | any = null;
   type!: VisualizationType;
   visualizationType!: VisualizationType;
   config!: VisualizationConfiguration;
@@ -85,6 +88,16 @@ export class D2Visualizer {
   }
 
   /**
+   *
+   * @param legendSet
+   * @returns
+   */
+  setLegendSet(legendSet: LegendSet) {
+    this.legendSet = legendSet;
+    return this;
+  }
+
+  /**
    * @description Get data selection layout orientation
    * @returns {VisualizationLayout}
    */
@@ -130,11 +143,13 @@ export class D2Visualizer {
               .join(';')
           );
           break;
+
         default:
           analyticPromise.setDimension(
             dataSelection?.dimension,
             dataSelection.items.map((item: { id: any }) => item.id).join(';')
           );
+
           break;
       }
     });
@@ -154,11 +169,13 @@ export class D2Visualizer {
             .setChartType(this.chartType)
             .draw();
         case 'MAP':
-          return new MapVisualization()
-            .setId(this.id)
-            .setConfig(this.config)
-            .setData(this.dataAnalytics)
-            .setGeoFeatures(this.geoFeatures)
+          return new MapUtil()
+            .setMapAnalytics(this.dataAnalytics as MapAnalytic)
+            .setGeofeature(this.geoFeatures as any)
+            .setLegendSet(this.legendSet)
+            .setContainer('map-container-demo')
+            .setType('thematic')
+            .setShowLabel(true)
             .draw();
         default:
           return null;
@@ -177,11 +194,12 @@ export class D2Visualizer {
             .setChartType(this.chartType)
             .draw();
         case 'MAP':
-          return new MapVisualization()
-            .setId(this.id)
-            .setConfig(this.config)
-            .setSelections(this.dataSelections)
-            .setGeoFeatures(this.geoFeatures)
+          return new MapUtil()
+            .setMapAnalytics(this.dataAnalytics as MapAnalytic)
+            .setGeofeature(this.geoFeatures as any)
+            .setLegendSet(this.legendSet)
+            .setContainer('map-container-demo')
+            .setShowLabel(true)
             .draw();
         default:
           return null;

@@ -9,7 +9,9 @@ import { D2Visualizer } from '@iapps/d2-visualizer';
 import { getQueryParamValue } from '../../shared/helpers/param.helper';
 import { MapCodeConfig } from './models/map-config.model';
 import { dhisAnalytics, dhisGeofeatures } from './config/map-constants';
-
+import { demoMapAnalytic } from './config/demo-analytic.config';
+import { demoGeofeatures } from './config/demo-geofeature.config';
+import { demoLegendSet } from './config/demo-legend.config';
 @Component({
   selector: 'iapps-map',
   templateUrl: './map.component.html',
@@ -21,9 +23,9 @@ export class MapComponent implements OnInit {
   mapCodeConfig: MapCodeConfig | null = null;
   isInfoOpen = false;
   panelOpenState = false;
-  step? = 0;
+  step?= 0;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(
@@ -43,7 +45,7 @@ export class MapComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   onOpenInfo() {
     this.isInfoOpen = !this.isInfoOpen;
@@ -104,7 +106,7 @@ export class MapComponent implements OnInit {
     const mapconfig = {
       latitude: -5.66901,
       longitude: 34.8888,
-      zoom: 5.8,
+      zoom: 6.8,
       fillColor: '#ff9900',
       mapboxApiKey: '',
       mapboxStyle: '',
@@ -138,16 +140,15 @@ export class MapComponent implements OnInit {
       },
     ];
 
-    const visualizer = new D2Visualizer()
+    // Initiate Map Draw 
+    const visualizerMapBox = new D2Visualizer()
       .setConfig(mapconfig)
-      // .setData(chartVisualizationAnalytics)
-
       .setId('map-container')
       .setType('MAP')
       .setChartType('map')
-      // .setSelections(selections)
-      .setData(dhisAnalytics)
-      .setGeoFeatures(dhisGeofeatures)
+      .setData(demoMapAnalytic)
+      .setGeoFeatures(demoGeofeatures)
+      .setLegendSet(demoLegendSet)
       .draw();
   }
 }
