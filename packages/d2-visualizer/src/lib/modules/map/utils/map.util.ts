@@ -1466,6 +1466,29 @@ export class MapUtil {
     return this.type;
   }
 
+  /**
+   *
+   * @returns
+   */
+  getLegendSetContainerId(): string {
+    return `${this.container}-legend`;
+  }
+
+  /**
+   *
+   */
+  getInfoContainerId(): string {
+    return `${this.container}-info`;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getMapTitleContainerId(): string {
+    return `${this.container}-map-title`;
+  }
+
   draw(): void {
     try {
       // Map Instance
@@ -1578,7 +1601,8 @@ export class MapUtil {
         }
 
         // Remove Details Section On Start
-        const featuresDOMElement = document.getElementById('features');
+        const infoContainerId = this.getInfoContainerId();
+        const featuresDOMElement = document.getElementById(infoContainerId);
         if (featuresDOMElement) {
           featuresDOMElement.style.display = 'none';
         }
@@ -1644,7 +1668,8 @@ export class MapUtil {
    *
    */
   createLegendSet(d2MapEngine: D2MapEngine) {
-    const legendDOMElement = document.getElementById('legend');
+    const legendSetContainerId = this.getLegendSetContainerId();
+    const legendDOMElement = document.getElementById(legendSetContainerId);
 
     const legendDIVItem: HTMLDivElement = document.createElement('div');
     const legendTableItem = document.createElement('table');
@@ -1764,12 +1789,13 @@ export class MapUtil {
           ? this.mapAnalytic.metaData.items[periodId].name
           : '';
 
-      const featuresDOMElement = document.getElementById('features');
+      const infoContainerId = this.getInfoContainerId();
+      const mapInfoDOMElement = document.getElementById(infoContainerId);
       const info: any = _.head(mapboxGeoJSONFeature);
 
       let htmlCode = ``;
-      if (featuresDOMElement) {
-        featuresDOMElement.style.display = 'block';
+      if (mapInfoDOMElement) {
+        mapInfoDOMElement.style.display = 'block';
         if (dataName && mapboxGeoJSONFeature) {
           htmlCode += `<table>`;
           htmlCode += `<thead>`;
@@ -1801,9 +1827,9 @@ export class MapUtil {
           }
           htmlCode += `<tfoot>`;
           htmlCode += `</tfoot>`;
-          featuresDOMElement.innerHTML = htmlCode;
+          mapInfoDOMElement.innerHTML = htmlCode;
         } else {
-          featuresDOMElement.innerHTML = `<p>Hover over a state!</p>`;
+          mapInfoDOMElement.innerHTML = `<p>Hover over a state!</p>`;
         }
       }
     }
@@ -1841,7 +1867,8 @@ export class MapUtil {
           ? _.head(this.mapAnalytic.metaData.dimensions.pe)
           : '';
 
-      const mapTitleDOMElement = document.getElementById('map-title');
+      const mapTitleContainerId = this.getMapTitleContainerId();
+      const mapTitleDOMElement = document.getElementById(mapTitleContainerId);
 
       if (mapTitleDOMElement && periodId && indicatorName) {
         const periodName =

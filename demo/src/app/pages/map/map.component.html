@@ -84,19 +84,8 @@
       </nav>
     </div>
     <div class="row mx-0 w-100 container mat-typography">
-      <!-- MAP DRAWABLE CONTAINER  -->
-      <div class="map-view-window" id="map-container-demo"></div>
-
-      <!-- MAP DRAWABLE TITLE CONTAINER -->
-      <div class="map-title-overlay" id="map-title"></div>
-
-      <!-- MAP DRAWABLE LEGEND CONTAINER  -->
-      <div class="map-overlay" id="legend"></div>
-
-      <!-- MAP DRAWABLE MORE DETAILS CONTAINER  -->
-      <div class="map-overlay" id="features"></div>
-      <!-- OLD CONTAINER  -->
-      <!-- <div style="border: 5px solid blue;" class="map-view-window" id="map-container"></div> -->
+      <!-- Interactive MAP Component for drawing MAP  -->
+      <iapps-ngx-d2-map [container]="'map-container-demo'"></iapps-ngx-d2-map>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>

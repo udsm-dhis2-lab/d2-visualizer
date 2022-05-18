@@ -43,7 +43,7 @@ mat-drawer-container {
   margin-left: 8px;
 }
 
-.map-view-window {
+.map-drawable-window {
   width: 100%;
   // height: 82vh;
   /* position: absolute; */
@@ -62,8 +62,6 @@ body {
   bottom: 0;
   width: 100%;
 }
-
-// LEGEND STYLE
 
 body {
   margin: 0;
@@ -98,7 +96,7 @@ p {
 * Set rules for how the map overlays
 * (information box and legend) will be displayed
 * on the page. */
-.map-overlay {
+.map-drawable-overlay {
   position: absolute;
   bottom: 0;
   right: 0;
@@ -109,7 +107,7 @@ p {
   border-radius: 3px;
 }
 
-.map-title-overlay {
+.map-title-drawable-overlay {
   position: absolute;
   background: #fff;
   padding: 5px;
