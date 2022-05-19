@@ -45,6 +45,137 @@ mat-drawer-container {
 
 .map-view-window {
   width: 100%;
-  height: 82vh;
+  // height: 82vh;
   /* position: absolute; */
+}
+
+// LEGEND CSS
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#map-container-demo {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+// LEGEND STYLE
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+h2,
+h3 {
+  margin: 10px;
+  font-size: 18px;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+p {
+  margin: 10px;
+}
+
+/**
+* Create a position for the map
+* on the page */
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+/**
+* Set rules for how the map overlays
+* (information box and legend) will be displayed
+* on the page. */
+.map-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #fff;
+  margin-right: 20px;
+  font-family: Arial, sans-serif;
+  overflow: auto;
+  border-radius: 3px;
+}
+
+.map-title-overlay {
+  position: absolute;
+  background: #fff;
+  padding: 5px;
+  border-radius: 3px;
+
+  // Centering Transformation type 1
+  // top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
+
+  // Centering Transformation type 2
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 1;
+}
+
+#map-title {
+  top: 42px;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  height: 25px;
+  font-weight: bold;
+}
+
+#features {
+  // top: 25px;
+  left: 12px;
+  // height: 100px;
+  // margin-top: 150px;
+  // width: 250px;
+
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  height: 110px;
+  margin-bottom: 40px;
+  width: 300px;
+}
+
+#legend {
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  height: 150px;
+  margin-bottom: 40px;
+  width: 250px;
+}
+
+.legend-key {
+  display: inline-block;
+  border-radius: 20%;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
 }

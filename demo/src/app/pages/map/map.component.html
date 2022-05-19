@@ -39,7 +39,7 @@
               [src]="'assets/icons/map.png'"
               [alt]="'Map item'"
             />
-            <div mat-line>Map Item</div>
+            <div mat-line>Thematic Layer</div>
           </mat-list-item>
         </mat-list>
       </mat-expansion-panel>
@@ -64,34 +64,46 @@
 
   <mat-drawer-content>
     <div class="row mx-0 w-100">
-        <nav mat-tab-nav-bar>
-          <a mat-tab-link (click)="onMapConfigTabClick('analytics')">
-            <mat-icon>analytics</mat-icon>
-            &nbsp; DHIS2 Analytics Configuration
-          </a>
-          <a mat-tab-link (click)="onMapConfigTabClick('geoFeatures')">
-            <mat-icon>analytics</mat-icon>
-            &nbsp; DHIS2 GeoFeatures
-          </a>
-          <a mat-tab-link (click)="onMapConfigTabClick('mapConfigurations')">
-            <mat-icon>vertical_split</mat-icon>
-            &nbsp; Map Configuration
-          </a>
-          <a mat-tab-link (click)="onMapConfigTabClick('mapCode')">
-            <mat-icon>vertical_split</mat-icon>
-            &nbsp; Map Code
-          </a>
-        </nav>
+      <nav mat-tab-nav-bar>
+        <a mat-tab-link (click)="onMapConfigTabClick('analytics')">
+          <mat-icon>analytics</mat-icon>
+          &nbsp; DHIS2 Analytics Configuration
+        </a>
+        <a mat-tab-link (click)="onMapConfigTabClick('geoFeatures')">
+          <mat-icon>analytics</mat-icon>
+          &nbsp; DHIS2 GeoFeatures
+        </a>
+        <a mat-tab-link (click)="onMapConfigTabClick('mapConfigurations')">
+          <mat-icon>vertical_split</mat-icon>
+          &nbsp; Map Configuration
+        </a>
+        <a mat-tab-link (click)="onMapConfigTabClick('mapCode')">
+          <mat-icon>vertical_split</mat-icon>
+          &nbsp; Map Code
+        </a>
+      </nav>
     </div>
-    <div class="row mx-0 w-100">
-      <div class="map-view-window" id="map-container"></div>
+    <div class="row mx-0 w-100 container mat-typography">
+      <!-- MAP DRAWABLE CONTAINER  -->
+      <div class="map-view-window" id="map-container-demo"></div>
+
+      <!-- MAP DRAWABLE TITLE CONTAINER -->
+      <div class="map-title-overlay" id="map-title"></div>
+
+      <!-- MAP DRAWABLE LEGEND CONTAINER  -->
+      <div class="map-overlay" id="legend"></div>
+
+      <!-- MAP DRAWABLE MORE DETAILS CONTAINER  -->
+      <div class="map-overlay" id="features"></div>
+      <!-- OLD CONTAINER  -->
+      <!-- <div style="border: 5px solid blue;" class="map-view-window" id="map-container"></div> -->
     </div>
   </mat-drawer-content>
-
 </mat-drawer-container>
 
 <iapps-ngx-drawer
   (cancel)="onInfoClose($event)"
   [sourceCodeConfig]="mapCodeConfig"
   [isInfoOpen]="isInfoOpen"
-></iapps-ngx-drawer>
+>
+</iapps-ngx-drawer>

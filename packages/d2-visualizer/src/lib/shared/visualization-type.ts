@@ -4,4 +4,5 @@ export type VisualizationType =
   | 'CHART'
   | 'REPORT_TABLE'
   | 'MAP'
-  | 'DICTIONARY';
+  | 'DICTIONARY'
+  | 'MAPBOX';

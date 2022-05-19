@@ -9,7 +9,7 @@
     "build:demo": "cd demo && npm run build",
     "build:demo-prod": "cd demo && npm run build --prod",
     "postinstall": "ngcc --properties es2015 browser module main",
-    "publish:d2-visualizer":"nx build d2-visualizer && cd dist/packages/d2-visualizer && && npm publish --access public && cd ../../../"
+    "publish:d2-visualizer": "nx build d2-visualizer && cd dist/packages/d2-visualizer && && npm publish --access public && cd ../../../"
   },
   "private": true,
   "author": "UDSM DHIS2 Project <udsm.dhis.project@gmail.com>",
@@ -54,7 +54,8 @@
     "@testing-library/react-hooks": "7.0.2",
     "@types/jest": "27.0.2",
     "@types/lodash": "^4.14.178",
-    "@types/node": "16.11.7",
+    "@types/mapbox-gl": "^2.7.0",
+    "@types/node": "^16.11.7",
     "@types/react": "17.0.30",
     "@types/react-dom": "17.0.9",
     "@types/react-router-dom": "5.3.1",
@@ -93,6 +94,7 @@
     "highcharts": "^7.2.2",
     "highcharts-grouped-categories": "^1.2.0",
     "lodash": "^4.17.21",
+    "mapbox-gl": "^2.8.2",
     "monaco-editor": "^0.32.1",
     "ngx-monaco-editor": "^12.0.0",
     "react": "17.0.2",
