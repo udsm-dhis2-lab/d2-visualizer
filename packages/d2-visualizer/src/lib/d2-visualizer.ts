@@ -1,13 +1,9 @@
 import { Fn } from '@iapps/function-analytics';
 import { ChartVisualization } from './modules/chart/chart-visualizer';
-<<<<<<< HEAD
-import { MapVisualization } from './modules/map/map-visualizer';
 import { TableVisualization } from './modules/table/table-visualizer';
-=======
 import { LegendSet } from './modules/map/models/legend-set.model';
 import { MapAnalytic } from './modules/map/models/map-analytic.model';
 import { MapUtil } from './modules/map/utils/map.util';
->>>>>>> 61fec99250d4f071073f47a178aa8e0207e29030
 import { VisualizationConfiguration } from './shared/visualization-configuration';
 import { VisualizationLayout } from './shared/visualization-layout';
 import { ChartType, VisualizationType } from './shared/visualization-type';
