@@ -1,6 +1,7 @@
 import { Fn } from '@iapps/function-analytics';
 import { ChartVisualization } from './modules/chart/chart-visualizer';
 import { MapVisualization } from './modules/map/map-visualizer';
+import { TableVisualization } from './modules/table/table-visualizer';
 import { VisualizationConfiguration } from './shared/visualization-configuration';
 import { VisualizationLayout } from './shared/visualization-layout';
 import { ChartType, VisualizationType } from './shared/visualization-type';
@@ -143,6 +144,10 @@ export class D2Visualizer {
   }
 
   async draw(): Promise<any> {
+
+    console.log("should be CHART | MAP | REPORT_TABLE")
+    console.log(this.visualizationType)
+
     if (this.dataAnalytics) {
       switch (this.visualizationType) {
         case 'CHART':
@@ -159,6 +164,12 @@ export class D2Visualizer {
             .setConfig(this.config)
             .setData(this.dataAnalytics)
             .setGeoFeatures(this.geoFeatures)
+            .draw();
+        case 'REPORT_TABLE':
+          return new TableVisualization()
+            .setId(this.id)
+            .setConfig(this.config)
+            .setData(this.dataAnalytics)
             .draw();
         default:
           return null;
