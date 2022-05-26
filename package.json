@@ -94,6 +94,7 @@
     "core-js": "^3.6.5",
     "highcharts": "^7.2.2",
     "highcharts-grouped-categories": "^1.2.0",
+    "html-to-image": "^1.9.0",
     "lodash": "^4.17.21",
     "mapbox-gl": "^2.8.2",
     "monaco-editor": "^0.32.1",
@@ -104,6 +105,7 @@
     "regenerator-runtime": "0.13.7",
     "rxjs": "~7.4.0",
     "tslib": "^2.0.0",
+    "turf": "^3.0.14",
     "zone.js": "~0.11.4"
   }
 }
