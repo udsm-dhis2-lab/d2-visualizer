@@ -89,6 +89,7 @@
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
     "@iapps/function-analytics": "^1.0.0-beta.24",
+    "@turf/turf": "^6.5.0",
     "angular-cli-ghpages": "^1.0.0",
     "core-js": "^3.6.5",
     "highcharts": "^7.2.2",
