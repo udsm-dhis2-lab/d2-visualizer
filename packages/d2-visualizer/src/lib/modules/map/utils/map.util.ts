@@ -1,10 +1,13 @@
 import * as mapboxgl from 'mapbox-gl';
 import { Legend, LegendSet } from '../models/legend-set.model';
-import { MapAnalytic } from '../models/map-analytic.model';
+import { MapAnalytics } from '../models/map-analytic.model';
 import { MapDrawablePayload } from '../models/map-drawable-payload.model';
 import { GeoFeature } from '../models/map-geofeature.model';
 import * as _ from 'lodash';
-import { D2MapEngine } from './map-type.util';
+import { D2MapEngine } from './map-engine.util';
+import { MapDashboardItem } from '../models/map-dashboard-item.model';
+import { MapDashboardExtensionItem } from '../models/map-dashboard-extension.model';
+import { GeoFeatureSnapshot } from '../models/map-geofeature-snapshot.model';
 
 export class MapUtil {
   private accessToken: string;
@@ -56,16 +59,18 @@ export class MapUtil {
   private trackResize: boolean;
   private transformRequest: any;
   private zoom: number;
-  private mapAnalytic: MapAnalytic | any;
-  private geoFeature: GeoFeature | any;
-  private legendSet: LegendSet | any;
   private showLegend: boolean;
   private showLabel: boolean;
   private showValue: boolean;
   private showBoundary: boolean;
-  private showMapSummary: boolean;
-  private showMapTitle: boolean;
+  private showSummary: boolean;
+  private showTitle: boolean;
   private type: string;
+  private mapDashboardItem: MapDashboardItem | any;
+  private mapDashboardExtensionItem: MapDashboardExtensionItem | any;
+  private mapAnalytics: MapAnalytics[] | any;
+  private geoFeatures: GeoFeatureSnapshot[] | any;
+  private legendSets: LegendSet[] | any;
 
   constructor() {
     /**
@@ -121,16 +126,18 @@ export class MapUtil {
     this.trackResize = true;
     this.transformRequest = null;
     this.zoom = 5.6;
-    this.mapAnalytic = null;
-    this.geoFeature = null;
-    this.legendSet = null;
+    this.mapAnalytics = null;
+    this.geoFeatures = null;
+    this.legendSets = null;
     this.showLegend = false;
     this.showLabel = true;
     this.showValue = false;
     this.showBoundary = true;
-    this.showMapSummary = true;
-    this.showMapTitle = true;
+    this.showSummary = true;
+    this.showTitle = true;
     this.type = 'thematic';
+    this.mapDashboardItem = null;
+    this.mapDashboardExtensionItem = null;
   }
 
   /**
@@ -1287,26 +1294,26 @@ export class MapUtil {
    *
    * @returns
    */
-  getMapAnalytics(): MapAnalytic {
-    return this.mapAnalytic;
+  getMapAnalytics(): MapAnalytics {
+    return this.mapAnalytics;
   }
 
   /**
    *
-   * @param mapAnalytic
+   * @param mapAnalytics
    * @returns
    */
-  setMapAnalytics(mapAnalytic: MapAnalytic): MapUtil {
-    this.mapAnalytic = mapAnalytic;
+  setMapAnalytics(mapAnalytics: MapAnalytics): MapUtil {
+    this.mapAnalytics = mapAnalytics;
     return this;
   }
 
   /**
    *
-   * @returns {MapAnalytic}
+   * @returns {MapAnalytics}
    */
   getGeofeature(): GeoFeature {
-    return this.geoFeature;
+    return this.geoFeatures;
   }
 
   /**
@@ -1315,7 +1322,7 @@ export class MapUtil {
    * @returns
    */
   setGeofeature(geoFeature: GeoFeature): MapUtil {
-    this.geoFeature = geoFeature;
+    this.geoFeatures = geoFeature;
     return this;
   }
 
@@ -1324,16 +1331,16 @@ export class MapUtil {
    * @param legendSet
    * @returns
    */
-  setLegendSet(legendSet: LegendSet): MapUtil {
-    this.legendSet = legendSet;
+  setLegendSet(legendSet: LegendSet[]): MapUtil {
+    this.legendSets = legendSet;
     return this;
   }
 
   /**
    *
    */
-  getLegendSet(): LegendSet {
-    return this.legendSet;
+  getLegendSet(): LegendSet[] {
+    return this.legendSets;
   }
 
   /**
@@ -1361,6 +1368,7 @@ export class MapUtil {
    */
   setShowLabel(showLabel: boolean): MapUtil {
     this.showLabel = showLabel;
+    this.setShowValue(false);
     return this;
   }
 
@@ -1414,7 +1422,7 @@ export class MapUtil {
    * @returns
    */
   setShowMapSummary(showMapSummary: boolean): MapUtil {
-    this.showMapSummary = showMapSummary;
+    this.showSummary = showMapSummary;
     return this;
   }
 
@@ -1423,7 +1431,7 @@ export class MapUtil {
    * @returns
    */
   getShowMapSummary(): boolean {
-    return this.showMapSummary;
+    return this.showSummary;
   }
 
   /**
@@ -1436,7 +1444,7 @@ export class MapUtil {
    * @returns
    */
   setShowMapTitle(showMapTitle: boolean): MapUtil {
-    this.showMapTitle = showMapTitle;
+    this.showTitle = showMapTitle;
     return this;
   }
 
@@ -1445,7 +1453,7 @@ export class MapUtil {
    * @returns
    */
   getShowMapTitle(): boolean {
-    return this.showMapTitle;
+    return this.showTitle;
   }
 
   /**
@@ -1453,7 +1461,7 @@ export class MapUtil {
    * @param type
    * @returns
    */
-  setType(type: string): MapUtil {
+  setMapType(type: string): MapUtil {
     this.type = type;
     return this;
   }
@@ -1489,6 +1497,47 @@ export class MapUtil {
     return `${this.container}-map-title`;
   }
 
+  /**
+   *
+   * @param mapDrawableItems
+   * @returns
+   */
+  setMapDashboardItem(mapDrawableItem: MapDashboardItem): MapUtil {
+    this.mapDashboardItem = mapDrawableItem;
+    return this;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getMapDownloadItem(): MapDashboardItem {
+    return this.mapDashboardItem;
+  }
+
+  /**
+   *
+   * @param mapDashboardExtensionItem
+   * @returns
+   */
+  setMapDashboardExtensionItem(
+    mapDashboardExtensionItem: MapDashboardExtensionItem
+  ): MapUtil {
+    this.mapDashboardExtensionItem = mapDashboardExtensionItem;
+    return this;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getMapDashboardExtensionItem(): MapDashboardExtensionItem {
+    return this.mapDashboardExtensionItem;
+  }
+
+  /**
+   *
+   */
   draw(): void {
     try {
       // Map Instance
@@ -1503,6 +1552,15 @@ export class MapUtil {
       //   Get Map Source UIdentifier
       const mapContainerSourceId: string = this.getContainer();
 
+      // Remove Legend Set On Map Start
+      const legendSetContainerId = this.getLegendSetContainerId();
+      const legendDOMElement = document.getElementById(legendSetContainerId);
+      const showMapLegend: boolean = this.getShowLegend();
+
+      if (legendDOMElement && showMapLegend) {
+        legendDOMElement.style.display = 'none';
+      }
+
       // On Map Load
       map.on('load', () => {
         /**
@@ -1511,380 +1569,48 @@ export class MapUtil {
         const d2MapEngine = new D2MapEngine();
 
         // Get Drawable Map Payload
-        const mapDrawablePayload: MapDrawablePayload =
+        const mapDrawablePayloads: MapDrawablePayload[] =
           d2MapEngine.getMapDrawablePayload(
             this.type,
             this,
-            this.geoFeature,
-            this.mapAnalytic
+            this.geoFeatures,
+            this.mapAnalytics,
+            this.mapDashboardItem,
+            this.mapDashboardExtensionItem
           );
 
-        // Add Map Source
-        map.addSource(
-          mapContainerSourceId,
-          mapDrawablePayload as mapboxgl.AnySourceData
-        );
 
-        // Get Legend Set
-        const legendSet: LegendSet = this.getLegendSet();
-
-        // Legend Set for MAP
-        const mapLegendSet: string[] = d2MapEngine.getMapLegendSet(legendSet);
-
-        map.addLayer({
-          id: `${mapContainerSourceId}`,
-          type: 'fill',
-          source: mapContainerSourceId, // reference the data source
-          layout: {},
-          paint: {
-            'fill-color': [
-              'interpolate',
-              ['linear'],
-              ['get', 'datavalue'],
-              ...mapLegendSet,
-            ],
-            'fill-opacity': 1,
-          },
-        });
-
-        // Map Typograph Management
-        if (this.getShowLabel()) {
-          map.addLayer({
-            id: `${mapContainerSourceId}_label`,
-            type: 'symbol',
-            source: mapContainerSourceId,
-            layout: {
-              'text-field': [
-                'format',
-                ['upcase', ['get', 'description']],
-                { 'font-scale': 0.6 },
-                '\n',
-                {},
-                ['downcase', ['get', 'value']],
-                { 'font-scale': 0.6 },
-              ],
-              'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-              'text-radial-offset': 0.8,
-              'text-justify': 'auto',
-              'icon-image': ['get', 'icon'],
-              'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-            },
-          });
-        }
-
-        if (this.showBoundary) {
-          // Adding Boundary Layer
-          map.addLayer({
-            id: `${mapContainerSourceId}_boundary`,
-            type: 'line',
-            source: mapContainerSourceId,
-            layout: {},
-            paint: {
-              'line-color': '#000',
-              'line-width': 1,
-            },
-          });
-        }
-
-        // Appending Legend To The DOM
-        if (
-          this.legendSet &&
-          this.legendSet.legends &&
-          this.legendSet.legends.length
-        ) {
-          this.createLegendSet(d2MapEngine);
-        }
-
-        if (this.showMapTitle) {
-          // Added Map Title
-          this.createMapTitle();
-        }
-
-        // Remove Details Section On Start
-        const infoContainerId = this.getInfoContainerId();
-        const featuresDOMElement = document.getElementById(infoContainerId);
-        if (featuresDOMElement) {
-          featuresDOMElement.style.display = 'none';
-        }
-
-        // When a click event occurs on a feature in the states layer,
-        // open a popup at the location of the click, with description
-        // HTML from the click event's properties.
-        map.on('click', mapContainerSourceId, (mapMouseEvent: any) => {
-          const description = mapMouseEvent.features[0].properties.description;
-          const value = mapMouseEvent.features[0].properties.value;
-
-          const popUpMessage = `<p>${description} (${value})</p>`;
-
-          // Create a popup, but don't add it to the map yet.
-          const mapBoxPopUp = new mapboxgl.Popup({
-            closeButton: true,
-            closeOnClick: true,
-          });
-
-          mapBoxPopUp
-            .setLngLat(mapMouseEvent.lngLat)
-            .setHTML(popUpMessage)
-            .addTo(map);
-
-          map.flyTo({
-            center: mapMouseEvent.features[0].geometry.coordinates,
-          });
-        });
-
-        // On Mouse Move
-        map.on('mousemove', mapContainerSourceId, (event: any) => {
-          map.getCanvas().style.cursor = 'pointer';
-
-          // Create a popup, but don't add it to the map yet.
-          const mapBoxPopUp = new mapboxgl.Popup({
-            closeButton: false,
-            closeOnClick: false,
-          });
-
-          if (this.showMapSummary) {
-            const mapboxGeoJSONFeature: mapboxgl.MapboxGeoJSONFeature[] =
-              map.queryRenderedFeatures(event.point, {
-                layers: [mapContainerSourceId],
-              });
-            // Added support for hover details on map
-            this.createHoverDetails(mapboxGeoJSONFeature);
+        if (mapDrawablePayloads && mapDrawablePayloads.length) {
+          for (const mapDrawablePayload of mapDrawablePayloads) {
+            if (mapDrawablePayload && mapDrawablePayload.mapType === 'BUBBLE') {
+              // Bubble MapBox Map Drawable Item
+              d2MapEngine.drawBubbleThematicLayer(
+                this,
+                d2MapEngine,
+                map,
+                mapDrawablePayload,
+                mapContainerSourceId,
+              );
+            } else {
+              // Thematic MapBox Map Drawable Item
+              d2MapEngine.drawNormalThematicLayer(
+                this,
+                d2MapEngine,
+                map,
+                mapContainerSourceId,
+                mapDrawablePayload,
+                legendSetContainerId,
+                this.getMapTitleContainerId(),
+                this.mapAnalytics
+              );
+            }
           }
-        });
-
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', mapContainerSourceId, () => {
-          map.getCanvas().style.cursor = '';
-        });
+        }
       });
 
       // Implement some methods
     } catch (error) {
       console.error(error);
-    }
-  }
-
-  /**
-   *
-   */
-  createLegendSet(d2MapEngine: D2MapEngine) {
-    const legendSetContainerId = this.getLegendSetContainerId();
-    const legendDOMElement = document.getElementById(legendSetContainerId);
-
-    const legendDIVItem: HTMLDivElement = document.createElement('div');
-    const legendTableItem = document.createElement('table');
-    const legendTableBodyItem = document.createElement('tbody');
-    const legendTableHead = document.createElement('thead');
-    const legendTableHeadItem = document.createElement('tr');
-    const legendTableHRLineItem = document.createElement('tr');
-    const legendTableHRLineTDItem = document.createElement('td');
-
-    const legendTableDataItemTitleSection = document.createElement('th');
-    const legendTableHeadHorizontalLine = document.createElement('hr');
-
-    legendTableHeadHorizontalLine.setAttribute('style', `width: 100%`);
-
-    legendTableDataItemTitleSection.innerHTML = `${this.legendSet?.name}`;
-    legendTableDataItemTitleSection.setAttribute('colspan', '3');
-    legendTableHRLineTDItem.setAttribute('colspan', '3');
-
-    legendTableHeadItem.appendChild(legendTableDataItemTitleSection);
-    legendTableHead.appendChild(legendTableHeadItem);
-    legendTableItem.appendChild(legendTableHead);
-    legendTableHRLineTDItem.appendChild(legendTableHeadHorizontalLine);
-    legendTableHRLineItem.appendChild(legendTableHRLineTDItem);
-    legendTableHead.appendChild(legendTableHRLineItem);
-
-    const dataValueIndex: number = d2MapEngine.getAnalyticHeaderMetadataIndex(
-      this.mapAnalytic,
-      'value'
-    );
-
-    const values: number[] = _.map(
-      this.mapAnalytic.rows,
-      (row: string[]) => +row[dataValueIndex]
-    );
-
-    const legendsWithCountValues: Legend[] = _.map(
-      this.legendSet.legends,
-      (legend: Legend) => {
-        return {
-          ...legend,
-          itemCount: _.filter(values, (value: number) => {
-            return value >= legend.startValue && value <= legend.endValue;
-          })?.length,
-        };
-      }
-    );
-
-    const legends: Legend[] = _.orderBy(legendsWithCountValues, [
-      'startValue',
-    ]) as Legend[];
-
-    for (const legend of legends) {
-      const legendTableRowItem = document.createElement('tr');
-
-      const legendTableDataItemColorSection = document.createElement('td');
-      legendTableDataItemColorSection.setAttribute(
-        'style',
-        `width: 20px; margin-right: 10px !important; font-weight: bold !important;`
-      );
-
-      const legendTableDataItemLabel = document.createElement('td');
-      const legendTableDataItemCount = document.createElement('td');
-
-      legendTableDataItemColorSection.style.backgroundColor = legend?.color;
-      legendTableDataItemLabel.innerHTML = `${legend?.name} ${legend?.startValue} - ${legend?.endValue} (${legend?.itemCount})`;
-      // legendTableDataItemCount.innerHTML = `${legend?.name}`;
-
-      legendTableRowItem.appendChild(legendTableDataItemColorSection);
-      legendTableRowItem.appendChild(legendTableDataItemLabel);
-      legendTableRowItem.appendChild(legendTableDataItemCount);
-      legendTableBodyItem.appendChild(legendTableRowItem);
-      legendTableItem.appendChild(legendTableBodyItem);
-      legendDIVItem.appendChild(legendTableItem);
-      legendDOMElement?.appendChild(legendDIVItem);
-    }
-  }
-
-  /**
-   *
-   */
-  createHoverDetails(mapboxGeoJSONFeature: mapboxgl.MapboxGeoJSONFeature[]) {
-    const dataName: string | undefined =
-      this.mapAnalytic &&
-      this.mapAnalytic.metaData &&
-      this.mapAnalytic.metaData.dimensions &&
-      this.mapAnalytic.metaData.dimensions.dx &&
-      _.head(this.mapAnalytic.metaData.dimensions.dx)
-        ? _.head(this.mapAnalytic.metaData.dimensions.dx)
-        : '';
-
-    if (dataName) {
-      const indicatorName: string =
-        this.mapAnalytic &&
-        this.mapAnalytic.metaData &&
-        this.mapAnalytic.metaData.items &&
-        this.mapAnalytic.metaData.items[dataName] &&
-        this.mapAnalytic.metaData.items[dataName].name
-          ? this.mapAnalytic.metaData.items[dataName].name
-          : '';
-
-      const periodId: string | undefined =
-        this.mapAnalytic &&
-        this.mapAnalytic.metaData &&
-        this.mapAnalytic.metaData.dimensions &&
-        this.mapAnalytic.metaData.dimensions.pe &&
-        _.head(this.mapAnalytic.metaData.dimensions.pe)
-          ? _.head(this.mapAnalytic.metaData.dimensions.pe)
-          : '';
-
-      const periodName =
-        this.mapAnalytic &&
-        periodId &&
-        this.mapAnalytic.metaData &&
-        this.mapAnalytic.metaData.items &&
-        this.mapAnalytic.metaData.items[periodId] &&
-        this.mapAnalytic.metaData.items[periodId].name
-          ? this.mapAnalytic.metaData.items[periodId].name
-          : '';
-
-      const infoContainerId = this.getInfoContainerId();
-      const mapInfoDOMElement = document.getElementById(infoContainerId);
-      const info: any = _.head(mapboxGeoJSONFeature);
-
-      let htmlCode = ``;
-      if (mapInfoDOMElement) {
-        mapInfoDOMElement.style.display = 'block';
-        if (dataName && mapboxGeoJSONFeature) {
-          htmlCode += `<table>`;
-          htmlCode += `<thead>`;
-          htmlCode += `</thead>`;
-          htmlCode += `<tbody>`;
-
-          if (
-            info &&
-            info.properties &&
-            info.properties.value &&
-            info.properties.value
-          ) {
-            htmlCode += `<tr>`;
-            htmlCode += `<td><b>Region:</b> ${info.properties?.description}</td>`;
-            htmlCode += `</tr>`;
-            htmlCode += `<tr>`;
-            htmlCode += `<td><b>Data:</b> ${indicatorName}</td>`;
-            htmlCode += `</tr>`;
-            htmlCode += `<tr>`;
-            htmlCode += `<td><b>Period:</b> ${periodName}</td>`;
-            htmlCode += `</tr>`;
-            htmlCode += `<tr>`;
-            htmlCode += `<td><b>Value:</b> ${info.properties.value}</td>`;
-            htmlCode += `</tr>`;
-          } else {
-            htmlCode += `<td>Hover on the map for more info! </td>`;
-            htmlCode += `</tr>`;
-            htmlCode += `</tr>`;
-          }
-          htmlCode += `<tfoot>`;
-          htmlCode += `</tfoot>`;
-          mapInfoDOMElement.innerHTML = htmlCode;
-        } else {
-          mapInfoDOMElement.innerHTML = `<p>Hover over a state!</p>`;
-        }
-      }
-    }
-  }
-
-  /**
-   *
-   */
-  createMapTitle() {
-    const dataName: string | undefined =
-      this.mapAnalytic &&
-      this.mapAnalytic.metaData &&
-      this.mapAnalytic.metaData.dimensions &&
-      this.mapAnalytic.metaData.dimensions.dx &&
-      _.head(this.mapAnalytic.metaData.dimensions.dx)
-        ? _.head(this.mapAnalytic.metaData.dimensions.dx)
-        : '';
-
-    if (dataName) {
-      const indicatorName: string =
-        this.mapAnalytic &&
-        this.mapAnalytic.metaData &&
-        this.mapAnalytic.metaData.items &&
-        this.mapAnalytic.metaData.items[dataName] &&
-        this.mapAnalytic.metaData.items[dataName].name
-          ? this.mapAnalytic.metaData.items[dataName].name
-          : '';
-
-      const periodId: string | undefined =
-        this.mapAnalytic &&
-        this.mapAnalytic.metaData &&
-        this.mapAnalytic.metaData.dimensions &&
-        this.mapAnalytic.metaData.dimensions.pe &&
-        _.head(this.mapAnalytic.metaData.dimensions.pe)
-          ? _.head(this.mapAnalytic.metaData.dimensions.pe)
-          : '';
-
-      const mapTitleContainerId = this.getMapTitleContainerId();
-      const mapTitleDOMElement = document.getElementById(mapTitleContainerId);
-
-      if (mapTitleDOMElement && periodId && indicatorName) {
-        const periodName =
-          this.mapAnalytic &&
-          this.mapAnalytic.metaData &&
-          this.mapAnalytic.metaData.items &&
-          this.mapAnalytic.metaData.items[periodId] &&
-          this.mapAnalytic.metaData.items[periodId].name
-            ? this.mapAnalytic.metaData.items[periodId].name
-            : '';
-
-        let htmlCode = ``;
-        htmlCode += `<h4>${indicatorName} - ${periodName}</h4>`;
-
-        mapTitleDOMElement.innerHTML = htmlCode;
-      }
     }
   }
 }

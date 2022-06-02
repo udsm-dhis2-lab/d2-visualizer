@@ -1,4 +1,7 @@
 export interface MapDrawablePayload {
+  id?: string;
+  mapType?: string;
+  legendSet?: string;
   type: string;
   data: Data;
 }

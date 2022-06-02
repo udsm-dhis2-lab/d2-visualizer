@@ -1,7 +1,10 @@
 import { Fn } from '@iapps/function-analytics';
 import { ChartVisualization } from './modules/chart/chart-visualizer';
 import { LegendSet } from './modules/map/models/legend-set.model';
-import { MapAnalytic } from './modules/map/models/map-analytic.model';
+import { MapAnalytics } from './modules/map/models/map-analytic.model';
+import { D2VisualizerMapControl } from './modules/map/models/map-control.model';
+import { MapDashboardExtensionItem } from './modules/map/models/map-dashboard-extension.model';
+import { MapDashboardItem } from './modules/map/models/map-dashboard-item.model';
 import { MapUtil } from './modules/map/utils/map.util';
 import { VisualizationConfiguration } from './shared/visualization-configuration';
 import { VisualizationLayout } from './shared/visualization-layout';
@@ -9,14 +12,19 @@ import { ChartType, VisualizationType } from './shared/visualization-type';
 
 export class D2Visualizer {
   dataSelections: any[] = [];
-  geoFeatures: any[] = [];
-  dataAnalytics: unknown = null;
-  legendSet: LegendSet | undefined | any = null;
   type!: VisualizationType;
   visualizationType!: VisualizationType;
   config!: VisualizationConfiguration;
   chartType!: any;
   id!: string;
+  d2VisualizerMapControl: D2VisualizerMapControl | any;
+  legendSets: LegendSet[] | any = null;
+  mapDashboardItem: MapDashboardItem | any;
+  mapDashboardExtensionItem: MapDashboardExtensionItem | any;
+  geoFeatures: any[] = [];
+  dataAnalytics: unknown = null;
+  layerStyle = 'default';
+
   /**
    * @description Set id to be used in rendering intended visualization
    * @param id String
@@ -89,11 +97,11 @@ export class D2Visualizer {
 
   /**
    *
-   * @param legendSet
+   * @param legendSets
    * @returns
    */
-  setLegendSet(legendSet: LegendSet) {
-    this.legendSet = legendSet;
+  setLegendSet(legendSets: LegendSet[]) {
+    this.legendSets = legendSets;
     return this;
   }
 
@@ -106,6 +114,80 @@ export class D2Visualizer {
     return VisualizationLayout.getLayout();
   }
 
+  /**
+   *
+   * @param d2VisualizerMapControl
+   * @returns
+   */
+  setD2VisualizerMapControl(d2VisualizerMapControl: D2VisualizerMapControl) {
+    this.d2VisualizerMapControl = d2VisualizerMapControl;
+    return this;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getD2VisualizerMapControl(): D2VisualizerMapControl {
+    return this.d2VisualizerMapControl;
+  }
+
+  /**
+   *
+   * @param layerStyle
+   * @returns
+   */
+  setLayerStyle(layerStyle: string) {
+    this.layerStyle = layerStyle;
+    return this;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getLayerStyle() {
+    return this.layerStyle;
+  }
+
+  /**
+   *
+   */
+  setDashboardItem(dashboardItem: MapDashboardItem) {
+    this.mapDashboardItem = dashboardItem;
+    return this;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getDashboardItem(): MapDashboardItem {
+    return this.mapDashboardItem;
+  }
+
+  /**
+   *
+   * @param dashboardExtensionItem
+   * @returns
+   */
+  setDashboardExtensionItem(dashboardExtensionItem: MapDashboardExtensionItem) {
+    this.mapDashboardExtensionItem = dashboardExtensionItem;
+    return this;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getDashboardExtensionItem(): MapDashboardExtensionItem {
+    return this.mapDashboardExtensionItem;
+  }
+
+  /**
+   *
+   * @returns
+   */
   private getData(): Promise<any> {
     const analyticPromise = new Fn.Analytics();
 
@@ -157,6 +239,10 @@ export class D2Visualizer {
     return analyticPromise.get();
   }
 
+  /**
+   *
+   * @returns
+   */
   async draw(): Promise<any> {
     if (this.dataAnalytics) {
       switch (this.visualizationType) {
@@ -170,12 +256,19 @@ export class D2Visualizer {
             .draw();
         case 'MAP':
           return new MapUtil()
-            .setMapAnalytics(this.dataAnalytics as MapAnalytic)
+            .setMapAnalytics(this.dataAnalytics as MapAnalytics)
             .setGeofeature(this.geoFeatures as any)
-            .setLegendSet(this.legendSet)
-            .setContainer('map-container-demo')
-            .setType('thematic')
-            .setShowLabel(true)
+            .setLegendSet(this.legendSets)
+            .setMapDashboardItem(this.mapDashboardItem)
+            .setMapDashboardExtensionItem(this.mapDashboardExtensionItem)
+            .setContainer(this.id)
+            .setStyle(this.layerStyle)
+            .setShowLegend(this.d2VisualizerMapControl?.showMapLegend)
+            .setShowLabel(this.d2VisualizerMapControl?.showMapLabel)
+            .setShowValue(this.d2VisualizerMapControl?.showMapValue)
+            .setShowMapTitle(this.d2VisualizerMapControl?.showMapTitle)
+            .setShowBoundary(this.d2VisualizerMapControl?.showMapBoundary)
+            .setShowMapSummary(this.d2VisualizerMapControl?.showMapSummary)
             .draw();
         default:
           return null;
@@ -195,9 +288,9 @@ export class D2Visualizer {
             .draw();
         case 'MAP':
           return new MapUtil()
-            .setMapAnalytics(this.dataAnalytics as MapAnalytic)
+            .setMapAnalytics(this.dataAnalytics as MapAnalytics)
             .setGeofeature(this.geoFeatures as any)
-            .setLegendSet(this.legendSet)
+            .setLegendSet(this.legendSets)
             .setContainer('map-container-demo')
             .setShowLabel(true)
             .draw();
@@ -207,6 +300,11 @@ export class D2Visualizer {
     }
   }
 
+  /**
+   *
+   * @param downloadFormat
+   * @returns
+   */
   async download(downloadFormat: any): Promise<any> {
     const data = await this.getData();
 

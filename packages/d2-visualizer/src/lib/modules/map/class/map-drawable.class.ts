@@ -1,5 +1,6 @@
 import { LegendSet } from '../models/legend-set.model';
-import { MapAnalytic } from '../models/map-analytic.model';
+import { MapAnalytics } from '../models/map-analytic.model';
+import { MapView } from '../models/map-dashboard-item.model';
 import { MapDrawablePayload } from '../models/map-drawable-payload.model';
 import { GeoFeature } from '../models/map-geofeature.model';
 import { MapUtil } from '../utils/map.util';
@@ -10,8 +11,9 @@ export abstract class MapDrawable {
      */
     public abstract getMapFeaturePayload(
         mapUtil: MapUtil,
-        geoFeature: GeoFeature,
-        mapAnalytic: MapAnalytic
+        mapView: MapView,
+        geoFeature: GeoFeature[],
+        mapAnalytic: MapAnalytics
     ): MapDrawablePayload;
 
     /**
@@ -20,7 +22,7 @@ export abstract class MapDrawable {
      * @param lookUp
      */
     public abstract getAnalyticHeaderMetadataIndex(
-        mapAnalytic: MapAnalytic,
+        mapAnalytic: MapAnalytics,
         lookUp: string
     ): number;
 

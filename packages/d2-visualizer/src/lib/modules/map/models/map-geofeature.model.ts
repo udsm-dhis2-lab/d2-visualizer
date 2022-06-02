@@ -5,11 +5,12 @@ export interface GeoFeature {
   hcd: boolean;
   hcu: boolean;
   le: number;
-  pg: string;
-  pi: string;
-  pn: string;
+  pg?: string;
+  pi?: string;
+  pn?: string;
   ty: number;
   co: string;
   dimensions: any;
 }
+
 
