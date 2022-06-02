@@ -1,6 +1,6 @@
 import { LegendSet } from '../models/legend-set.model';
 
-export const d2LegendSet: LegendSet[] = [
+export const d2LegendSets: LegendSet[] = [
     {
         created: '2019-01-17T10:12:22.781',
         lastUpdated: '2022-03-04T11:21:33.437',
@@ -196,7 +196,7 @@ export const d2LegendSet: LegendSet[] = [
                 created: '2022-03-04T12:17:05.697',
                 name: '50 - < 100',
                 endValue: 100.0,
-                color: '#FDA909',
+                color: '#336699',
                 displayName: '50 - < 100',
                 externalAccess: false,
                 startValue: 50.0,
@@ -226,7 +226,7 @@ export const d2LegendSet: LegendSet[] = [
                 created: '2022-03-04T12:17:05.698',
                 name: '10 - < 25',
                 endValue: 25.0,
-                color: '#08FF00',
+                color: '#0099cc',
                 displayName: '10 - < 25',
                 externalAccess: false,
                 startValue: 10.0,
@@ -256,7 +256,7 @@ export const d2LegendSet: LegendSet[] = [
                 created: '2022-03-04T12:17:05.698',
                 name: '25 - < 50',
                 endValue: 50.0,
-                color: '#F3EA0A',
+                color: '#00ccff',
                 displayName: '25 - < 50',
                 externalAccess: false,
                 startValue: 25.0,

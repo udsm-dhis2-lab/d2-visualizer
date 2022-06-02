@@ -1,4 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import '~@angular/material/theming';
+// @import '../../../node_modules/bootstrap/scss/bootstrap';
+
+@include mat-core();
+
+$d2-visualizer-demo-primary: mat-palette($mat-light-blue, 800);
+$d2-visualizer-demo-accent: mat-palette($mat-deep-orange, A200, A100, A400);
+$d2-visualizer-demo-warn: mat-palette($mat-red);
+$d2-visualizer-demo-theme: mat-light-theme(
+  $d2-visualizer-demo-primary,
+  $d2-visualizer-demo-accent,
+  $d2-visualizer-demo-warn
+);
+@include angular-material-theme($d2-visualizer-demo-theme);
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}

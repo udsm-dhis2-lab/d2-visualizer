@@ -1,4 +1,4 @@
-export interface MapAnalytic {
+export interface MapAnalytics {
     id?: string;
     headers: Header[];
     metaData: MetaData;

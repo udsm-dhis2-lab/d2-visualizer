@@ -1,7 +1,33 @@
-export interface d2MapConfig {
+export interface MapDashboardItem {
     lastUpdated: string;
     id: string;
-    href: string;
+    created: string;
+    type: string;
+    externalAccess: boolean;
+    contentCount: number;
+    height: number;
+    interpretationCount: number;
+    sharing: Sharing;
+    width: number;
+    x: number;
+    y: number;
+    interpretationLikeCount: number;
+    favorite: boolean;
+    access: Access;
+    map: Map;
+    favorites: any[];
+    reports: any[];
+    translations: any[];
+    userGroupAccesses: any[];
+    attributeValues: any[];
+    resources: any[];
+    users: any[];
+    userAccesses: any[];
+}
+
+export interface Map {
+    lastUpdated: string;
+    id: string;
     created: string;
     name: string;
     displayName: string;
@@ -25,25 +51,8 @@ export interface d2MapConfig {
     userAccesses: any[];
 }
 
-export interface Access {
-    read: boolean;
-    update: boolean;
-    externalize: boolean;
-    delete: boolean;
-    write: boolean;
-    manage: boolean;
-}
-
-export interface CreatedBy {
-    displayName: string;
-    name: string;
-    id: string;
-    username: string;
-}
-
 export interface MapView {
     lastUpdated: string;
-    href: string;
     id: string;
     created: string;
     name: string;
@@ -67,7 +76,7 @@ export interface MapView {
     eventPointRadius: number;
     sharing: Sharing;
     displayFormName: string;
-    thematicMapType?: string;
+    thematicMapType: string;
     hideSubtitle: boolean;
     externalAccess: boolean;
     digitGroupSeparator: string;
@@ -81,7 +90,7 @@ export interface MapView {
     interpretations: any[];
     userGroupAccesses: any[];
     subscribers: any[];
-    columns: LegendSet[];
+    columns: any[];
     dataElementDimensions: any[];
     periods: any[];
     categoryDimensions: any[];
@@ -96,17 +105,33 @@ export interface MapView {
     organisationUnitGroupSetDimensions: any[];
     organisationUnitLevels: number[];
     organisationUnits: any[];
-    filters: LegendSet[];
-    rows: LegendSet[];
+    filters: any[];
+    rows: any[];
+}
+
+export interface DataDimensionItem {
+    dataDimensionItemType: string;
+    indicator: LegendSet;
 }
 
 export interface LegendSet {
     id: string;
 }
 
-export interface DataDimensionItem {
-    dataDimensionItemType: string;
-    indicator: LegendSet;
+export interface Access {
+    read: boolean;
+    update: boolean;
+    externalize: boolean;
+    delete: boolean;
+    write: boolean;
+    manage: boolean;
+}
+
+export interface CreatedBy {
+    displayName: string;
+    name: string;
+    id: string;
+    username: string;
 }
 
 export interface Sharing {

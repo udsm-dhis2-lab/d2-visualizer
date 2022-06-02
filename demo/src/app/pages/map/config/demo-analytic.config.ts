@@ -1,6 +1,6 @@
-import { MapAnalytic } from 'packages/d2-visualizer/src/lib/modules/map/models/map-analytic.model';
+import { MapAnalytics } from 'packages/d2-visualizer/src/lib/modules/map/models/map-analytic.model';
 
-export const demoMapAnalytic: MapAnalytic = {
+export const demoMapAnalytic: MapAnalytics = {
   headers: [
     {
       name: 'dx',

@@ -41,6 +41,19 @@
             />
             <div mat-line>Thematic Layer</div>
           </mat-list-item>
+
+          <mat-list-item
+            [routerLinkActive]="'active'"
+            (click)="onMapTypeChange()"
+          >
+            <img
+              mat-list-icon
+              class="side-menu-icon"
+              [src]="'assets/icons/map.png'"
+              [alt]="'Map item'"
+            />
+            <div mat-line>Thematic Layer(mCBS)</div>
+          </mat-list-item>
         </mat-list>
       </mat-expansion-panel>
       <!-- Map Visualization Menu  -->
@@ -83,9 +96,20 @@
         </a>
       </nav>
     </div>
-    <div class="row mx-0 w-100 container mat-typography">
+    <div
+      *ngIf="d2MapDashboardItemConfigs"
+      class="row mx-0 w-100 container mat-typography"
+    >
       <!-- Interactive MAP Component for drawing MAP  -->
-      <iapps-ngx-d2-map [container]="'map-container-demo'"></iapps-ngx-d2-map>
+      <iapps-ngx-d2-map
+        *ngFor="let d2MapDashboardItemConfig of d2MapDashboardItemConfigs"
+        [mapAnalytics]="d2MapAnalytics"
+        [mapGeoFeatures]="d2GeoFeatureConfigs"
+        [mapLegendSets]="d2LegendSetConfigs"
+        [mapDashboardItem]="d2MapDashboardItemConfig"
+        [mapDashboardExtensionItem]="d2MapDashboardExtensionItem"
+        [container]="mapRenderId"
+      ></iapps-ngx-d2-map>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>

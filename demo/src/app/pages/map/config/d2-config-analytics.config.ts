@@ -1,6 +1,6 @@
-import { MapAnalytic } from '../models/map-analytic.model';
+import { MapAnalytics } from '../models/map-analytic.model';
 
-export const d2ConfigAnalytics: MapAnalytic[] = [
+export const d2ConfigAnalytics: MapAnalytics[] = [
   {
     id: 'JHLoK5HUbcH',
     headers: [
