@@ -2,7 +2,7 @@ export type ChartType = 'COLUMN';
 export type VisualizationType =
   | ChartType
   | 'CHART'
-  | 'TABLE'
+  | 'REPORT_TABLE'
   | 'MAP'
   | 'DICTIONARY'
   | 'MAPBOX';

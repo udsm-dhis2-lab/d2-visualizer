@@ -1,0 +1,8 @@
+.table-container {
+  padding: 10px;
+}
+
+.table-visualizer {
+  height: 60vh;
+  border: 1px solid #ddd;
+}

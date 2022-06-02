@@ -4,10 +4,9 @@ import { D2Visualizer } from '@iapps/d2-visualizer';
 import * as _ from 'lodash';
 import { getQueryParamValue } from '../../shared/helpers/param.helper';
 import { chartVisualizationAnalytics } from '../chart/config/analytic-viz.config';
-import { chartConfigurations } from '../chart/config/chart-viz.config';
-import { chartConfigs } from '../chart/config/chart.config';
-import { ChartConfiguration } from '../chart/models/chart-viz.model';
 import { Chart } from '../chart/models/chart.model';
+import { tableAnalytics } from './config/analytic-table.config';
+import { tableConfigurations } from './config/configs-table.config';
 
 @Component({
   selector: 'iapps-table',
@@ -15,8 +14,8 @@ import { Chart } from '../chart/models/chart.model';
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
-  chartConfigurations: ChartConfiguration = chartConfigurations;
-  chartConfigs: Chart[] = chartConfigs;
+  tableConfigurations: any = tableConfigurations;
+  tableAnalytics: any = tableAnalytics;
   panelOpenState = false;
   step? = 0;
 
@@ -40,15 +39,27 @@ export class TableComponent implements OnInit {
     }
   }
 
-  onMenuClick(chartConfig: Chart) {
-    if (chartConfig) {
-      const visualizer = new D2Visualizer()
-        .setConfig(this.chartConfigurations)
-        .setData(chartVisualizationAnalytics)
-        .setId('visualization-container')
-        .setType('CHART')
-        .setChartType(chartConfig.id)
-        .draw();
-    }
+  onMenuClick() {
+
+    console.log(tableConfigurations)
+
+    const visualizer = new D2Visualizer()
+    .setConfig(this.tableConfigurations)
+    .setData(tableAnalytics)
+    .setId('table-visualization')
+    .setType('REPORT_TABLE')
+    .draw();
+
+
+
+    // if (chartConfig) {
+    //   const visualizer = new D2Visualizer()
+    //     .setConfig(this.chartConfigurations)
+    //     .setData(chartVisualizationAnalytics)
+    //     .setId('visualization-container')
+    //     .setType('CHART')
+    //     .setChartType(chartConfig.id)
+    //     .draw();
+    // }
   }
 }
