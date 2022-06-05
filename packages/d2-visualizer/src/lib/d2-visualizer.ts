@@ -1,6 +1,5 @@
 import { Fn } from '@iapps/function-analytics';
 import { ChartVisualization } from './modules/chart/chart-visualizer';
-import { TableVisualization } from './modules/table/table-visualizer';
 import { LegendSet } from './modules/map/models/legend-set.model';
 import { MapAnalytics } from './modules/map/models/map-analytic.model';
 import { D2VisualizerMapControl } from './modules/map/models/map-control.model';
@@ -10,6 +9,10 @@ import { MapUtil } from './modules/map/utils/map.util';
 import { VisualizationConfiguration } from './shared/visualization-configuration';
 import { VisualizationLayout } from './shared/visualization-layout';
 import { ChartType, VisualizationType } from './shared/visualization-type';
+import { TableUtil } from './modules/table/utils/table.util';
+import { TableAnalytics } from './modules/table/models/table-analytics.model';
+import { TableDashboardItem } from './modules/table/models/table-dashboard-item.model';
+import { TableConfiguration } from './modules/table/models/table-config.model';
 
 export class D2Visualizer {
   dataSelections: any[] = [];
@@ -25,6 +28,76 @@ export class D2Visualizer {
   geoFeatures: any[] = [];
   dataAnalytics: unknown = null;
   layerStyle = 'default';
+
+  // Table Configuration
+  tableDashboardItem: TableDashboardItem | any;
+  tableAnalytics: TableAnalytics | any;
+  tableConfiguration: TableConfiguration | any;
+  tableLegendSets: LegendSet[] | any;
+
+  /**
+   *
+   * @param tableDashboardItem
+   * @returns
+   */
+  setTableDashboardItem(tableDashboardItem: TableDashboardItem) {
+    this.tableDashboardItem = tableDashboardItem;
+    return this;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getTableDashboardItem(): TableDashboardItem {
+    return this.tableDashboardItem;
+  }
+
+  /**
+   *
+   * @param tableAnalytics
+   * @returns
+   */
+  setTableAnalytics(tableAnalytics: TableAnalytics) {
+    this.tableAnalytics = tableAnalytics;
+    return this;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getTableAnalytics(): TableAnalytics {
+    return this.tableAnalytics;
+  }
+
+  /**
+   *
+   * @param tableConfiguration
+   * @returns
+   */
+  setTableConfiguration(tableConfiguration: TableConfiguration) {
+    this.tableConfiguration = tableConfiguration;
+    return this;
+  }
+
+  /**
+   *
+   * @param tableLegendSets
+   * @returns
+   */
+  setTableLegendSet(tableLegendSets: LegendSet[]) {
+    this.tableLegendSets = tableLegendSets;
+    return this;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getTableLegendSet(): LegendSet[] {
+    return this.tableLegendSets;
+  }
 
   /**
    * @description Set id to be used in rendering intended visualization
@@ -245,70 +318,65 @@ export class D2Visualizer {
    * @returns
    */
   async draw(): Promise<any> {
-
-    console.log("should be CHART | MAP | REPORT_TABLE")
-    console.log(this.visualizationType)
-
-    if (this.dataAnalytics) {
-      switch (this.visualizationType) {
-        case 'CHART':
-          return new ChartVisualization()
-            .setId(this.id)
-            .setConfig(this.config.config)
-            .setData(this.dataAnalytics)
-            .setVisualizationType(this.visualizationType as ChartType)
-            .setChartType(this.chartType)
-            .draw();
-        case 'MAP':
-          return new MapUtil()
-            .setMapAnalytics(this.dataAnalytics as MapAnalytics)
-            .setGeofeature(this.geoFeatures as any)
-            .setLegendSet(this.legendSets)
-            .setMapDashboardItem(this.mapDashboardItem)
-            .setMapDashboardExtensionItem(this.mapDashboardExtensionItem)
-            .setContainer(this.id)
-            .setStyle(this.layerStyle)
-            .setShowLegend(this.d2VisualizerMapControl?.showMapLegend)
-            .setShowLabel(this.d2VisualizerMapControl?.showMapLabel)
-            .setShowValue(this.d2VisualizerMapControl?.showMapValue)
-            .setShowMapTitle(this.d2VisualizerMapControl?.showMapTitle)
-            .setShowBoundary(this.d2VisualizerMapControl?.showMapBoundary)
-            .setShowMapSummary(this.d2VisualizerMapControl?.showMapSummary)
-            .draw();
-        case 'REPORT_TABLE':
-          return new TableVisualization()
-            .setId(this.id)
-            .setConfig(this.config)
-            .setData(this.dataAnalytics)
-            .draw();
-        default:
-          return null;
-      }
+    switch (this.visualizationType) {
+      case 'CHART':
+        return new ChartVisualization()
+          .setId(this.id)
+          .setConfig(this.config.config)
+          .setData(this.dataAnalytics)
+          .setVisualizationType(this.visualizationType as ChartType)
+          .setChartType(this.chartType)
+          .draw();
+      case 'MAP':
+        return new MapUtil()
+          .setMapAnalytics(this.dataAnalytics as MapAnalytics)
+          .setGeofeature(this.geoFeatures as any)
+          .setLegendSet(this.legendSets)
+          .setMapDashboardItem(this.mapDashboardItem)
+          .setMapDashboardExtensionItem(this.mapDashboardExtensionItem)
+          .setContainer(this.id)
+          .setStyle(this.layerStyle)
+          .setShowLegend(this.d2VisualizerMapControl?.showMapLegend)
+          .setShowLabel(this.d2VisualizerMapControl?.showMapLabel)
+          .setShowValue(this.d2VisualizerMapControl?.showMapValue)
+          .setShowMapTitle(this.d2VisualizerMapControl?.showMapTitle)
+          .setShowBoundary(this.d2VisualizerMapControl?.showMapBoundary)
+          .setShowMapSummary(this.d2VisualizerMapControl?.showMapSummary)
+          .draw();
+      case 'REPORT_TABLE':
+        return new TableUtil()
+          .setTableDashboardItem(this.tableDashboardItem)
+          .setTableConfiguration(this.tableConfiguration)
+          .setTableAnalytics(this.tableAnalytics)
+          .setLegendSet(this.legendSets)
+          .draw();
+      default:
+        return null;
     }
 
-    if (!this.dataAnalytics) {
-      const data = await this.getData();
-      switch (this.visualizationType) {
-        case 'CHART':
-          return new ChartVisualization()
-            .setId(this.id)
-            .setConfig(this.config)
-            .setData(data.data)
-            .setVisualizationType(this.visualizationType as ChartType)
-            .setChartType(this.chartType)
-            .draw();
-        case 'MAP':
-          return new MapUtil()
-            .setMapAnalytics(this.dataAnalytics as MapAnalytics)
-            .setGeofeature(this.geoFeatures as any)
-            .setLegendSet(this.legendSets)
-            .setContainer('map-container-demo')
-            .setShowLabel(true)
-            .draw();
-        default:
-          return null;
-      }
-    }
+    // if (!this.dataAnalytics) {
+    //   const data = await this.getData();
+    //   switch (this.visualizationType) {
+    //     case 'CHART':
+    //       return new ChartVisualization()
+    //         .setId(this.id)
+    //         .setConfig(this.config)
+    //         .setData(data.data)
+    //         .setVisualizationType(this.visualizationType as ChartType)
+    //         .setChartType(this.chartType)
+    //         .draw();
+    //     case 'MAP':
+    //       return new MapUtil()
+    //         .setMapAnalytics(this.dataAnalytics as MapAnalytics)
+    //         .setGeofeature(this.geoFeatures as any)
+    //         .setLegendSet(this.legendSets)
+    //         .setContainer('map-container-demo')
+    //         .setShowLabel(true)
+    //         .draw();
+    //     default:
+    //       return null;
+    //   }
+    // }
   }
 
   /**
