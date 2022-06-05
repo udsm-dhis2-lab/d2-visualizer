@@ -56,7 +56,7 @@
         -->
           <mat-list-item
             [routerLinkActive]="'active'"
-            (click)="onMenuClick()"
+            (click)="onTableTypeChange()"
           >
             <img
               mat-list-icon
@@ -64,7 +64,7 @@
               [src]="'assets/icons/table.png'"
               [alt]=""
             />
-            <div mat-line>Table Item 1</div>
+            <div mat-line>EHS Color Scorecard</div>
           </mat-list-item>
         </mat-list>
       </mat-expansion-panel>
@@ -72,6 +72,10 @@
     </mat-accordion>
   </mat-drawer>
   <mat-drawer-content>
-    <app-table-visualization></app-table-visualization>
+    <!-- <app-table-visualization></app-table-visualization> -->
+    <iapps-ngx-d2-table
+      [tableConfiguration]="tableConfiguration"
+      [tablePayload]="tablePayload"
+    ></iapps-ngx-d2-table>
   </mat-drawer-content>
 </mat-drawer-container>

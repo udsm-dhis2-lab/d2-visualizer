@@ -132,48 +132,10 @@ export class MapComponent implements OnInit {
   }
 
   onMapTypeChange() {
-    const mapconfig = {
-      latitude: -5.66901,
-      longitude: 34.8888,
-      zoom: 6.8,
-      fillColor: '#ff9900',
-      mapboxApiKey: '',
-      mapboxStyle: '',
-      width: '500px',
-      height: '500px',
-    };
-    const selections = [
-      {
-        dimension: 'dx',
-        items: [
-          {
-            id: 'dy1a1mseGR7',
-          },
-        ],
-      },
-      {
-        dimension: 'pe',
-        items: [
-          {
-            id: '2020',
-          },
-        ],
-      },
-      {
-        dimension: 'ou',
-        items: [
-          {
-            id: 'ImspTQPwCqd;LEVEL-2',
-          },
-        ],
-      },
-    ];
-
     // Supportive Configuration for Map
     this.mapAnalytics = demoMapAnalytic;
     this.mapGeoFeature = demoGeofeatures;
     this.mapLegendSet = demoLegendSet;
-
     this.mapRenderId = (Math.random() + 1).toString(36).substring(2);
   }
 }

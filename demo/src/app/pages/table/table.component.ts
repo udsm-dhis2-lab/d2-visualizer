@@ -3,10 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { D2Visualizer } from '@iapps/d2-visualizer';
 import * as _ from 'lodash';
 import { getQueryParamValue } from '../../shared/helpers/param.helper';
-import { chartVisualizationAnalytics } from '../chart/config/analytic-viz.config';
-import { Chart } from '../chart/models/chart.model';
-import { tableAnalytics } from './config/analytic-table.config';
-import { tableConfigurations } from './config/configs-table.config';
+import { tableAnalytics } from './config/d2-config-analytics.config';
+import { tableConfiguration } from './config/d2-table-configuration.config';
+import { tableDashboardItem } from './config/d2-table-dashboard-item.config';
+import { TableDashboardItem } from './models/table-dashboard-item.model';
+import { LegendSet } from './models/legend-set.model';
+import { TableAnalytics } from './models/table-analytics.model';
+import { TableConfiguration } from './models/table-config.model';
+import { tableLegendSets } from './config/d2-legend-set.config';
+import { TablePayload } from './models/table-object.model';
 
 @Component({
   selector: 'iapps-table',
@@ -14,10 +19,14 @@ import { tableConfigurations } from './config/configs-table.config';
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
-  tableConfigurations: any = tableConfigurations;
-  tableAnalytics: any = tableAnalytics;
+  tableDashboardItem: TableDashboardItem | any;
+  tableConfiguration: TableConfiguration | any;
+  tableAnalytics: TableAnalytics | any;
+  tableLegendSets: LegendSet[] = [];
   panelOpenState = false;
   step? = 0;
+  tablePayload: TablePayload | any;
+
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
@@ -26,6 +35,11 @@ export class TableComponent implements OnInit {
       (queryParams: { [key: string]: any }) => {
         this.step = +getQueryParamValue(queryParams, 'ps');
         this.panelOpenState = true;
+        this.tableDashboardItem = tableDashboardItem;
+        this.tableConfiguration = tableConfiguration;
+        this.tableAnalytics = tableAnalytics;
+        this.tableLegendSets = tableLegendSets;
+        this.generateTable();
       }
     );
   }
@@ -39,27 +53,25 @@ export class TableComponent implements OnInit {
     }
   }
 
-  onMenuClick() {
+  onTableTypeChange() {
+    // Supportive Configuration for Map
+    this.tableDashboardItem = tableDashboardItem;
+    this.tableAnalytics = tableAnalytics;
+    this.tableConfiguration = tableConfiguration;
+    this.tableLegendSets = [];
 
-    console.log(tableConfigurations)
+    this.generateTable();
+  }
 
-    const visualizer = new D2Visualizer()
-    .setConfig(this.tableConfigurations)
-    .setData(tableAnalytics)
-    .setId('table-visualization')
-    .setType('REPORT_TABLE')
-    .draw();
-
-
-
-    // if (chartConfig) {
-    //   const visualizer = new D2Visualizer()
-    //     .setConfig(this.chartConfigurations)
-    //     .setData(chartVisualizationAnalytics)
-    //     .setId('visualization-container')
-    //     .setType('CHART')
-    //     .setChartType(chartConfig.id)
-    //     .draw();
-    // }
+  generateTable = async () => {
+    if (this.tableLegendSets) {
+      this.tablePayload = await new D2Visualizer()
+      .setTableDashboardItem(this.tableDashboardItem)
+      .setTableAnalytics(this.tableAnalytics)
+      .setLegendSet(this.tableLegendSets as any)
+      .setTableConfiguration(this.tableConfiguration)
+      .setType('REPORT_TABLE')
+      .draw();
+    }
   }
 }
