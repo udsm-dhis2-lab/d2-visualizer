@@ -6,7 +6,9 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/ngx-d2-table",
         "main": "packages/ngx-d2-table/src/index.ts",
@@ -23,7 +25,9 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/ngx-d2-table"],
+      "outputs": [
+        "coverage/packages/ngx-d2-table"
+      ],
       "options": {
         "jestConfig": "packages/ngx-d2-table/jest.config.js",
         "passWithNoTests": true

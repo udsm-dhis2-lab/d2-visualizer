@@ -1,5 +1,8 @@
 {
   "name": "@iapps/ngx-d2-table",
-  "version": "1.0.0",
-  "type": "commonjs"
+  "version": "1.0.1",
+  "type": "commonjs",
+  "scripts": {
+    "postinstall": "ngcc"
+  }
 }
