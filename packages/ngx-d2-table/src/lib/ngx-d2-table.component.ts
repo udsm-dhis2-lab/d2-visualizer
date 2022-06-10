@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { LegendSet } from './models/legend-set.model';
 import { TableConfiguration } from './models/table-config.model';
@@ -18,6 +19,7 @@ export class NgxD2TableComponent implements OnInit {
 
   constructor() {}
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {}
 
   sortData(tablePayload: TablePayload, n: any, isLastItem: any) {
