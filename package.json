@@ -10,7 +10,7 @@
     "build:demo-prod": "cd demo && npm run build --prod",
     "postinstall": "ngcc --properties es2015 browser module main",
     "publish:d2-visualizer": "nx build d2-visualizer && cd dist/packages/d2-visualizer && npm publish --access public && cd ../../../",
-    "publish:ngx-d2-table": "nx build ngx-d2-table && cd dist/packages/ngx-d2-table && npm publish --access public && cd ../../../",
+    "publish:ngx-d2-table": "nx build ngx-d2-table && cd dist/packages/ngx-d2-table && npm unpublish --access public && cd ../../../",
     "publish:ngx-d2-map": "nx build ngx-d2-map && cd dist/packages/ngx-d2-map && npm publish --access public && cd ../../../"
   },
   "private": true,

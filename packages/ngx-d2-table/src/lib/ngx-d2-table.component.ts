@@ -3,7 +3,7 @@ import {
   Component,
   ElementRef,
   Input,
-  OnInit,
+  AfterViewInit,
   ViewChild,
 } from '@angular/core';
 import { LegendSet } from './models/legend-set.model';
@@ -19,7 +19,7 @@ import { TableAnalytics } from './models/table-analytics.model';
   templateUrl: './ngx-d2-table.component.html',
   styleUrls: ['./ngx-d2-table.component.scss'],
 })
-export class NgxD2TableComponent implements OnInit {
+export class NgxD2TableComponent implements AfterViewInit {
   @Input() legendSets: LegendSet[] | any;
   @Input() tableDashboardItem: TableDashboardItem | any;
   @Input() tableConfiguration: TableConfiguration | any;
@@ -32,6 +32,7 @@ export class NgxD2TableComponent implements OnInit {
   current_sorting: boolean[] = [];
 
   constructor() {}
+
   ngAfterViewInit(): void {
     this.generateDashboardTable();
   }
