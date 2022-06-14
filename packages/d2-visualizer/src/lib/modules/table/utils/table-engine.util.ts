@@ -592,7 +592,7 @@ export class D2TableEngine extends TableDrawable {
         } else if (metadataType === 'co') {
             metadataArray = analyticsObject.metaData.co;
         } else if (metadataType === 'pe') {
-            metadataArray = analyticsObject.metaData.pe;
+            metadataArray = analyticsObject && analyticsObject.metaData && analyticsObject.metaData.pe ? analyticsObject.metaData.pe : analyticsObject.metaData.dimensions.pe;
         } else {
             metadataArray = analyticsObject.metaData[metadataType];
         }

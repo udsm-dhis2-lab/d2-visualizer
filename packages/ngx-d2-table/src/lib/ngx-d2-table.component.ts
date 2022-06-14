@@ -1,8 +1,18 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { LegendSet } from './models/legend-set.model';
 import { TableConfiguration } from './models/table-config.model';
 import { TablePayload } from './models/table-object.model';
+import { D2Visualizer } from '@iapps/d2-visualizer';
+import * as _ from 'lodash';
+import { TableDashboardItem } from './models/table-dashboard-item.model';
+import { TableAnalytics } from './models/table-analytics.model';
 
 @Component({
   selector: 'iapps-ngx-d2-table',
@@ -10,17 +20,40 @@ import { TablePayload } from './models/table-object.model';
   styleUrls: ['./ngx-d2-table.component.scss'],
 })
 export class NgxD2TableComponent implements OnInit {
-  @Input() tablePayload: TablePayload | any;
-  @Input() tableConfiguration: TableConfiguration | any;
   @Input() legendSets: LegendSet[] | any;
+  @Input() tableDashboardItem: TableDashboardItem | any;
+  @Input() tableConfiguration: TableConfiguration | any;
+  @Input() tableAnalytics: TableAnalytics | any;
   @ViewChild('table') table: ElementRef | any;
+
+  tablePayload: TablePayload | any;
+
   sort_direction: string[] = [];
   current_sorting: boolean[] = [];
 
   constructor() {}
+  ngAfterViewInit(): void {
+    this.generateDashboardTable();
+  }
 
-  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
-  ngOnInit(): void {}
+  generateDashboardTable = async () => {
+    if (
+      this.tableDashboardItem &&
+      this.tableAnalytics &&
+      this.tableConfiguration
+    ) {
+      try {
+        this.tablePayload = await new D2Visualizer()
+          .setTableDashboardItem(this.tableDashboardItem)
+          .setTableAnalytics(this.tableAnalytics)
+          .setTableConfiguration(this.tableConfiguration)
+          .setType('REPORT_TABLE')
+          .draw();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   sortData(tablePayload: TablePayload, n: any, isLastItem: any) {
     if (tablePayload.columns.length === 1 && isLastItem) {
@@ -34,7 +67,9 @@ export class NgxD2TableComponent implements OnInit {
         shouldSwitch,
         dir,
         switchcount = 0;
-      const table = document.getElementById('myPivotTable');
+      const table = document.getElementById(
+        `${_.trim(this.tableConfiguration.id)}_body`
+      );
       switching = true;
       //  Set the sorting direction to ascending:
       dir = 'asc';

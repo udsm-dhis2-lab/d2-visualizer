@@ -72,10 +72,11 @@
     </mat-accordion>
   </mat-drawer>
   <mat-drawer-content>
-    <!-- <app-table-visualization></app-table-visualization> -->
-    <iapps-ngx-d2-table
+    <!-- <div>MNAONA 2222::: {{ tableDashboardItem | json }}</div> -->
+    <iapps-ngx-d2-table *ngIf="tableDashboardItem && tableAnalytics && tableConfiguration"
+      [tableDashboardItem]="tableDashboardItem"
+      [tableAnalytics]="tableAnalytics"
       [tableConfiguration]="tableConfiguration"
-      [tablePayload]="tablePayload"
     ></iapps-ngx-d2-table>
   </mat-drawer-content>
 </mat-drawer-container>

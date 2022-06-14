@@ -27,7 +27,6 @@ export class TableComponent implements OnInit {
   step? = 0;
   tablePayload: TablePayload | any;
 
-
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
@@ -39,7 +38,6 @@ export class TableComponent implements OnInit {
         this.tableConfiguration = tableConfiguration;
         this.tableAnalytics = tableAnalytics;
         this.tableLegendSets = tableLegendSets;
-        this.generateTable();
       }
     );
   }
@@ -66,12 +64,12 @@ export class TableComponent implements OnInit {
   generateTable = async () => {
     if (this.tableLegendSets) {
       this.tablePayload = await new D2Visualizer()
-      .setTableDashboardItem(this.tableDashboardItem)
-      .setTableAnalytics(this.tableAnalytics)
-      .setLegendSet(this.tableLegendSets as any)
-      .setTableConfiguration(this.tableConfiguration)
-      .setType('REPORT_TABLE')
-      .draw();
+        .setTableDashboardItem(this.tableDashboardItem)
+        .setTableAnalytics(this.tableAnalytics)
+        .setLegendSet(this.tableLegendSets as any)
+        .setTableConfiguration(this.tableConfiguration)
+        .setType('REPORT_TABLE')
+        .draw();
     }
-  }
+  };
 }

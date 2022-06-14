@@ -17,7 +17,7 @@ export interface Header {
 }
 
 export interface MetaData {
-    items:      { [key: string]: Item };
+    items?:      { [key: string]: Item };
     dimensions?: Dimensions;
     dx?: string[]
     pe?: string[]

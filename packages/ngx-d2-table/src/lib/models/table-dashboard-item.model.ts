@@ -15,7 +15,7 @@ export interface TableDashboardItem {
     favorite: boolean;
     visualization: ReportTable;
     access: Access;
-    reportTable: ReportTable | any;
+    reportTable: ReportTable;
     favorites: any[];
     reports: any[];
     translations: any[];
@@ -99,8 +99,8 @@ export interface ReportTable {
     organisationUnitGroupSetDimensions: any[];
     organisationUnitLevels: any[];
     dataElementDimensions: any[];
-    periods: any;
-    organisationUnits: any;
+    periods: any[];
+    organisationUnits: any[];
     categoryDimensions: any[];
     filters: any[];
     rows: any[];
@@ -184,6 +184,7 @@ export interface LegendSharing {
     userGroups: ParentGraphMap;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ParentGraphMap { }
 
 export interface LegendSetSharing {
