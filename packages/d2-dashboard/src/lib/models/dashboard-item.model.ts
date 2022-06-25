@@ -1,5 +1,5 @@
-export interface DashboardItem {
-  id?: string;
+export interface DashboardItemObject {
+  id: string;
   created?: string;
   lastUpdated?: string;
   type: string;
@@ -8,13 +8,35 @@ export interface DashboardItem {
   gridColumn?: string;
   gridRow?: string;
   shape?: string;
-  x?: number;
-  y?: number;
+  x: number;
+  y: number;
+  h: number;
+  w: number;
   publicAccess?: string;
   externalAccess?: boolean;
   appKey?: string;
   singleValue?: boolean;
   visualization: DashboardVisualization;
+}
+
+export class DashboardItem {
+  constructor(
+    public dashboardItemResponse: { [key: string]: string | number | object }
+  ) {}
+
+  toObject(): DashboardItemObject {
+    return {
+      id: this.dashboardItemResponse['id'] as string,
+      type: this.dashboardItemResponse['type'] as string,
+      x: this.dashboardItemResponse['x'] as number,
+      y: this.dashboardItemResponse['y'] as number,
+      h: this.dashboardItemResponse['height'] as number,
+      w: this.dashboardItemResponse['width'] as number,
+      visualization: this.dashboardItemResponse[
+        'visualization'
+      ] as DashboardVisualization,
+    };
+  }
 }
 
 export interface DashboardVisualization {

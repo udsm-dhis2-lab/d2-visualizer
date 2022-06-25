@@ -11,8 +11,10 @@ import {
 } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
+  Dashboard,
   DashboardMenu,
   DashboardMenuObject,
+  DashboardObject,
   DashboardResponse,
 } from '../models';
 import { DashboardMenuResponse } from '../models/dashboard-menu-response.model';
@@ -70,11 +72,18 @@ export class DashboardService {
         ? this._findByIdFromDataStore(id)
         : this._findByIdFromApi(id, config)
     ).pipe(
-      map((dashboard) => ({
+      map((dashboard: DashboardObject) => ({
         loading: false,
         error: undefined,
         dashboard: dashboard,
-      }))
+      })),
+      catchError((error) => {
+        return of({
+          loading: false,
+          error,
+          dashboard: undefined,
+        });
+      })
     );
   }
 
@@ -116,9 +125,13 @@ export class DashboardService {
   }
 
   private _findByIdFromApi(id: string, preference?: any) {
-    return this.httpClient.get(
-      `dashboards/${id}.json?fields=id,name,description,favorite,dashboardItems[id,type,shape,visualization[id],chart~rename(visualization)]`
-    );
+    return this.httpClient
+      .get(
+        `dashboards/${id}.json?fields=id,name,description,favorite,dashboardItems[id,type,x,y,height,width,shape,visualization[id],chart~rename(visualization)]`
+      )
+      .pipe(
+        map((dashboardResponse) => new Dashboard(dashboardResponse).toObject())
+      );
   }
 
   private _findByIdFromDataStore(id: string, preference?: any) {

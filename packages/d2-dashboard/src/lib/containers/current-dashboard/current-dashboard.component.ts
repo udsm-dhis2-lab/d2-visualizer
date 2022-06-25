@@ -9,7 +9,6 @@ import { DashboardService } from '../../services';
   styleUrls: ['./current-dashboard.component.scss'],
 })
 export class CurrentDashboardComponent implements OnInit {
-  items: any[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   dashboardResponse$!: Observable<DashboardResponse>;
   constructor(private dashboardService: DashboardService) {}
 

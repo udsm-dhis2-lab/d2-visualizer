@@ -1,7 +1,13 @@
-<div class="d2-dashboard__current-dashboard-container">
-  <iapps-current-dashboard-header></iapps-current-dashboard-header>
-  <iapps-dashboard-items></iapps-dashboard-items>
-  <div class="d2-dashboard__dashboard-items">
-    {{ dashboardResponse$ | async | json }}
-  </div>
+<div
+  class="d2-dashboard__current-dashboard-container"
+  *ngIf="dashboardResponse$ | async as dashboardResponse"
+>
+  <ng-container *ngIf="!dashboardResponse.error">
+    <iapps-current-dashboard-header></iapps-current-dashboard-header>
+    <iapps-dashboard-items
+      [dashboardItems]="dashboardResponse?.dashboard?.dashboardItems || []"
+    ></iapps-dashboard-items>
+  </ng-container>
+
+  <ng-container *ngIf="dashboardResponse.error"> Dashboard Error </ng-container>
 </div>

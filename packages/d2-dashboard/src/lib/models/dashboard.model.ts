@@ -1,7 +1,7 @@
 import { DashboardAccess } from './dashboard-access.model';
-import { DashboardItem } from './dashboard-item.model';
+import { DashboardItem, DashboardItemObject } from './dashboard-item.model';
 
-export interface Dashboard {
+export interface DashboardObject {
   id: string;
   name?: string;
   displayName?: string;
@@ -26,9 +26,30 @@ export interface Dashboard {
   publicAccess?: string;
   externalAccess?: boolean;
   userGroupAccesses?: any[];
-  dashboardItems?: DashboardItem[];
+  dashboardItems?: DashboardItemObject[];
   userAccesses?: any[];
   user?: {
     id: string;
   };
+}
+
+export class Dashboard {
+  constructor(
+    public dashboardResponse: { [key: string]: string | number | object }
+  ) {}
+
+  get dashboardItems(): DashboardItemObject[] {
+    return ((this.dashboardResponse['dashboardItems'] as any) || []).map(
+      (dashboardItem: { [key: string]: string | number | object }) =>
+        new DashboardItem(dashboardItem).toObject()
+    );
+  }
+
+  toObject(): DashboardObject {
+    return {
+      id: this.dashboardResponse['id'] as string,
+      name: this.dashboardResponse['name'] as string,
+      dashboardItems: this.dashboardItems,
+    };
+  }
 }
