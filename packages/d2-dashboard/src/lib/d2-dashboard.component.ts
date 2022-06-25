@@ -11,10 +11,12 @@ import { DashboardService } from './services';
 })
 export class D2DashboardComponent implements OnInit {
   dashboardMenuResponse$!: Observable<DashboardMenuResponse>;
+  currentDashboardId$!: Observable<any>;
   constructor(private dashboardService: DashboardService) {}
 
   ngOnInit() {
     this.dashboardMenuResponse$ = this.dashboardService.getMenuResponse();
+    this.currentDashboardId$ = this.dashboardService.getCurrentDashboardId();
   }
 
   onSetCurrentDashboard(id: string) {
