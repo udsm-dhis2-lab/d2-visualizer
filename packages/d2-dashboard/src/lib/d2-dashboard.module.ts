@@ -11,6 +11,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { d2DashboardComponents } from './components';
 import { d2DashboardServices } from './services';
 import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
+import { KtdGridModule } from '@katoid/angular-grid-layout';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
     MatIconModule,
     ScrollingModule,
     NgxDhis2HttpClientModule,
+    KtdGridModule,
   ],
   declarations: [
     D2DashboardComponent,

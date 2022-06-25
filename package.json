@@ -97,6 +97,7 @@
     "@angular/router": "^13.1.3",
     "@iapps/function-analytics": "^1.0.0-beta.24",
     "@iapps/ngx-dhis2-http-client": "^2.0.8",
+    "@katoid/angular-grid-layout": "^1.2.0",
     "@turf/turf": "^6.5.0",
     "angular-cli-ghpages": "^1.0.0",
     "core-js": "^3.6.5",

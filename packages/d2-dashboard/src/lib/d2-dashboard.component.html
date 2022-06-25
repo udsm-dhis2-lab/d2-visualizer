@@ -3,7 +3,7 @@
     <ng-container *ngIf="!dashboardMenuResponse.error">
       <iapps-dashboard-menu
         [dashboardMenuItems]="dashboardMenuResponse.dashboardMenuItems"
-        [currentDashboardId]="currentDashboardId$ | async"
+        [currentDashboardId]="(currentDashboardId$ | async) || ''"
         (setCurrentDashboard)="onSetCurrentDashboard($event)"
       ></iapps-dashboard-menu>
     </ng-container>

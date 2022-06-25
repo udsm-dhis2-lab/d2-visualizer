@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import {
   BehaviorSubject,
@@ -10,7 +10,11 @@ import {
   of,
 } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { DashboardMenu, DashboardMenuObject } from '../models';
+import {
+  DashboardMenu,
+  DashboardMenuObject,
+  DashboardResponse,
+} from '../models';
 import { DashboardMenuResponse } from '../models/dashboard-menu-response.model';
 
 interface DashboardStore {
@@ -22,7 +26,8 @@ export class DashboardService {
   private _dashboardStore$: BehaviorSubject<DashboardStore>;
   constructor(
     private httpClient: NgxDhis2HttpClientService,
-    private router: Router
+    private router: Router,
+    private activedRoute: ActivatedRoute
   ) {
     this._dashboardStore$ = new BehaviorSubject({
       currentDashboardId: '',
@@ -30,9 +35,13 @@ export class DashboardService {
   }
 
   getMenuResponse(config?: any): Observable<DashboardMenuResponse> {
-    return this.findMenuList(config).pipe(
+    return this._findMenuList(config).pipe(
       map((dashboardMenuItems: DashboardMenuObject[]) => {
-        const currentDashboardId = dashboardMenuItems[0]?.id;
+        const splitedUrl = (window.location.href || '').split('/');
+        const currentDashboardId =
+          splitedUrl[splitedUrl.indexOf('dashboard') + 1] ||
+          dashboardMenuItems[0]?.id;
+
         this.setCurrentDashboard(currentDashboardId);
         return {
           loading: false,
@@ -52,6 +61,23 @@ export class DashboardService {
     );
   }
 
+  getCurrentDashboardResponse(
+    id: string,
+    config?: any
+  ): Observable<DashboardResponse> {
+    return (
+      config?.useDataStore
+        ? this._findByIdFromDataStore(id)
+        : this._findByIdFromApi(id, config)
+    ).pipe(
+      map((dashboard) => ({
+        loading: false,
+        error: undefined,
+        dashboard: dashboard,
+      }))
+    );
+  }
+
   async setCurrentDashboard(id: string) {
     const dashboardStore = await firstValueFrom(
       this._dashboardStore$.asObservable()
@@ -66,9 +92,11 @@ export class DashboardService {
       .pipe(map((dashboardStore) => dashboardStore?.currentDashboardId));
   }
 
-  findMenuList(config: any): Observable<DashboardMenuObject[]> {
+  private _findMenuList(config: any): Observable<DashboardMenuObject[]> {
     return (
-      config?.useDataStore ? this.findAllFromDataStore() : this.findAllFromApi()
+      config?.useDataStore
+        ? this._findAllFromDataStore()
+        : this._findAllFromApi()
     ).pipe(
       map((res) =>
         (res?.dashboards || []).map(
@@ -79,13 +107,23 @@ export class DashboardService {
     );
   }
 
-  findAllFromApi() {
+  private _findAllFromApi() {
     return this.httpClient.get('dashboards.json?fields=id,name&paging=false');
   }
 
-  findAllFromDataStore() {
+  private _findAllFromDataStore() {
     return of({ dashboards: [] });
   }
 
-  findById(id: string, preference?: any) {}
+  private _findByIdFromApi(id: string, preference?: any) {
+    return this.httpClient.get(
+      `dashboards/${id}.json?fields=id,name,description,favorite,dashboardItems[id,type,shape,visualization[id],chart~rename(visualization)]`
+    );
+  }
+
+  private _findByIdFromDataStore(id: string, preference?: any) {
+    return this.httpClient.get(
+      `dashboards/${id}.json?fields=id,name,description,favorite,dashboardItems[id,type,shape,visualization[id],chart~rename(visualization)]`
+    );
+  }
 }

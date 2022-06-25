@@ -1,5 +1,7 @@
 <div class="d2-dashboard__current-dashboard-container">
   <iapps-current-dashboard-header></iapps-current-dashboard-header>
   <iapps-dashboard-items></iapps-dashboard-items>
-  <div class="d2-dashboard__dashboard-items"></div>
+  <div class="d2-dashboard__dashboard-items">
+    {{ dashboardResponse$ | async | json }}
+  </div>
 </div>

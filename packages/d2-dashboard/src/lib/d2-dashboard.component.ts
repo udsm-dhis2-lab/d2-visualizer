@@ -11,7 +11,7 @@ import { DashboardService } from './services';
 })
 export class D2DashboardComponent implements OnInit {
   dashboardMenuResponse$!: Observable<DashboardMenuResponse>;
-  currentDashboardId$!: Observable<any>;
+  currentDashboardId$!: Observable<string>;
   constructor(private dashboardService: DashboardService) {}
 
   ngOnInit() {

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { filter, Observable, switchMap } from 'rxjs';
+import { DashboardResponse } from '../../models';
+import { DashboardService } from '../../services';
 
 @Component({
   selector: 'iapps-current-dashboard',
@@ -7,7 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CurrentDashboardComponent implements OnInit {
   items: any[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  constructor() {}
+  dashboardResponse$!: Observable<DashboardResponse>;
+  constructor(private dashboardService: DashboardService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.dashboardService
+      .getCurrentDashboardId()
+      .pipe(filter((id: string) => id.length > 0))
+      .subscribe((id) => {
+        this.dashboardResponse$ =
+          this.dashboardService.getCurrentDashboardResponse(id);
+      });
+  }
 }

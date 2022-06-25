@@ -21,8 +21,7 @@ import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    RouterModule.forRoot([], { initialNavigation: 'enabledBlocking' }),
-    MonacoEditorModule.forRoot(), // use forRoot() in main app module only.
+    MonacoEditorModule.forRoot(),
     BrowserAnimationsModule,
     LayoutModule,
     MatToolbarModule,

@@ -1,1 +1,13 @@
-<div class="d2-dashboard__current-dashboard-items-container"></div>
+<div class="d2-dashboard__current-dashboard-items-container">
+  <ktd-grid [cols]="cols" [rowHeight]="rowHeight" [layout]="layout">
+    <ktd-grid-item
+      *ngFor="let item of layout; trackBy: trackById"
+      [draggable]="false"
+      [resizable]="false"
+      [id]="item.id"
+      class="d2-dashboard__dashboard-item"
+    >
+      <div class="d2-dashboard__dashboard-item-card">Item</div>
+    </ktd-grid-item>
+  </ktd-grid>
+</div>
