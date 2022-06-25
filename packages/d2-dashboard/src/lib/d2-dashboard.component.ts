@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { DashboardMenuObject } from './models';
+import { DashboardMenuResponse } from './models/dashboard-menu-response.model';
 import { DashboardService } from './services';
 
 @Component({
@@ -11,18 +10,14 @@ import { DashboardService } from './services';
   styleUrls: ['./d2-dashboard.component.scss'],
 })
 export class D2DashboardComponent implements OnInit {
-  dashboardMenuItems$!: Observable<DashboardMenuObject[]>;
-  constructor(
-    private router: Router,
-    private dashboardService: DashboardService
-  ) {}
+  dashboardMenuResponse$!: Observable<DashboardMenuResponse>;
+  constructor(private dashboardService: DashboardService) {}
 
   ngOnInit() {
-    this.dashboardMenuItems$ = this.dashboardService.getMenuList();
-    this.router.navigate(['/dashboard/id']);
+    this.dashboardMenuResponse$ = this.dashboardService.getMenuResponse();
   }
 
   onSetCurrentDashboard(id: string) {
-    this.router.navigate(['/dashboard/' + id]);
+    this.dashboardService.setCurrentDashboard(id);
   }
 }

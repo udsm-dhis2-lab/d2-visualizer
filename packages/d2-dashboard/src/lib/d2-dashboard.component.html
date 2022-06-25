@@ -1,10 +1,15 @@
 <div class="d2-dashboard__container">
-  <ng-container *ngIf="dashboardMenuItems$ | async as dashboardMenuItems">
-    <iapps-dashboard-menu
-      [dashboardMenuItems]="dashboardMenuItems"
-      currentDashboardId="''"
-      (setCurrentDashboard)="onSetCurrentDashboard($event)"
-    ></iapps-dashboard-menu>
+  <ng-container *ngIf="dashboardMenuResponse$ | async as dashboardMenuResponse">
+    <ng-container *ngIf="!dashboardMenuResponse.error">
+      <iapps-dashboard-menu
+        [dashboardMenuItems]="dashboardMenuResponse.dashboardMenuItems"
+        [currentDashboardId]="dashboardMenuResponse.currentDashboardId"
+        (setCurrentDashboard)="onSetCurrentDashboard($event)"
+      ></iapps-dashboard-menu>
+    </ng-container>
+    <ng-container *ngIf="dashboardMenuResponse.error">
+      There is an error here
+    </ng-container>
   </ng-container>
   <router-outlet></router-outlet>
 </div>
