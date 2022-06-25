@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'chart',
+    redirectTo: 'dashboard',
     pathMatch: 'full',
   },
   {
@@ -21,6 +21,13 @@ const routes: Routes = [
     path: 'map',
     loadChildren: () =>
       import('../app/pages/map/map.module').then((m) => m.MapModule),
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () =>
+      import('../app/pages/dashboard/dashboard.module').then(
+        (m) => m.DashboardModule
+      ),
   },
 ];
 

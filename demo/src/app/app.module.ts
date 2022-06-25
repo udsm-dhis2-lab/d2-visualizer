@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { SharedModule } from './shared/shared.module';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
 
 @NgModule({
   declarations: [AppComponent, NxWelcomeComponent],
@@ -30,6 +31,16 @@ import { MonacoEditorModule } from 'ngx-monaco-editor';
     MatIconModule,
     MatListModule,
     SharedModule,
+    NgxDhis2HttpClientModule.forRoot({
+      namespace: 'iapps',
+      version: 1,
+      models: {
+        users: 'id',
+        organisationUnitLevels: 'id,level',
+        organisationUnits: 'id,name,level',
+        organisationUnitGroups: 'id',
+      },
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],

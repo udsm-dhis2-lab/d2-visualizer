@@ -1,0 +1,10 @@
+<div class="d2-dashboard__container">
+  <ng-container *ngIf="dashboardMenuItems$ | async as dashboardMenuItems">
+    <iapps-dashboard-menu
+      [dashboardMenuItems]="dashboardMenuItems"
+      currentDashboardId="''"
+      (setCurrentDashboard)="onSetCurrentDashboard($event)"
+    ></iapps-dashboard-menu>
+  </ng-container>
+  <router-outlet></router-outlet>
+</div>
