@@ -1,3 +1,5 @@
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { Injectable } from '@angular/core';
 import {
   MatSnackBar,
@@ -7,8 +9,16 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { find } from 'lodash';
-import { BehaviorSubject, firstValueFrom, Observable, of, tap } from 'rxjs';
-import { distinctUntilChanged, map, take } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  firstValueFrom,
+  Observable,
+  of,
+  tap,
+  throwError,
+} from 'rxjs';
+import { catchError, distinctUntilChanged, map, take } from 'rxjs/operators';
+import { DashboardLoaderComponent } from '../components/dashboard-loader/dashboard-loader.component';
 import {
   Dashboard,
   DashboardMenu,
@@ -24,12 +34,14 @@ interface DashboardStore {
 export class DashboardService {
   private _dashboardStore$: BehaviorSubject<DashboardStore>;
   private _dashboardStoreObservable$: Observable<DashboardStore>;
+  private _overlayRef?: OverlayRef;
 
   constructor(
     private httpClient: NgxDhis2HttpClientService,
     private router: Router,
     private _snackBar: MatSnackBar,
-    private _snackBarRef: MatSnackBarRef<TextOnlySnackBar>
+    private _snackBarRef: MatSnackBarRef<TextOnlySnackBar>,
+    private overlay: Overlay
   ) {
     this._dashboardStore$ = new BehaviorSubject({});
 
@@ -37,6 +49,7 @@ export class DashboardService {
   }
 
   getMenuList(config?: any): Observable<DashboardMenuObject[]> {
+    this._attachOverlay();
     return this._findMenuList(config).pipe(
       tap((dashboardMenuItems: DashboardMenuObject[]) => {
         const splitedUrl = (window.location.href || '').split('/');
@@ -52,13 +65,20 @@ export class DashboardService {
   }
 
   getCurrentDashboard(id: string, config?: any): Observable<DashboardObject> {
+    this._detachOverlay();
+    this._attachOverlay();
     return (
       config?.useDataStore
         ? this._findByIdFromDataStore(id)
         : this._findByIdFromApi(id, config)
     ).pipe(
       tap(() => {
+        this._detachOverlay();
         this._snackBarRef.dismiss();
+      }),
+      catchError((error) => {
+        console.log('WE HAVE ERROR SITUATION HERE');
+        return throwError(error);
       })
     );
   }
@@ -119,5 +139,21 @@ export class DashboardService {
     return this.httpClient.get(
       `dashboards/${id}.json?fields=id,name,description,favorite,dashboardItems[id,type,shape,visualization[id],chart~rename(visualization)]`
     );
+  }
+
+  private _attachOverlay() {
+    this._overlayRef = this.overlay.create({
+      positionStrategy: this.overlay
+        .position()
+        .global()
+        .centerHorizontally()
+        .centerVertically(),
+      hasBackdrop: true,
+    });
+    this._overlayRef.attach(new ComponentPortal(DashboardLoaderComponent));
+  }
+
+  private _detachOverlay() {
+    this._overlayRef?.detach();
   }
 }

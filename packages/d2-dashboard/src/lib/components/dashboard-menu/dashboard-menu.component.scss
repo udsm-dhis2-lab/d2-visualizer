@@ -3,7 +3,7 @@
   right: 0;
   top: 50 !important;
   position: sticky;
-  z-index: 1204;
+  z-index: 1000;
   padding: 8px;
   background-color: #fff;
 }
@@ -27,6 +27,7 @@
   margin-left: 8px !important;
 }
 
-.d2-dashboard__input {
+.d2-dashboard__search-input {
   padding-left: 8px;
+  margin: 0 0 2px 0 !important;
 }

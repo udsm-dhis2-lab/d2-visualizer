@@ -1,14 +1,13 @@
 <div class="d2-dashboard__menu-container mat-elevation-z1">
   <div class="d2-dashboard__menu-list">
-    <mat-form-field class="d2-dashboard__search" floatLabel="never">
-      <mat-icon matPrefix inline>search</mat-icon>
-      <mat-label class="d2-dashboard__search-label"
-        >Search for a dashboard</mat-label
-      >
-      <input matInput class="d2-dashboard__input" />
-    </mat-form-field>
-
     <mat-chip-list aria-label="Dashboard menu list">
+      <mat-form-field class="d2-dashboard__search" floatLabel="never">
+        <mat-icon matPrefix inline>search</mat-icon>
+        <mat-label class="d2-dashboard__search-label"
+          >Search for a dashboard</mat-label
+        >
+        <input matInput class="d2-dashboard__search-input" />
+      </mat-form-field>
       <iapps-dashboard-menu-item
         *ngFor="let dashboardMenuItem of dashboardMenuItems"
         [dashboardMenuItem]="dashboardMenuItem"
