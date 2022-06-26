@@ -1,4 +1,9 @@
 import { Injectable } from '@angular/core';
+import {
+  MatSnackBar,
+  MatSnackBarRef,
+  TextOnlySnackBar,
+} from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { find } from 'lodash';
@@ -19,9 +24,12 @@ interface DashboardStore {
 export class DashboardService {
   private _dashboardStore$: BehaviorSubject<DashboardStore>;
   private _dashboardStoreObservable$: Observable<DashboardStore>;
+
   constructor(
     private httpClient: NgxDhis2HttpClientService,
-    private router: Router
+    private router: Router,
+    private _snackBar: MatSnackBar,
+    private _snackBarRef: MatSnackBarRef<TextOnlySnackBar>
   ) {
     this._dashboardStore$ = new BehaviorSubject({});
 
@@ -44,12 +52,22 @@ export class DashboardService {
   }
 
   getCurrentDashboard(id: string, config?: any): Observable<DashboardObject> {
-    return config?.useDataStore
-      ? this._findByIdFromDataStore(id)
-      : this._findByIdFromApi(id, config);
+    return (
+      config?.useDataStore
+        ? this._findByIdFromDataStore(id)
+        : this._findByIdFromApi(id, config)
+    ).pipe(
+      tap(() => {
+        this._snackBarRef.dismiss();
+      })
+    );
   }
 
   async setCurrentDashboard(currentDashboardMenu: DashboardMenuObject) {
+    this._snackBarRef = this._snackBar.open(
+      `Loading ${currentDashboardMenu.name} Dashboard`
+    );
+
     const dashboardStore = await firstValueFrom(
       this._dashboardStoreObservable$.pipe(take(1))
     );

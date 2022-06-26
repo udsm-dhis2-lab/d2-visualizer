@@ -12,6 +12,7 @@ import { d2DashboardComponents } from './components';
 import { d2DashboardServices } from './services';
 import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
 import { KtdGridModule } from '@katoid/angular-grid-layout';
+import { MatSnackBarModule, MatSnackBarRef } from '@angular/material/snack-bar';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { KtdGridModule } from '@katoid/angular-grid-layout';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatSnackBarModule,
     ScrollingModule,
     NgxDhis2HttpClientModule,
     KtdGridModule,
@@ -30,7 +32,13 @@ import { KtdGridModule } from '@katoid/angular-grid-layout';
     ...d2DashboardContainers,
     ...d2DashboardComponents,
   ],
-  providers: [...d2DashboardServices],
+  providers: [
+    ...d2DashboardServices,
+    {
+      provide: MatSnackBarRef,
+      useValue: {},
+    },
+  ],
   exports: [D2DashboardComponent],
 })
 export class D2DashboardModule {}
