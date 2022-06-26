@@ -12,25 +12,16 @@ import { DashboardService } from '../../services';
 })
 export class CurrentDashboardComponent implements OnInit {
   currentDashboard$?: Observable<DashboardObject | undefined>;
-  loading = true;
   error?: object;
   constructor(
     private dashboardService: DashboardService,
     private activateRoute: ActivatedRoute
   ) {}
 
-  get dashboardLoaded(): boolean {
-    return !this.loading && !this.error;
-  }
-
   ngOnInit() {
     this.currentDashboard$ = this.activateRoute.params.pipe(
       switchMap(({ id }) => {
-        this.loading = true;
         return this.dashboardService.getCurrentDashboard(id);
-      }),
-      tap(() => {
-        this.loading = false;
       }),
       catchError((error) => {
         this.error = error;

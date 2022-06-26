@@ -35,6 +35,7 @@ export class DashboardService {
   private _dashboardStore$: BehaviorSubject<DashboardStore>;
   private _dashboardStoreObservable$: Observable<DashboardStore>;
   private _overlayRef?: OverlayRef;
+  private _firstTimeLoad = true;
 
   constructor(
     private httpClient: NgxDhis2HttpClientService,
@@ -67,6 +68,7 @@ export class DashboardService {
   getCurrentDashboard(id: string, config?: any): Observable<DashboardObject> {
     this._detachOverlay();
     this._attachOverlay();
+
     return (
       config?.useDataStore
         ? this._findByIdFromDataStore(id)
@@ -74,19 +76,31 @@ export class DashboardService {
     ).pipe(
       tap(() => {
         this._detachOverlay();
-        this._snackBarRef.dismiss();
+        if (!this._firstTimeLoad) {
+          this._snackBarRef.dismiss();
+        }
       }),
       catchError((error) => {
-        console.log('WE HAVE ERROR SITUATION HERE');
+        console.log(error);
+
         return throwError(error);
       })
     );
   }
 
   async setCurrentDashboard(currentDashboardMenu: DashboardMenuObject) {
-    this._snackBarRef = this._snackBar.open(
-      `Loading ${currentDashboardMenu.name} Dashboard`
-    );
+    if (this._firstTimeLoad) {
+      this._snackBarRef = this._snackBar.open(
+        `Loading ${currentDashboardMenu.name} Dashboard`,
+        '',
+        { duration: 5000 }
+      );
+      this._firstTimeLoad = false;
+    } else {
+      this._snackBarRef = this._snackBar.open(
+        `Loading ${currentDashboardMenu.name} Dashboard`
+      );
+    }
 
     const dashboardStore = await firstValueFrom(
       this._dashboardStoreObservable$.pipe(take(1))
