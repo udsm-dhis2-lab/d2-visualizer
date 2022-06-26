@@ -46,10 +46,11 @@ export class Dashboard {
   }
 
   toObject(): DashboardObject {
+    // console.log('DASHBOARD ITEM::', this.dashboardItems);
     return {
       id: this.dashboardResponse['id'] as string,
       name: this.dashboardResponse['name'] as string,
-      dashboardItems: this.dashboardItems,
+      dashboardItems: [],
     };
   }
 }

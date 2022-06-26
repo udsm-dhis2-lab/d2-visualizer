@@ -6,18 +6,16 @@ import { DashboardMenuObject } from '../../models';
   templateUrl: './dashboard-menu-item.component.html',
   styleUrls: ['./dashboard-menu-item.component.scss'],
 })
-export class DashboardMenuItemComponent implements OnInit {
+export class DashboardMenuItemComponent {
   @Input() dashboardMenuItem!: DashboardMenuObject;
   @Input() isCurrentDashboard?: boolean;
-  @Output() setDashboard: EventEmitter<string> = new EventEmitter<string>();
-  constructor() {}
-
-  ngOnInit() {}
+  @Output() setDashboard: EventEmitter<DashboardMenuObject> =
+    new EventEmitter<DashboardMenuObject>();
 
   onSetDashboard(e: MouseEvent) {
     e.stopPropagation();
     if (!this.isCurrentDashboard) {
-      this.setDashboard.emit(this.dashboardMenuItem?.id);
+      this.setDashboard.emit(this.dashboardMenuItem);
     }
   }
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { catchError, Observable, of, tap } from 'rxjs';
+import { DashboardMenuObject } from './models';
 import { DashboardMenuResponse } from './models/dashboard-menu-response.model';
 import { DashboardService } from './services';
 
@@ -10,16 +12,31 @@ import { DashboardService } from './services';
   styleUrls: ['./d2-dashboard.component.scss'],
 })
 export class D2DashboardComponent implements OnInit {
-  dashboardMenuResponse$!: Observable<DashboardMenuResponse>;
-  currentDashboardId$!: Observable<string>;
+  dashboardMenuList$!: Observable<DashboardMenuObject[]>;
+  currentDashboardId$?: Observable<string | undefined>;
+  loading = true;
+  error?: object;
   constructor(private dashboardService: DashboardService) {}
 
+  get dashboardMenuLoaded(): boolean {
+    return !this.loading && !this.error;
+  }
+
   ngOnInit() {
-    this.dashboardMenuResponse$ = this.dashboardService.getMenuResponse();
+    this.dashboardMenuList$ = this.dashboardService.getMenuList().pipe(
+      tap(() => {
+        this.loading = false;
+      }),
+      catchError((error) => {
+        this.loading = false;
+        this.error = error;
+        return of([]);
+      })
+    );
     this.currentDashboardId$ = this.dashboardService.getCurrentDashboardId();
   }
 
-  onSetCurrentDashboard(id: string) {
-    this.dashboardService.setCurrentDashboard(id);
+  onSetCurrentDashboard(dashboardMenuItem: DashboardMenuObject) {
+    this.dashboardService.setCurrentDashboard(dashboardMenuItem);
   }
 }

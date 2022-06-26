@@ -10,14 +10,14 @@ export class DashboardMenuComponent implements OnInit {
   @Input() dashboardMenuItems!: DashboardMenuObject[];
   @Input() currentDashboardId?: string;
 
-  @Output() setCurrentDashboard: EventEmitter<string> =
-    new EventEmitter<string>();
+  @Output() setCurrentDashboard: EventEmitter<DashboardMenuObject> =
+    new EventEmitter<DashboardMenuObject>();
 
   constructor() {}
 
   ngOnInit() {}
 
-  onSetCurrentDashboard(id: string) {
-    this.setCurrentDashboard.emit(id);
+  onSetCurrentDashboard(dashboardMenuItem: DashboardMenuObject) {
+    this.setCurrentDashboard.emit(dashboardMenuItem);
   }
 }

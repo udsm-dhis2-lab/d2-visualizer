@@ -1,13 +1,15 @@
 <div
   class="d2-dashboard__current-dashboard-container"
-  *ngIf="dashboardResponse$ | async as dashboardResponse"
+  *ngIf="currentDashboard$ | async as currentDashboard"
 >
-  <ng-container *ngIf="!dashboardResponse.error">
+  <div *ngIf="loading">Loading Cuurent Dashboard</div>
+
+  <ng-container *ngIf="dashboardLoaded">
     <iapps-current-dashboard-header></iapps-current-dashboard-header>
     <iapps-dashboard-items
-      [dashboardItems]="dashboardResponse?.dashboard?.dashboardItems || []"
+      [dashboardItems]="currentDashboard?.dashboardItems || []"
     ></iapps-dashboard-items>
   </ng-container>
 
-  <ng-container *ngIf="dashboardResponse.error"> Dashboard Error </ng-container>
+  <ng-container *ngIf="error"> Dashboard Error </ng-container>
 </div>

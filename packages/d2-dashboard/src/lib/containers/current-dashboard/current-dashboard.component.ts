@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, Observable, switchMap } from 'rxjs';
-import { DashboardResponse } from '../../models';
+import { ActivatedRoute } from '@angular/router';
+
+import { filter, Observable, of, switchMap, map, catchError, tap } from 'rxjs';
+import { DashboardObject, DashboardResponse } from '../../models';
 import { DashboardService } from '../../services';
 
 @Component({
@@ -9,16 +11,31 @@ import { DashboardService } from '../../services';
   styleUrls: ['./current-dashboard.component.scss'],
 })
 export class CurrentDashboardComponent implements OnInit {
-  dashboardResponse$!: Observable<DashboardResponse>;
-  constructor(private dashboardService: DashboardService) {}
+  currentDashboard$?: Observable<DashboardObject | undefined>;
+  loading = true;
+  error?: object;
+  constructor(
+    private dashboardService: DashboardService,
+    private activateRoute: ActivatedRoute
+  ) {}
+
+  get dashboardLoaded(): boolean {
+    return !this.loading && !this.error;
+  }
 
   ngOnInit() {
-    this.dashboardService
-      .getCurrentDashboardId()
-      .pipe(filter((id: string) => id.length > 0))
-      .subscribe((id) => {
-        this.dashboardResponse$ =
-          this.dashboardService.getCurrentDashboardResponse(id);
-      });
+    this.currentDashboard$ = this.activateRoute.params.pipe(
+      switchMap(({ id }) => {
+        this.loading = true;
+        return this.dashboardService.getCurrentDashboard(id);
+      }),
+      tap(() => {
+        this.loading = false;
+      }),
+      catchError((error) => {
+        this.error = error;
+        return of(undefined);
+      })
+    );
   }
 }

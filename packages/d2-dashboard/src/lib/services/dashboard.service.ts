@@ -1,104 +1,67 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
-import {
-  BehaviorSubject,
-  firstValueFrom,
-  from,
-  lastValueFrom,
-  Observable,
-  of,
-} from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { find } from 'lodash';
+import { BehaviorSubject, firstValueFrom, Observable, of, tap } from 'rxjs';
+import { distinctUntilChanged, map, take } from 'rxjs/operators';
 import {
   Dashboard,
   DashboardMenu,
   DashboardMenuObject,
   DashboardObject,
-  DashboardResponse,
 } from '../models';
-import { DashboardMenuResponse } from '../models/dashboard-menu-response.model';
 
 interface DashboardStore {
-  currentDashboardId: string;
+  currentDashboardMenu?: DashboardMenuObject;
 }
 
 @Injectable()
 export class DashboardService {
   private _dashboardStore$: BehaviorSubject<DashboardStore>;
+  private _dashboardStoreObservable$: Observable<DashboardStore>;
   constructor(
     private httpClient: NgxDhis2HttpClientService,
-    private router: Router,
-    private activedRoute: ActivatedRoute
+    private router: Router
   ) {
-    this._dashboardStore$ = new BehaviorSubject({
-      currentDashboardId: '',
-    });
+    this._dashboardStore$ = new BehaviorSubject({});
+
+    this._dashboardStoreObservable$ = this._dashboardStore$.asObservable();
   }
 
-  getMenuResponse(config?: any): Observable<DashboardMenuResponse> {
+  getMenuList(config?: any): Observable<DashboardMenuObject[]> {
     return this._findMenuList(config).pipe(
-      map((dashboardMenuItems: DashboardMenuObject[]) => {
+      tap((dashboardMenuItems: DashboardMenuObject[]) => {
         const splitedUrl = (window.location.href || '').split('/');
-        const currentDashboardId =
-          splitedUrl[splitedUrl.indexOf('dashboard') + 1] ||
-          dashboardMenuItems[0]?.id;
+        const currentDashboard =
+          find(dashboardMenuItems, [
+            'id',
+            splitedUrl[splitedUrl.indexOf('dashboard') + 1],
+          ]) || dashboardMenuItems[0];
 
-        this.setCurrentDashboard(currentDashboardId);
-        return {
-          loading: false,
-          error: undefined,
-          currentDashboardId,
-          dashboardMenuItems,
-        };
-      }),
-      catchError((error: any) => {
-        return of({
-          loading: false,
-          error,
-          currentDashboardId: '',
-          dashboardMenuItems: [],
-        });
+        this.setCurrentDashboard(currentDashboard);
       })
     );
   }
 
-  getCurrentDashboardResponse(
-    id: string,
-    config?: any
-  ): Observable<DashboardResponse> {
-    return (
-      config?.useDataStore
-        ? this._findByIdFromDataStore(id)
-        : this._findByIdFromApi(id, config)
-    ).pipe(
-      map((dashboard: DashboardObject) => ({
-        loading: false,
-        error: undefined,
-        dashboard: dashboard,
-      })),
-      catchError((error) => {
-        return of({
-          loading: false,
-          error,
-          dashboard: undefined,
-        });
-      })
-    );
+  getCurrentDashboard(id: string, config?: any): Observable<DashboardObject> {
+    return config?.useDataStore
+      ? this._findByIdFromDataStore(id)
+      : this._findByIdFromApi(id, config);
   }
 
-  async setCurrentDashboard(id: string) {
+  async setCurrentDashboard(currentDashboardMenu: DashboardMenuObject) {
     const dashboardStore = await firstValueFrom(
-      this._dashboardStore$.asObservable()
+      this._dashboardStoreObservable$.pipe(take(1))
     );
-    this._dashboardStore$.next({ ...dashboardStore, currentDashboardId: id });
-    this.router.navigate(['/dashboard/' + id]);
+    this._dashboardStore$.next({ ...dashboardStore, currentDashboardMenu });
+    this.router.navigate(['/dashboard/' + currentDashboardMenu.id]);
   }
 
-  getCurrentDashboardId(): Observable<string> {
-    return this._dashboardStore$
-      .asObservable()
-      .pipe(map((dashboardStore) => dashboardStore?.currentDashboardId));
+  getCurrentDashboardId(): Observable<string | undefined> {
+    return this._dashboardStoreObservable$.pipe(
+      distinctUntilChanged(),
+      map((dashboardStore) => dashboardStore?.currentDashboardMenu?.id)
+    );
   }
 
   private _findMenuList(config: any): Observable<DashboardMenuObject[]> {
