@@ -1,7 +1,16 @@
 <div class="d2-dashboard__current-dashboard-header">
   <div class="d2-dashboard__current-dashboard-title-container">
-    <div>Dashboard title</div>
-    <div>Dashboard filters</div>
+    <h2 class="d2-dashboard__current-dashboard-title" [id]="dashboard?.id">
+      {{ dashboard?.name }}
+    </h2>
+    <div class="d2-dashboard__dashboard-filters">
+      <iapps-dashboard-selection-filters></iapps-dashboard-selection-filters>
+    </div>
   </div>
-  <div>Dashboard download</div>
+  <div>
+    <button mat-stroked-button>
+      <mat-icon inline>print</mat-icon>
+      <span class="d2-dashboard__print-label">Print</span>
+    </button>
+  </div>
 </div>

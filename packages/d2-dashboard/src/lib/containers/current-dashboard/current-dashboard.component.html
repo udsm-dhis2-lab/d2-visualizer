@@ -2,7 +2,9 @@
   class="d2-dashboard__current-dashboard-container"
   *ngIf="currentDashboard$ | async as currentDashboard"
 >
-  <iapps-current-dashboard-header></iapps-current-dashboard-header>
+  <iapps-current-dashboard-header
+    [dashboard]="currentDashboard"
+  ></iapps-current-dashboard-header>
   <iapps-dashboard-items
     [dashboardItems]="currentDashboard?.dashboardItems || []"
   ></iapps-dashboard-items>
