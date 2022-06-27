@@ -4,7 +4,9 @@
       {{ dashboard?.name }}
     </h2>
     <div class="d2-dashboard__dashboard-filters">
-      <iapps-dashboard-selection-filters></iapps-dashboard-selection-filters>
+      <iapps-dashboard-selection-filters
+        (setFilterSelection)="onFilterSelection($event)"
+      ></iapps-dashboard-selection-filters>
     </div>
   </div>
   <div>

@@ -6,7 +6,7 @@ import {
   MatSnackBarRef,
   TextOnlySnackBar,
 } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { find } from 'lodash';
 import {
@@ -24,10 +24,12 @@ import {
   DashboardMenu,
   DashboardMenuObject,
   DashboardObject,
+  VisualizationDataSelection,
 } from '../models';
 
 interface DashboardStore {
   currentDashboardMenu?: DashboardMenuObject;
+  globalSelections: { [id: string]: VisualizationDataSelection[] };
 }
 
 @Injectable()
@@ -44,7 +46,9 @@ export class DashboardService {
     private _snackBarRef: MatSnackBarRef<TextOnlySnackBar>,
     private overlay: Overlay
   ) {
-    this._dashboardStore$ = new BehaviorSubject({});
+    this._dashboardStore$ = new BehaviorSubject({
+      globalSelections: {},
+    });
 
     this._dashboardStoreObservable$ = this._dashboardStore$.asObservable();
   }
@@ -107,6 +111,34 @@ export class DashboardService {
     );
     this._dashboardStore$.next({ ...dashboardStore, currentDashboardMenu });
     this.router.navigate(['/dashboard/' + currentDashboardMenu.id]);
+  }
+
+  async setGlobalSelections(
+    dataSelections: VisualizationDataSelection[],
+    id: string
+  ) {
+    const dashboardStore = await firstValueFrom(
+      this._dashboardStoreObservable$.pipe(take(1))
+    );
+    this._dashboardStore$.next({
+      ...dashboardStore,
+      globalSelections: {
+        ...dashboardStore.globalSelections,
+        [id]: dataSelections,
+      },
+    });
+  }
+
+  getGlobalSelection(): Observable<VisualizationDataSelection[]> {
+    return this._dashboardStoreObservable$.pipe(
+      distinctUntilChanged(),
+      map(
+        (dashboardStore) =>
+          (dashboardStore?.globalSelections || {})[
+            dashboardStore?.currentDashboardMenu?.id as string
+          ]
+      )
+    );
   }
 
   getCurrentDashboardId(): Observable<string | undefined> {

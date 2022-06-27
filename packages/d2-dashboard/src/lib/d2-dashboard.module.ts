@@ -11,6 +11,7 @@ import { d2DashboardContainers } from './containers';
 import { D2DashboardRoutingModule } from './d2-dashboard-routing.module';
 import { D2DashboardComponent } from './d2-dashboard.component';
 import { d2DashboardModules } from './modules';
+import { d2DashboardPipes } from './pipes';
 import { d2DashboardServices } from './services';
 import { d2DashboardMaterialModules } from './shared';
 
@@ -28,6 +29,7 @@ import { d2DashboardMaterialModules } from './shared';
     ...d2DashboardContainers,
     ...d2DashboardComponents,
     ...d2DashboardEntryComponents,
+    ...d2DashboardPipes,
   ],
   providers: [
     ...d2DashboardServices,

@@ -4,3 +4,5 @@ export * from './dashboard.model';
 export * from './dashboard-response.model';
 export * from './dashboard-item.model';
 export * from './dashboard-access.model';
+export * from './global-filter.model';
+export * from './visualization-data-selection.model';

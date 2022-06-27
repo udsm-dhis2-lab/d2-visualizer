@@ -4,12 +4,14 @@ import { DashboardSelectionFiltersComponent } from './dashboard-selection-filter
 import { d2DashboardMaterialModules } from '../../shared';
 import { d2DashboardSelectionFilterDialogs } from './dialogs';
 import { NgxDhis2OrgUnitFilterModule } from '@iapps/ngx-dhis2-org-unit-filter';
+import { NgxDhis2PeriodFilterModule } from '@iapps/ngx-dhis2-period-filter';
 
 @NgModule({
   imports: [
     CommonModule,
     ...d2DashboardMaterialModules,
     NgxDhis2OrgUnitFilterModule,
+    NgxDhis2PeriodFilterModule,
   ],
   declarations: [
     DashboardSelectionFiltersComponent,

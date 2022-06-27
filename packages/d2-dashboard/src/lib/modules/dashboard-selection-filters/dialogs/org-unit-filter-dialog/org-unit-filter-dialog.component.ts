@@ -15,6 +15,7 @@ export class OrgUnitFilterDialogComponent implements OnInit {
     reportUse: true,
     emitOnSelection: false,
   };
+  firstAction?: string;
   constructor(
     private dialogRef: MatDialogRef<OrgUnitFilterDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: object
@@ -23,9 +24,12 @@ export class OrgUnitFilterDialogComponent implements OnInit {
   ngOnInit() {}
 
   onOrgUnitUpdate(selectionItems: any, action: string) {
+    if (!this.firstAction) {
+      this.firstAction = action;
+    }
     this.dialogRef.close({
       selectionItems,
-      action,
+      action: this.firstAction,
     });
   }
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { filter, Observable, of, switchMap, map, catchError, tap } from 'rxjs';
-import { DashboardObject, DashboardResponse } from '../../models';
+import { catchError, Observable, of, switchMap } from 'rxjs';
+import { DashboardObject, VisualizationDataSelection } from '../../models';
 import { DashboardService } from '../../services';
 
 @Component({
@@ -12,6 +12,7 @@ import { DashboardService } from '../../services';
 })
 export class CurrentDashboardComponent implements OnInit {
   currentDashboard$?: Observable<DashboardObject | undefined>;
+  globalSelection$?: Observable<VisualizationDataSelection[]>;
   error?: object;
   constructor(
     private dashboardService: DashboardService,
@@ -28,5 +29,10 @@ export class CurrentDashboardComponent implements OnInit {
         return of(undefined);
       })
     );
+    this.globalSelection$ = this.dashboardService.getGlobalSelection();
+  }
+
+  onSetGlobalFilter(dataSelections: VisualizationDataSelection[], id: string) {
+    this.dashboardService.setGlobalSelections(dataSelections, id);
   }
 }

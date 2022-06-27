@@ -4,7 +4,15 @@
 >
   <iapps-current-dashboard-header
     [dashboard]="currentDashboard"
+    (setGlobalFilter)="onSetGlobalFilter($event, currentDashboard.id)"
   ></iapps-current-dashboard-header>
+
+  <div class="d2-dashboard__dashboard-selection-summary">
+    <iapps-dashboard-selection-summary
+      [dataSelections]="(globalSelection$ | async) || []"
+      (removeSelection)="onSetGlobalFilter($event, currentDashboard.id)"
+    ></iapps-dashboard-selection-summary>
+  </div>
   <iapps-dashboard-items
     [dashboardItems]="currentDashboard?.dashboardItems || []"
   ></iapps-dashboard-items>

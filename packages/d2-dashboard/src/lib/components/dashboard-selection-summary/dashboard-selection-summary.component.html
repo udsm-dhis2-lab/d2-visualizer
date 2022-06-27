@@ -1,0 +1,8 @@
+<div class="selection-summary-container">
+  <div class="selection-summary-item" *ngFor="let dataSelection of dataSelections">
+    <div>
+      {{dataSelection.items | summarizeSelection:dataSelection.dimension}}
+    </div>
+    <a (click)="onRemoveSelection($event, dataSelection.dimension)" class="remove-selection-button">Remove</a>
+  </div>
+</div>

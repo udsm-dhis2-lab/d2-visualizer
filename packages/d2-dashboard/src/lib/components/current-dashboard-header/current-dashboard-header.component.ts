@@ -1,10 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
-  OnInit,
+  Output,
 } from '@angular/core';
-import { DashboardObject } from '../../models';
+import { DashboardObject, VisualizationDataSelection } from '../../models';
 
 @Component({
   selector: 'iapps-current-dashboard-header',
@@ -12,8 +13,12 @@ import { DashboardObject } from '../../models';
   styleUrls: ['./current-dashboard-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CurrentDashboardHeaderComponent implements OnInit {
+export class CurrentDashboardHeaderComponent {
   @Input() dashboard!: Partial<DashboardObject>;
 
-  ngOnInit() {}
+  @Output() setGlobalFilter = new EventEmitter<VisualizationDataSelection[]>();
+
+  onFilterSelection(selectedFilters: VisualizationDataSelection[]) {
+    this.setGlobalFilter.emit(selectedFilters);
+  }
 }
