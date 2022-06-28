@@ -1,7 +1,15 @@
+import { getSelectionDimensionsFromFavorite } from './helpers';
+import { VisualizationDataSelection } from './visualization-data-selection';
+import { VisualizationLayout } from './visualization-layout';
 import { VisualizationType } from './visualization-type';
 
 export class VisualizationConfiguration {
-  constructor(public config: any) {}
+  dataSelections: VisualizationDataSelection[];
+  layout?: VisualizationLayout;
+  constructor(public config: any) {
+    this.dataSelections = getSelectionDimensionsFromFavorite(this.config);
+    this.layout = VisualizationLayout.getLayout(this.dataSelections);
+  }
 
   get renderId(): string {
     return this.config?.id;
@@ -11,7 +19,7 @@ export class VisualizationConfiguration {
   }
 
   get type(): VisualizationType {
-    return this.config?.type;
+    return this.config?.type.toLowerCase();
   }
 
   get hideEmptyColumns(): boolean {
@@ -134,16 +142,22 @@ export class VisualizationConfiguration {
     return this.config?.selectedChartTypes;
   }
 
-  get xAxisType(): string[] {
-    return this.config?.rowDimensions;
+  get axes(): any[] {
+    return [];
   }
 
-  get yAxisType(): string[] {
-    return this.config?.columnDimensions;
+  get xAxisType(): string[] {
+    return this.layout?.rows || ['dx'];
+  }
+
+  get yAxisType(): string {
+    return this.layout?.columns && this.layout?.columns.length > 0
+      ? (this.layout?.columns[0] as string)
+      : 'ou';
   }
 
   get zAxisType(): string[] {
-    return this.config?.filterDimensions;
+    return this.layout?.filters || ['pe'];
   }
 
   get zoom(): number {

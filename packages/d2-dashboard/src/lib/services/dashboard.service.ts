@@ -8,7 +8,7 @@ import {
 } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
-import { find } from 'lodash';
+import { find, isEqual } from 'lodash';
 import {
   BehaviorSubject,
   firstValueFrom,
@@ -78,16 +78,12 @@ export class DashboardService {
         ? this._findByIdFromDataStore(id)
         : this._findByIdFromApi(id, config)
     ).pipe(
+      distinctUntilChanged(isEqual),
       tap(() => {
         this._detachOverlay();
         if (!this._firstTimeLoad) {
           this._snackBarRef.dismiss();
         }
-      }),
-      catchError((error) => {
-        console.log(error);
-
-        return throwError(error);
       })
     );
   }

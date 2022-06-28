@@ -21,17 +21,45 @@ export interface DashboardItemObject {
 
 export class DashboardItem {
   constructor(
-    public dashboardItemResponse: { [key: string]: string | number | object }
+    public dashboardItemResponse: { [key: string]: string | number | object },
+    public dashboardItemIndex: number
   ) {}
+
+  get width(): number {
+    return (this.dashboardItemResponse['width'] as number) || 29;
+  }
+
+  get height(): number {
+    return (this.dashboardItemResponse['height'] as number) || 20;
+  }
+
+  get x(): number {
+    if (this.dashboardItemResponse['x'] !== undefined) {
+      return this.dashboardItemResponse['x'] as number;
+    }
+
+    return this.dashboardItemIndex % 2 === 0 ? 0 : 29;
+  }
+
+  get y(): number {
+    if (this.dashboardItemResponse['y'] !== undefined) {
+      return this.dashboardItemResponse['y'] as number;
+    }
+    return this.dashboardItemIndex === 0
+      ? 0
+      : this.dashboardItemIndex % 2 === 0
+      ? this.dashboardItemIndex * 10
+      : (this.dashboardItemIndex - 1) * 10;
+  }
 
   toObject(): DashboardItemObject {
     return {
       id: this.dashboardItemResponse['id'] as string,
       type: this.dashboardItemResponse['type'] as string,
-      x: this.dashboardItemResponse['x'] as number,
-      y: this.dashboardItemResponse['y'] as number,
-      h: this.dashboardItemResponse['height'] as number,
-      w: this.dashboardItemResponse['width'] as number,
+      x: this.x,
+      y: this.y,
+      h: this.height,
+      w: this.width,
       visualization: this.dashboardItemResponse[
         'visualization'
       ] as DashboardVisualization,

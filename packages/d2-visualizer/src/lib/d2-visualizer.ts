@@ -13,9 +13,11 @@ import { TableUtil } from './modules/table/utils/table.util';
 import { TableAnalytics } from './modules/table/models/table-analytics.model';
 import { TableDashboardItem } from './modules/table/models/table-dashboard-item.model';
 import { TableConfiguration } from './modules/table/models/table-config.model';
+import { getSelectionDimensionsFromFavorite } from './shared/helpers';
+import { VisualizationDataSelection } from '@iapps/d2-dashboard';
 
 export class D2Visualizer {
-  dataSelections: any[] = [];
+  dataSelections!: VisualizationDataSelection[];
   type!: VisualizationType;
   visualizationType!: VisualizationType;
   config!: VisualizationConfiguration;
@@ -146,6 +148,7 @@ export class D2Visualizer {
    */
   setConfig(config: any) {
     this.config = new VisualizationConfiguration(config);
+
     return this;
   }
 
@@ -177,15 +180,6 @@ export class D2Visualizer {
   setLegendSet(legendSets: LegendSet[]) {
     this.legendSets = legendSets;
     return this;
-  }
-
-  /**
-   * @description Get data selection layout orientation
-   * @returns {VisualizationLayout}
-   */
-  get layout(): VisualizationLayout | null {
-    // TODO Find best way to pass data Selections
-    return VisualizationLayout.getLayout();
   }
 
   /**
@@ -262,10 +256,12 @@ export class D2Visualizer {
    *
    * @returns
    */
-  private getData(): Promise<any> {
+  private _getData(): Promise<any> {
     const analyticPromise = new Fn.Analytics();
 
-    (this.dataSelections || []).forEach((dataSelection) => {
+    const dataSelections = this.dataSelections || this.config.dataSelections;
+
+    (dataSelections || []).forEach((dataSelection) => {
       switch (dataSelection.dimension) {
         case 'dx':
           analyticPromise.setData(
@@ -318,18 +314,19 @@ export class D2Visualizer {
    * @returns
    */
   async draw(): Promise<any> {
+    const data = this.dataAnalytics || (await this._getData())._data;
     switch (this.visualizationType) {
       case 'CHART':
         return new ChartVisualization()
           .setId(this.id)
-          .setConfig(this.config.config)
-          .setData(this.dataAnalytics)
+          .setConfig(this.config)
+          .setData(data)
           .setVisualizationType(this.visualizationType as ChartType)
           .setChartType(this.chartType)
           .draw();
       case 'MAP':
         return new MapUtil()
-          .setMapAnalytics(this.dataAnalytics as MapAnalytics)
+          .setMapAnalytics(data as MapAnalytics)
           .setGeofeature(this.geoFeatures as any)
           .setLegendSet(this.legendSets)
           .setMapDashboardItem(this.mapDashboardItem)
@@ -385,7 +382,7 @@ export class D2Visualizer {
    * @returns
    */
   async download(downloadFormat: any): Promise<any> {
-    const data = await this.getData();
+    const data = await this._getData();
 
     switch (this.visualizationType) {
       case 'CHART':

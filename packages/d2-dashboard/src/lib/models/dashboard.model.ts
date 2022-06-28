@@ -1,3 +1,4 @@
+import { KtdGridLayout } from '@katoid/angular-grid-layout';
 import { DashboardAccess } from './dashboard-access.model';
 import { DashboardItem, DashboardItemObject } from './dashboard-item.model';
 
@@ -27,6 +28,7 @@ export interface DashboardObject {
   externalAccess?: boolean;
   userGroupAccesses?: any[];
   dashboardItems?: DashboardItemObject[];
+  dashboardItemsLayout?: KtdGridLayout;
   userAccesses?: any[];
   user?: {
     id: string;
@@ -40,17 +42,28 @@ export class Dashboard {
 
   get dashboardItems(): DashboardItemObject[] {
     return ((this.dashboardResponse['dashboardItems'] as any) || []).map(
-      (dashboardItem: { [key: string]: string | number | object }) =>
-        new DashboardItem(dashboardItem).toObject()
+      (
+        dashboardItem: { [key: string]: string | number | object },
+        dashboardItemIndex: number
+      ) => {
+        return new DashboardItem(dashboardItem, dashboardItemIndex).toObject();
+      }
     );
   }
 
+  get dashboardItemsLayout(): KtdGridLayout {
+    return (this.dashboardItems || []).map((dashboardItem) => {
+      const { id, x, y, h, w } = dashboardItem;
+      return { id, x, y, h, w };
+    });
+  }
+
   toObject(): DashboardObject {
-    // console.log('DASHBOARD ITEM::', this.dashboardItems);
     return {
       id: this.dashboardResponse['id'] as string,
       name: this.dashboardResponse['name'] as string,
-      dashboardItems: [],
+      dashboardItems: this.dashboardItems,
+      dashboardItemsLayout: this.dashboardItemsLayout,
     };
   }
 }

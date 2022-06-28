@@ -93,10 +93,7 @@ export class ChartVisualization {
    *
    */
   draw() {
-    const chartObject = drawChart(this._data, {
-      ...this._config,
-      type: this._chart ? this._chart : 'column',
-    });
+    const chartObject = drawChart(this._data, this._config);
     setTimeout(() => {
       this._chart = Highcharts.chart(chartObject);
     }, 20);

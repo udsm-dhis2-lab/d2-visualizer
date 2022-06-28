@@ -13,8 +13,11 @@
       (removeSelection)="onSetGlobalFilter($event, currentDashboard.id)"
     ></iapps-dashboard-selection-summary>
   </div>
+
   <iapps-dashboard-items
+    *ngIf="!loading"
     [dashboardItems]="currentDashboard?.dashboardItems || []"
+    [dashboardItemsLayout]="currentDashboard?.dashboardItemsLayout || []"
   ></iapps-dashboard-items>
 
   <ng-container *ngIf="error"> Dashboard Error </ng-container>
