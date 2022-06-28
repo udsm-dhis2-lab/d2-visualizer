@@ -2,6 +2,7 @@ import { getSelectionDimensionsFromFavorite } from './helpers';
 import { VisualizationDataSelection } from './visualization-data-selection';
 import { VisualizationLayout } from './visualization-layout';
 import { VisualizationType } from './visualization-type';
+import * as _ from 'lodash';
 
 export class VisualizationConfiguration {
   dataSelections: VisualizationDataSelection[];
@@ -190,5 +191,16 @@ export class VisualizationConfiguration {
 
   get mapboxStyle(): string {
     return this.config?.mapboxStyle;
+  }
+
+  mergeDataSelections(dataSelections: any[]): void {
+    this.dataSelections = this.dataSelections.map((dataSelection) => {
+      const availableDataSelection = _.find(dataSelections, [
+        'dimension',
+        dataSelection.dimension,
+      ]);
+
+      return availableDataSelection || dataSelection;
+    });
   }
 }

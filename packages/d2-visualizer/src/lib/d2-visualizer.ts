@@ -14,10 +14,9 @@ import { TableAnalytics } from './modules/table/models/table-analytics.model';
 import { TableDashboardItem } from './modules/table/models/table-dashboard-item.model';
 import { TableConfiguration } from './modules/table/models/table-config.model';
 import { getSelectionDimensionsFromFavorite } from './shared/helpers';
-import { VisualizationDataSelection } from '@iapps/d2-dashboard';
 
 export class D2Visualizer {
-  dataSelections!: VisualizationDataSelection[];
+  dataSelections!: any[];
   type!: VisualizationType;
   visualizationType!: VisualizationType;
   config!: VisualizationConfiguration;
@@ -259,7 +258,8 @@ export class D2Visualizer {
   private _getData(): Promise<any> {
     const analyticPromise = new Fn.Analytics();
 
-    const dataSelections = this.dataSelections || this.config.dataSelections;
+    this.config.mergeDataSelections(this.dataSelections);
+    const dataSelections: any[] = this.config.dataSelections;
 
     (dataSelections || []).forEach((dataSelection) => {
       switch (dataSelection.dimension) {

@@ -17,6 +17,7 @@
   <iapps-dashboard-items
     *ngIf="!loading"
     [dashboardItems]="currentDashboard?.dashboardItems || []"
+    [dataSelections]="(globalSelection$ | async) || []"
     [dashboardItemsLayout]="currentDashboard?.dashboardItemsLayout || []"
   ></iapps-dashboard-items>
 
