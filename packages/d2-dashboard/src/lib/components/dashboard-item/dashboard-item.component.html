@@ -1,1 +1,13 @@
-<div [id]="dashboardItem?.visualization?.id || 'visualization_id'"></div>
+<div class="d2-dashboard__visualization-container">
+  <div
+    [id]="dashboardItem?.visualization?.id || 'visualization_id'"
+    [style.height]="'calc(' + visualizationContainerHeight + 'px - 16px)'"
+  ></div>
+
+  <div
+    class="d2-dashboard__visualization-loading-overlay"
+    *ngIf="loading$ | async"
+  >
+    <mat-spinner [strokeWidth]="2" [diameter]="30"></mat-spinner>
+  </div>
+</div>

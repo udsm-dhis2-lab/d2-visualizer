@@ -7,7 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { D2Visualizer } from '@iapps/d2-visualizer';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
 import { DashboardItemObject, VisualizationDataSelection } from '../../models';
 import { DashboardItemService } from '../../services';
 
@@ -22,9 +22,15 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   @Input() dataSelections?: VisualizationDataSelection[];
 
   visualizationConfig: any;
-  loading?: boolean;
+
+  private _loading$: BehaviorSubject<boolean>;
+  loading$: Observable<boolean>;
   error?: any;
-  constructor(private dashboardItemService: DashboardItemService) {}
+  visualizationContainerHeight!: number;
+  constructor(private dashboardItemService: DashboardItemService) {
+    this._loading$ = new BehaviorSubject<boolean>(true);
+    this.loading$ = this._loading$.asObservable();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelections'] && !changes['dataSelections'].firstChange) {
@@ -33,12 +39,17 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   }
 
   async ngOnInit() {
+    this.visualizationContainerHeight =
+      document.getElementsByClassName(
+        'dashboard-item-' + this.dashboardItem.id
+      )[0]?.clientHeight || 400;
     this.setVisualization();
+    console.log('REACHING HERE');
   }
 
   async setVisualization() {
+    this._loading$.next(true);
     if (this.dashboardItem?.visualization?.id) {
-      this.loading = true;
       try {
         this.visualizationConfig =
           this.visualizationConfig ||
@@ -48,7 +59,6 @@ export class DashboardItemComponent implements OnInit, OnChanges {
             )
           ));
 
-        this.loading = false;
         await new D2Visualizer()
           .setConfig(this.visualizationConfig)
           .setSelections(this.dataSelections || [])
@@ -56,9 +66,10 @@ export class DashboardItemComponent implements OnInit, OnChanges {
           .setChartType(this.visualizationConfig.type)
           .draw();
       } catch (error) {
-        this.loading = false;
+        this._loading$.next(false);
         console.log(error);
       }
     }
+    this._loading$.next(false);
   }
 }
