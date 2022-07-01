@@ -7,7 +7,7 @@ export class DashboardItemService {
 
   getVisualization(id: string) {
     return this.httpClient.get(
-      `visualizations/${id}.json?fields=id,name,type,hideEmptyColumns,rowSubTotals,cumulativeValues,showDimensionLabels,sortOrder,fontSize,topLimit,percentStackedValues,noSpaceBetweenColumns,showHierarchy,hideTitle,skipRounding,showData,hideEmptyRows,displayDensity,regressionType,colTotals,displayFormName,hideEmptyRowItems,aggregationType,hideSubtitle,hideLegend,colSubTotals,rowTotals,digitGroupSeparator,regression,columns[dimension,items[id,name,dimensionItemtType]],filters[dimension,items[id,name,dimensionItemtType]],rows[dimension,items[id,name,dimensionItemtType]]`
+      `visualizations/${id}.json?fields=id,name,title,subtitle,type,hideEmptyColumns,rowSubTotals,cumulativeValues,showDimensionLabels,sortOrder,fontSize,topLimit,percentStackedValues,noSpaceBetweenColumns,showHierarchy,hideTitle,skipRounding,showData,hideEmptyRows,displayDensity,regressionType,colTotals,displayFormName,hideEmptyRowItems,aggregationType,hideSubtitle,hideLegend,colSubTotals,rowTotals,digitGroupSeparator,regression,columns[dimension,items[id,name,dimensionItemtType]],filters[dimension,items[id,name,dimensionItemtType]],rows[dimension,items[id,name,dimensionItemtType]],legendSet[id,name,legends[id,name,startValue,endValue,color]]`
     );
   }
 }

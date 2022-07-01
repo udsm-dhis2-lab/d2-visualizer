@@ -137,6 +137,7 @@ export class D2Visualizer {
    */
   setType(type: VisualizationType) {
     this.visualizationType = type;
+
     return this;
   }
 
@@ -315,8 +316,10 @@ export class D2Visualizer {
    */
   async draw(): Promise<any> {
     const data = this.dataAnalytics || (await this._getData())._data;
+
     switch (this.visualizationType) {
       case 'CHART':
+      case 'LINE':
         return new ChartVisualization()
           .setId(this.id)
           .setConfig(this.config)
@@ -341,39 +344,16 @@ export class D2Visualizer {
           .setShowMapSummary(this.d2VisualizerMapControl?.showMapSummary)
           .draw();
       case 'REPORT_TABLE':
+      case 'PIVOT_TABLE':
         return new TableUtil()
           .setTableDashboardItem(this.tableDashboardItem)
-          .setTableConfiguration(this.tableConfiguration)
-          .setTableAnalytics(this.tableAnalytics)
+          .setTableConfiguration(this.config.toTableConfig())
+          .setTableAnalytics(data)
           .setLegendSet(this.legendSets)
           .draw();
       default:
         return null;
     }
-
-    // if (!this.dataAnalytics) {
-    //   const data = await this.getData();
-    //   switch (this.visualizationType) {
-    //     case 'CHART':
-    //       return new ChartVisualization()
-    //         .setId(this.id)
-    //         .setConfig(this.config)
-    //         .setData(data.data)
-    //         .setVisualizationType(this.visualizationType as ChartType)
-    //         .setChartType(this.chartType)
-    //         .draw();
-    //     case 'MAP':
-    //       return new MapUtil()
-    //         .setMapAnalytics(this.dataAnalytics as MapAnalytics)
-    //         .setGeofeature(this.geoFeatures as any)
-    //         .setLegendSet(this.legendSets)
-    //         .setContainer('map-container-demo')
-    //         .setShowLabel(true)
-    //         .draw();
-    //     default:
-    //       return null;
-    //   }
-    // }
   }
 
   /**

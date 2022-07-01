@@ -104,7 +104,7 @@ export class ChartVisualization {
    * @param downloadFormat
    */
   download(downloadFormat: DownloadFormat) {
-    const filename = this._config?.name || 'chart-data';
+    const filename = this._config?.title || 'chart-data';
     switch (downloadFormat) {
       case 'PNG':
         this._chart.exportChart({ filename, type: 'image/png' });

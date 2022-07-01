@@ -3,6 +3,7 @@ import { VisualizationDataSelection } from './visualization-data-selection';
 import { VisualizationLayout } from './visualization-layout';
 import { VisualizationType } from './visualization-type';
 import * as _ from 'lodash';
+import { TableConfiguration } from '../modules/table/models/table-config.model';
 
 export class VisualizationConfiguration {
   dataSelections: VisualizationDataSelection[];
@@ -15,8 +16,12 @@ export class VisualizationConfiguration {
   get renderId(): string {
     return this.config?.id;
   }
-  get name(): string {
-    return this.config?.displayName;
+  get title(): string {
+    return this.config?.title || this.config?.displayName;
+  }
+
+  get subTitle(): string {
+    return this.config?.subTitle;
   }
 
   get type(): VisualizationType {
@@ -193,6 +198,10 @@ export class VisualizationConfiguration {
     return this.config?.mapboxStyle;
   }
 
+  get legendSet(): any {
+    return this.config?.legendSet;
+  }
+
   mergeDataSelections(dataSelections: any[]): void {
     this.dataSelections = this.dataSelections.map((dataSelection) => {
       const availableDataSelection = _.find(dataSelections, [
@@ -202,5 +211,30 @@ export class VisualizationConfiguration {
 
       return availableDataSelection || dataSelection;
     });
+  }
+
+  toTableConfig(): TableConfiguration {
+    return {
+      id: this.renderId,
+      title: this.title,
+      subtitle: this.subTitle,
+      showColumnTotal: this.colTotals,
+      showColumnSubtotal: this.colSubTotals,
+      showRowTotal: this.rowTotals,
+      showRowSubtotal: this.rowSubTotals,
+      showDimensionLabels: this.showDimensionLabels,
+      hideEmptyRows: this.hideEmptyRows,
+      showHierarchy: this.showHierarchy,
+      rows: this.config?.rows,
+      columns: this.config?.columns,
+      filters: this.config?.filters,
+      legendDisplayStrategy: '',
+      displayList: false,
+      legendSet: this.legendSet,
+      styles: [],
+      style: '',
+      // TODO: This seems like a specific implementation, Need to find a best way to generically handle what that this is
+      isConsecutivePeDiff: false,
+    };
   }
 }

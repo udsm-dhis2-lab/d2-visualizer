@@ -44,7 +44,6 @@ export class DashboardItemComponent implements OnInit, OnChanges {
         'dashboard-item-' + this.dashboardItem.id
       )[0]?.clientHeight || 400;
     this.setVisualization();
-    console.log('REACHING HERE');
   }
 
   async setVisualization() {
@@ -62,7 +61,7 @@ export class DashboardItemComponent implements OnInit, OnChanges {
         await new D2Visualizer()
           .setConfig(this.visualizationConfig)
           .setSelections(this.dataSelections || [])
-          .setType('CHART')
+          .setType(this.visualizationConfig.type)
           .setChartType(this.visualizationConfig.type)
           .draw();
       } catch (error) {
