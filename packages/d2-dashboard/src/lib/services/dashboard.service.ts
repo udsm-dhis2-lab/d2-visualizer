@@ -73,14 +73,15 @@ export class DashboardService {
     );
   }
 
-  getCurrentDashboard(id: string, config?: any): Observable<DashboardObject> {
+  getCurrentDashboard(id: string): Observable<DashboardObject> {
+    const config: DashboardConfig = this.dashboardConfigService.getConfig();
     this._detachOverlay();
     this._attachOverlay();
 
     return (
       config?.useDataStore
-        ? this._findByIdFromDataStore(id)
-        : this._findByIdFromApi(id, config)
+        ? this._findByIdFromDataStore(id, config)
+        : this._findByIdFromApi(id)
     ).pipe(
       distinctUntilChanged(isEqual),
       tap(() => {
@@ -157,7 +158,6 @@ export class DashboardService {
         : this._findAllFromApi()
     ).pipe(
       map((res) => {
-        console.log('RESPONSE HERE', res, config);
         return (res?.dashboards || []).map(
           (dashboard: { [key: string]: string | number | object }) =>
             new DashboardMenu(dashboard).toObject()
@@ -178,7 +178,7 @@ export class DashboardService {
       );
   }
 
-  private _findByIdFromApi(id: string, preference?: any) {
+  private _findByIdFromApi(id: string) {
     return this.httpClient
       .get(
         `dashboards/${id}.json?fields=id,name,description,favorite,dashboardItems[id,type,x,y,height,width,shape,visualization[id],chart~rename(visualization)]`
@@ -188,10 +188,12 @@ export class DashboardService {
       );
   }
 
-  private _findByIdFromDataStore(id: string, preference?: any) {
-    return this.httpClient.get(
-      `dashboards/${id}.json?fields=id,name,description,favorite,dashboardItems[id,type,shape,visualization[id],chart~rename(visualization)]`
-    );
+  private _findByIdFromDataStore(id: string, config: DashboardConfig) {
+    return this.httpClient
+      .get(`dataStore/${config.dataStoreNamespace}/${id}`)
+      .pipe(
+        map((dashboardResponse) => new Dashboard(dashboardResponse).toObject())
+      );
   }
 
   private _attachOverlay() {
