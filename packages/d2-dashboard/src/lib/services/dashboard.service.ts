@@ -21,11 +21,13 @@ import { catchError, distinctUntilChanged, map, take } from 'rxjs/operators';
 import { DashboardLoaderComponent } from '../components/dashboard-loader/dashboard-loader.component';
 import {
   Dashboard,
+  DashboardConfig,
   DashboardMenu,
   DashboardMenuObject,
   DashboardObject,
   VisualizationDataSelection,
 } from '../models';
+import { DashboardConfigService } from './dashboard-config.service';
 
 interface DashboardStore {
   currentDashboardMenu?: DashboardMenuObject;
@@ -44,7 +46,8 @@ export class DashboardService {
     private router: Router,
     private _snackBar: MatSnackBar,
     private _snackBarRef: MatSnackBarRef<TextOnlySnackBar>,
-    private overlay: Overlay
+    private overlay: Overlay,
+    private dashboardConfigService: DashboardConfigService
   ) {
     this._dashboardStore$ = new BehaviorSubject({
       globalSelections: {},
@@ -53,9 +56,10 @@ export class DashboardService {
     this._dashboardStoreObservable$ = this._dashboardStore$.asObservable();
   }
 
-  getMenuList(config?: any): Observable<DashboardMenuObject[]> {
+  getMenuList(): Observable<DashboardMenuObject[]> {
+    const config: DashboardConfig = this.dashboardConfigService.getConfig();
     this._attachOverlay();
-    return this._findMenuList(config).pipe(
+    return this._findMenuList(config as DashboardConfig).pipe(
       tap((dashboardMenuItems: DashboardMenuObject[]) => {
         const splitedUrl = (window.location.href || '').split('/');
         const currentDashboard =
@@ -144,18 +148,21 @@ export class DashboardService {
     );
   }
 
-  private _findMenuList(config: any): Observable<DashboardMenuObject[]> {
+  private _findMenuList(
+    config: DashboardConfig
+  ): Observable<DashboardMenuObject[]> {
     return (
       config?.useDataStore
-        ? this._findAllFromDataStore()
+        ? this._findAllFromDataStore(config)
         : this._findAllFromApi()
     ).pipe(
-      map((res) =>
-        (res?.dashboards || []).map(
+      map((res) => {
+        console.log('RESPONSE HERE', res, config);
+        return (res?.dashboards || []).map(
           (dashboard: { [key: string]: string | number | object }) =>
             new DashboardMenu(dashboard).toObject()
-        )
-      )
+        );
+      })
     );
   }
 
@@ -163,8 +170,12 @@ export class DashboardService {
     return this.httpClient.get('dashboards.json?fields=id,name&paging=false');
   }
 
-  private _findAllFromDataStore() {
-    return of({ dashboards: [] });
+  private _findAllFromDataStore(config: DashboardConfig) {
+    return this.httpClient
+      .get(`dataStore/${config.dataStoreNamespace}/summary`)
+      .pipe(
+        map((dashboardResponse) => ({ dashboards: dashboardResponse || [] }))
+      );
   }
 
   private _findByIdFromApi(id: string, preference?: any) {

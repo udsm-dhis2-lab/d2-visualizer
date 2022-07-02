@@ -6,7 +6,6 @@ import { D2DashboardComponent } from './d2-dashboard.component';
 const routes: Routes = [
   {
     path: '',
-
     component: D2DashboardComponent,
     children: [
       {

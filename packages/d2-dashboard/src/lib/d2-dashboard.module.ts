@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
 import { KtdGridModule } from '@katoid/angular-grid-layout';
@@ -10,9 +10,14 @@ import {
 import { d2DashboardContainers } from './containers';
 import { D2DashboardRoutingModule } from './d2-dashboard-routing.module';
 import { D2DashboardComponent } from './d2-dashboard.component';
+import { DashboardConfig } from './models';
 import { d2DashboardModules } from './modules';
 import { d2DashboardPipes } from './pipes';
 import { d2DashboardServices } from './services';
+import {
+  DASHBARD_CONFIG,
+  DashboardConfigClass,
+} from './services/dashboard-config.service';
 import { d2DashboardMaterialModules } from './shared';
 
 @NgModule({
@@ -41,4 +46,18 @@ import { d2DashboardMaterialModules } from './shared';
   entryComponents: [...d2DashboardEntryComponents],
   exports: [D2DashboardComponent],
 })
-export class D2DashboardModule {}
+export class D2DashboardModule {
+  static forRoot(
+    config: DashboardConfig
+  ): ModuleWithProviders<D2DashboardModule> {
+    return {
+      ngModule: D2DashboardModule,
+      providers: [
+        {
+          provide: DASHBARD_CONFIG,
+          useValue: config,
+        },
+      ],
+    };
+  }
+}

@@ -274,9 +274,7 @@ export class TableUtil {
 
       if (renderingElement) {
         renderingElement?.replaceChildren();
-
         const tableHTML = this.getTableHTML(tableData);
-
         renderingElement.innerHTML = tableHTML;
       }
     }

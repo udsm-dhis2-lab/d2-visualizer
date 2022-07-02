@@ -15,6 +15,7 @@ import { MatListModule } from '@angular/material/list';
 import { SharedModule } from './shared/shared.module';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
+import { D2DashboardModule } from '@iapps/d2-dashboard';
 
 @NgModule({
   declarations: [AppComponent, NxWelcomeComponent],
@@ -39,6 +40,10 @@ import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
         organisationUnits: 'id,name,level',
         organisationUnitGroups: 'id',
       },
+    }),
+    D2DashboardModule.forRoot({
+      useDataStore: false,
+      dataStoreNamespace: 'ehs-dashboard',
     }),
   ],
   providers: [],
