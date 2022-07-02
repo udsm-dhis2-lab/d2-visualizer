@@ -6,10 +6,17 @@
         <mat-label class="d2-dashboard__search-label"
           >Search for a dashboard</mat-label
         >
-        <input matInput class="d2-dashboard__search-input" />
+        <input
+          matInput
+          class="d2-dashboard__search-input"
+          (keyup)="onSearchDashboard($event)"
+        />
       </mat-form-field>
       <iapps-dashboard-menu-item
-        *ngFor="let dashboardMenuItem of dashboardMenuItems"
+        *ngFor="
+          let dashboardMenuItem of dashboardMenuItems
+            | filterDashboardBy: 'name':searchTerm
+        "
         [dashboardMenuItem]="dashboardMenuItem"
         [isCurrentDashboard]="dashboardMenuItem?.id === currentDashboardId"
         (setDashboard)="onSetCurrentDashboard($event)"
