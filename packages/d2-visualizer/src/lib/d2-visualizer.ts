@@ -320,6 +320,10 @@ export class D2Visualizer {
     switch (this.visualizationType) {
       case 'CHART':
       case 'LINE':
+      case 'COLUMN':
+      case 'BAR':
+      case 'DOTTED':
+      case 'PIE':
         return new ChartVisualization()
           .setId(this.id)
           .setConfig(this.config)

@@ -1,4 +1,4 @@
-export type ChartType = 'COLUMN' | 'LINE';
+export type ChartType = 'COLUMN' | 'LINE' | 'BAR' | 'DOTTED' | 'PIE';
 export type VisualizationType =
   | ChartType
   | 'CHART'
