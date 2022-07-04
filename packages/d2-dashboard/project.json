@@ -1,0 +1,41 @@
+{
+  "projectType": "library",
+  "sourceRoot": "packages/d2-dashboard/src",
+  "prefix": "d2",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "outputs": ["dist/packages/d2-dashboard"],
+      "options": {
+        "project": "packages/d2-dashboard/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "packages/d2-dashboard/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "packages/d2-dashboard/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/d2-dashboard"],
+      "options": {
+        "jestConfig": "packages/d2-dashboard/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "packages/d2-dashboard/**/*.ts",
+          "packages/d2-dashboard/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

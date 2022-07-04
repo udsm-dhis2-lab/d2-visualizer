@@ -1,0 +1,18 @@
+<div class="d2-dashboard__current-dashboard-header">
+  <div class="d2-dashboard__current-dashboard-title-container">
+    <h2 class="d2-dashboard__current-dashboard-title" [id]="dashboard?.id">
+      {{ dashboard?.name }}
+    </h2>
+    <div class="d2-dashboard__dashboard-filters">
+      <iapps-dashboard-selection-filters
+        (setFilterSelection)="onFilterSelection($event)"
+      ></iapps-dashboard-selection-filters>
+    </div>
+  </div>
+  <div>
+    <button mat-stroked-button>
+      <mat-icon inline>print</mat-icon>
+      <span class="d2-dashboard__print-label">Print</span>
+    </button>
+  </div>
+</div>

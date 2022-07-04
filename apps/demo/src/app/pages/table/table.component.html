@@ -1,0 +1,82 @@
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened fixedInViewport>
+    <mat-accordion>
+      <!-- Chart Visualization Menu  -->
+      <mat-expansion-panel
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+        [expanded]="step === 0"
+        (opened)="setStep('chart', 0)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div mat-subheader>Chart Visualization Module</div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <!-- Map Visualization Menu  -->
+      <mat-expansion-panel
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+        (opened)="setStep('map', 1)"
+        [expanded]="step === 1"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div mat-subheader>Map Visualization Module</div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <!-- Table Visualization Module  -->
+      <mat-expansion-panel
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+        (opened)="setStep('table', 2)"
+        [expanded]="step === 2"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div mat-subheader>Table Visualization Module</div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list>
+          <!--<mat-list-item
+            [routerLinkActive]="'active'"
+            (click)="onMenuClick(chartConfig)"
+            *ngFor="let chartConfig of chartConfigs; let i = index"
+          >
+            <img
+              mat-list-icon
+              class="side-menu-icon"
+              [src]="'assets/icons/table.png'"
+              [alt]="chartConfig.name"
+            />
+            <div mat-line>Table Item {{ i + 1 }}</div>
+          </mat-list-item>
+        -->
+          <mat-list-item
+            [routerLinkActive]="'active'"
+            (click)="onTableTypeChange()"
+          >
+            <img
+              mat-list-icon
+              class="side-menu-icon"
+              [src]="'assets/icons/table.png'"
+              [alt]=""
+            />
+            <div mat-line>EHS Color Scorecard</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-expansion-panel>
+      <!-- Dictionary Visualization Module  -->
+    </mat-accordion>
+  </mat-drawer>
+  <mat-drawer-content>
+    <!-- <div>MNAONA 2222::: {{ tableDashboardItem | json }}</div> -->
+    <iapps-ngx-d2-table *ngIf="tableDashboardItem && tableAnalytics && tableConfiguration"
+      [tableDashboardItem]="tableDashboardItem"
+      [tableAnalytics]="tableAnalytics"
+      [tableConfiguration]="tableConfiguration"
+    ></iapps-ngx-d2-table>
+  </mat-drawer-content>
+</mat-drawer-container>

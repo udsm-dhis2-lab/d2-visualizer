@@ -1,0 +1,113 @@
+// .message-container {
+//   position: fixed;
+//   right: 0;
+//   bottom: 0;
+//   top: 0;
+//   width: 50%;
+//   background-color: #fff;
+//   z-index: 1000;
+// }
+
+.banner {
+  color: darkcyan;
+  margin-right: 5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.d2-menu-container {
+  display: flex;
+  position: fixed;
+  align-items: center;
+  height: 50px;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  right: 0;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.05),
+    0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+  -moz-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.05),
+    0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.05),
+    0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+
+  .left-header {
+    display: flex;
+    align-items: center;
+
+    .d2-header {
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+
+      a {
+        text-decoration: none;
+        color: #000000;
+      }
+    }
+
+    .d2-logo {
+      margin-right: 10px;
+      text-decoration: none;
+
+      img {
+        height: 30px;
+      }
+    }
+  }
+
+  .right-header {
+    display: flex;
+    align-items: center;
+
+    .apps-btn {
+      margin-right: 15px;
+      display: flex;
+      cursor: pointer;
+    }
+
+    .apps-search-icon {
+      margin-right: 15px;
+      display: flex;
+      cursor: pointer;
+    }
+
+    .apps-search {
+      margin-right: 15px;
+      display: flex;
+      cursor: pointer;
+      outline: none !important;
+    }
+
+    .apps-search-input {
+      font-size: 1rem;
+    }
+
+    .remove-app-search {
+      cursor: pointer;
+    }
+
+    .user-profile-btn {
+      height: 40px;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: #dddddd;
+      cursor: pointer;
+    }
+  }
+
+  .right-header a {
+    text-decoration: none;
+    color: black;
+  }
+}

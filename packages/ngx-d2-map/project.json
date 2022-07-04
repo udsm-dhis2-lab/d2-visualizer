@@ -1,0 +1,41 @@
+{
+  "projectType": "library",
+  "sourceRoot": "packages/ngx-d2-map/src",
+  "prefix": "iapps",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "outputs": ["dist/packages/ngx-d2-map"],
+      "options": {
+        "project": "packages/ngx-d2-map/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "packages/ngx-d2-map/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "packages/ngx-d2-map/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/ngx-d2-map"],
+      "options": {
+        "jestConfig": "packages/ngx-d2-map/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "packages/ngx-d2-map/**/*.ts",
+          "packages/ngx-d2-map/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

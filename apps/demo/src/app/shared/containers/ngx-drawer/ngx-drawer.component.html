@@ -1,0 +1,27 @@
+<div *ngIf="isInfoOpen" class="info-container mat-elevation-z3">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="w-100 source-code-container">
+      <div *ngIf="sourceCodeConfig">
+        <h2 mat-dialog-title class="text-muted">
+          {{ sourceCodeConfig?.title
+          }}<span (click)="onClose()" class="material-icons cancel">
+            cancel
+          </span>
+        </h2>
+      </div>
+      <mat-dialog-content>
+        <div>
+          <div [style.height]="monacoEditorHeight">
+            <ngx-monaco-editor
+              class="my-code-editor"
+              style="height: 100%"
+              [options]="editorOptions"
+              [(ngModel)]="code"
+              (onInit)="onEditorInit($event)"
+            ></ngx-monaco-editor>
+          </div>
+        </div>
+      </mat-dialog-content>
+    </div>
+  </div>
+</div>

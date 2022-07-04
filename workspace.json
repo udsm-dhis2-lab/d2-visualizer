@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json",
+  "version": 2,
+  "projects": {
+    "d2-dashboard": "packages/d2-dashboard",
+    "d2-visualizer": "packages/d2-visualizer",
+    "demo": "apps/demo",
+    "demo-e2e": "apps/demo-e2e",
+    "ngx-d2-map": "packages/ngx-d2-map"
+  }
+}

@@ -1,0 +1,9 @@
+<ngx-dhis2-period-filter
+  [selectedPeriods]="[]"
+  [selectedPeriodFilterType]="'FIXED'"
+  [periodFilterConfig]="periodFilterConfig"
+  (update)="onPeriodUpdate($event, 'UPDATE')"
+  (change)="onPeriodUpdate($event, 'CHANGE')"
+  (close)="onPeriodUpdate($event, 'CLOSE')"
+>
+</ngx-dhis2-period-filter>

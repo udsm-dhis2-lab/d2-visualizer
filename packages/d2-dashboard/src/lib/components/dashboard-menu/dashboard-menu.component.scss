@@ -1,0 +1,34 @@
+.d2-dashboard__menu-container {
+  left: 0;
+  right: 0;
+  top: 50px;
+  position: sticky;
+  z-index: 1000;
+  padding: 8px 16px 8px 16px;
+  background-color: #fff;
+}
+
+.d2-dashboard__search {
+  margin-left: 8px;
+  margin-right: 16px;
+}
+
+.d2-dashboard__menu-list {
+  display: flex;
+  align-items: center;
+}
+
+.d2-dashboard__action-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.d2-dashboard__search-label {
+  margin-left: 8px !important;
+}
+
+.d2-dashboard__search-input {
+  padding-left: 8px;
+  margin: 0 0 2px 0 !important;
+}

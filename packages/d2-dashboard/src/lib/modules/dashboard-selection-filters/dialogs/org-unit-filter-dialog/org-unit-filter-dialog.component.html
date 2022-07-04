@@ -1,0 +1,6 @@
+<ngx-dhis2-org-unit-filter
+  [orgUnitFilterConfig]="orgUnitFilterConfig"
+  [selectedOrgUnitItems]="[]"
+  (orgUnitUpdate)="onOrgUnitUpdate($event, 'UPDATE')"
+  (orgUnitClose)="onOrgUnitUpdate($event, 'CLOSE')"
+></ngx-dhis2-org-unit-filter>
