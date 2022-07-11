@@ -1,11 +1,12 @@
 import { Fn } from '@iapps/function-analytics';
-import { ChartVisualization } from './modules/chart/chart-visualizer';
+import { ChartVisualizer } from './modules/chart/chart-visualizer';
 import { LegendSet } from './modules/map/models/legend-set.model';
 import { MapAnalytics } from './modules/map/models/map-analytic.model';
 import { D2VisualizerMapControl } from './modules/map/models/map-control.model';
 import { MapDashboardExtensionItem } from './modules/map/models/map-dashboard-extension.model';
 import { MapDashboardItem } from './modules/map/models/map-dashboard-item.model';
 import { MapUtil } from './modules/map/utils/map.util';
+import { SingleValueVisualizer } from './modules/single-value/single-value-visualizer';
 import { TableAnalytics } from './modules/table/models/table-analytics.model';
 import { TableConfiguration } from './modules/table/models/table-config.model';
 import { TableDashboardItem } from './modules/table/models/table-dashboard-item.model';
@@ -322,7 +323,7 @@ export class D2Visualizer {
       case 'BAR':
       case 'DOTTED':
       case 'PIE':
-        return new ChartVisualization()
+        return new ChartVisualizer()
           .setId(this.id)
           .setConfig(this.config)
           .setData(data)
@@ -353,6 +354,9 @@ export class D2Visualizer {
           .setTableAnalytics(data)
           .setLegendSet(this.legendSets)
           .draw();
+      case 'SINGLE_VALUE':
+        console.log(this.id);
+        return new SingleValueVisualizer().setId(this.id).setData(data).draw();
       default:
         return null;
     }
@@ -368,7 +372,7 @@ export class D2Visualizer {
 
     switch (this.visualizationType) {
       case 'CHART':
-        return new ChartVisualization()
+        return new ChartVisualizer()
           .setId(this.id)
           .setConfig(this.config)
           .setData(data.data)

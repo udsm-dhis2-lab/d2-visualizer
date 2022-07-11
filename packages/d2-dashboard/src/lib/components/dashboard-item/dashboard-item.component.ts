@@ -59,6 +59,7 @@ export class DashboardItemComponent implements OnInit, OnChanges {
           ));
 
         await new D2Visualizer()
+          .setId(this.visualizationConfig?.id)
           .setConfig(this.visualizationConfig)
           .setSelections(this.dataSelections || [])
           .setType(this.visualizationConfig.type)
