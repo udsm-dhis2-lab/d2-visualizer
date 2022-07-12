@@ -16,6 +16,7 @@ export interface DashboardItemObject {
   externalAccess?: boolean;
   appKey?: string;
   singleValue?: boolean;
+  hasExtension?: boolean;
   visualization: DashboardVisualization;
 }
 
@@ -26,11 +27,17 @@ export class DashboardItem {
   ) {}
 
   get width(): number {
-    return (this.dashboardItemResponse['width'] as number) || 29;
+    return (
+      ((this.dashboardItemResponse['width'] ||
+        this.dashboardItemResponse['w']) as number) || 29
+    );
   }
 
   get height(): number {
-    return (this.dashboardItemResponse['height'] as number) || 20;
+    return (
+      ((this.dashboardItemResponse['height'] ||
+        this.dashboardItemResponse['h']) as number) || 20
+    );
   }
 
   get x(): number {
@@ -56,6 +63,7 @@ export class DashboardItem {
     return {
       id: this.dashboardItemResponse['id'] as string,
       type: this.dashboardItemResponse['type'] as string,
+      hasExtension: Boolean(this.dashboardItemResponse['hasExtension']),
       x: this.x,
       y: this.y,
       h: this.height,

@@ -1,5 +1,6 @@
 import { Fn } from '@iapps/function-analytics';
 import { ChartVisualizer } from './modules/chart/chart-visualizer';
+import { CustomVisualizer } from './modules/custom/custom-visualizer';
 import { LegendSet } from './modules/map/models/legend-set.model';
 import { MapAnalytics } from './modules/map/models/map-analytic.model';
 import { D2VisualizerMapControl } from './modules/map/models/map-control.model';
@@ -355,8 +356,13 @@ export class D2Visualizer {
           .setLegendSet(this.legendSets)
           .draw();
       case 'SINGLE_VALUE':
-        console.log(this.id);
         return new SingleValueVisualizer().setId(this.id).setData(data).draw();
+      case 'CUSTOM':
+        return new CustomVisualizer()
+          .setId(this.id)
+          .setConfig(this.config)
+          .setData(data)
+          .draw();
       default:
         return null;
     }

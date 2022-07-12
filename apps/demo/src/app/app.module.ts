@@ -41,8 +41,8 @@ import { SharedModule } from './shared/shared.module';
       },
     }),
     D2DashboardModule.forRoot({
-      useDataStore: false,
-      dataStoreNamespace: 'ehs-dashboard',
+      useDataStore: true,
+      dataStoreNamespace: 'eidsr-dashboard',
     }),
   ],
   providers: [],

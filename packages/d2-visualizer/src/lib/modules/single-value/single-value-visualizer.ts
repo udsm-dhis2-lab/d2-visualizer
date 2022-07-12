@@ -35,7 +35,7 @@ export class SingleValueVisualizer
       #single-value-label-${this._id} {
         font-size: 12px; 
         color: #666;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
       }
 
       #single-value-${this._id} {

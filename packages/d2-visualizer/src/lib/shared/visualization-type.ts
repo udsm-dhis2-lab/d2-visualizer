@@ -12,4 +12,5 @@ export type VisualizationType =
   | 'PIVOT_TABLE'
   | 'MAP'
   | 'DICTIONARY'
+  | 'CUSTOM'
   | 'MAPBOX';

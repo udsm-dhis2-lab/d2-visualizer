@@ -16,7 +16,7 @@ export class DashboardConfigService {
     @Optional() @Inject(DASHBARD_CONFIG) private config: DashboardConfig
   ) {}
 
-  getConfig() {
+  getConfig(): DashboardConfig {
     return this.config;
   }
 }

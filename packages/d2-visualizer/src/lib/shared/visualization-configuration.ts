@@ -1,15 +1,28 @@
-import { getSelectionDimensionsFromFavorite } from './helpers';
+import {
+  getCustomTemplateDataSelections,
+  getSelectionDimensionsFromFavorite,
+} from './helpers';
 import { VisualizationDataSelection } from './visualization-data-selection';
 import { VisualizationLayout } from './visualization-layout';
 import { VisualizationType } from './visualization-type';
 import * as _ from 'lodash';
 import { TableConfiguration } from '../modules/table/models/table-config.model';
+import { CustomVisualizationTemplate } from '../modules/custom/models/custom-visualization-template.model';
+import { DEFAULT_ORG_UNIT_SELECTIONS } from './constants/default-data-selections.constant';
 
 export class VisualizationConfiguration {
   dataSelections: VisualizationDataSelection[];
   layout?: VisualizationLayout;
   constructor(public config: any) {
     this.dataSelections = getSelectionDimensionsFromFavorite(this.config);
+
+    if (this.type.toUpperCase() === 'CUSTOM') {
+      this.dataSelections = getCustomTemplateDataSelections(
+        this.customTemplate.html,
+        _.unionBy(this.dataSelections, DEFAULT_ORG_UNIT_SELECTIONS)
+      );
+    }
+
     this.layout = VisualizationLayout.getLayout(this.dataSelections);
   }
 
@@ -202,15 +215,20 @@ export class VisualizationConfiguration {
     return this.config?.legendSet;
   }
 
-  mergeDataSelections(dataSelections: any[]): void {
-    this.dataSelections = this.dataSelections.map((dataSelection) => {
-      const availableDataSelection = _.find(dataSelections, [
-        'dimension',
-        dataSelection.dimension,
-      ]);
+  get customTemplate(): CustomVisualizationTemplate {
+    return new CustomVisualizationTemplate(this.config?.template);
+  }
 
-      return availableDataSelection || dataSelection;
-    });
+  get customTemplateDataSelections(): any {
+    return [];
+  }
+
+  mergeDataSelections(dataSelections: any[]): void {
+    this.dataSelections = _.unionBy(
+      dataSelections,
+      this.dataSelections,
+      'dimension'
+    );
   }
 
   toTableConfig(): TableConfiguration {
