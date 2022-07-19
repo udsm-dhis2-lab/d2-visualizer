@@ -14,11 +14,12 @@
     ></iapps-dashboard-selection-summary>
   </div>
 
-  <iapps-dashboard-items
+  <d2-dashboard-items
+    [dashboard$]="currentDashboard$ || undefined"
     [dashboardItems]="currentDashboard?.dashboardItems || []"
     [dataSelections]="(globalSelection$ | async) || []"
     [dashboardItemsLayout]="currentDashboard?.dashboardItemsLayout || []"
-  ></iapps-dashboard-items>
+  ></d2-dashboard-items>
 
   <ng-container *ngIf="error"> Dashboard Error </ng-container>
 </div>

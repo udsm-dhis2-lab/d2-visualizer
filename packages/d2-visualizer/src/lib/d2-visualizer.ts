@@ -1,6 +1,7 @@
 import { Fn } from '@iapps/function-analytics';
 import { ChartVisualizer } from './modules/chart/chart-visualizer';
 import { CustomVisualizer } from './modules/custom/custom-visualizer';
+import { TrackedEntityLayer } from './modules/map/layers/tracked-entity-layer/tracked-entity-layer.model';
 import { LegendSet } from './modules/map/models/legend-set.model';
 import { MapAnalytics } from './modules/map/models/map-analytic.model';
 import { D2VisualizerMapControl } from './modules/map/models/map-control.model';
@@ -29,6 +30,7 @@ export class D2Visualizer {
   geoFeatures: any[] = [];
   dataAnalytics: unknown = null;
   layerStyle = 'default';
+  trackedEntityInstances?: any[];
 
   // Table Configuration
   tableDashboardItem: TableDashboardItem | any;
@@ -164,6 +166,16 @@ export class D2Visualizer {
 
   /**
    *
+   * @param analytics
+   * @returns
+   */
+  setTrackedEntityInstances(trackedEntityInstances: any[]) {
+    this.trackedEntityInstances = trackedEntityInstances;
+    return this;
+  }
+
+  /**
+   *
    * @param geoFeatures
    * @returns
    */
@@ -257,6 +269,7 @@ export class D2Visualizer {
    * @returns
    */
   private _getData(): Promise<any> {
+    console.log(this.trackedEntityInstances);
     const analyticPromise = new Fn.Analytics();
 
     this.config.mergeDataSelections(this.dataSelections);
@@ -315,7 +328,9 @@ export class D2Visualizer {
    * @returns
    */
   async draw(): Promise<any> {
-    const data = this.dataAnalytics || (await this._getData())._data;
+    const data = !this.trackedEntityInstances
+      ? this.dataAnalytics || (await this._getData())._data
+      : undefined;
 
     switch (this.visualizationType) {
       case 'CHART':
@@ -324,6 +339,8 @@ export class D2Visualizer {
       case 'BAR':
       case 'DOTTED':
       case 'PIE':
+      case 'STACKED_BAR':
+      case 'STACKED_COLUMN':
         return new ChartVisualizer()
           .setId(this.id)
           .setConfig(this.config)
@@ -362,7 +379,10 @@ export class D2Visualizer {
           .setId(this.id)
           .setConfig(this.config)
           .setData(data)
+          .setTrackedEntityInstances(this.trackedEntityInstances)
           .draw();
+      case 'TRACKED_ENTITY_LAYER':
+        return new TrackedEntityLayer().setId(this.id).draw();
       default:
         return null;
     }

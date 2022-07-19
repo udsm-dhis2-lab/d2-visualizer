@@ -1,3 +1,4 @@
+import { PeriodType } from '@iapps/period-utilities';
 import { KtdGridLayout } from '@katoid/angular-grid-layout';
 import { DashboardAccess } from './dashboard-access.model';
 import { DashboardItem, DashboardItemObject } from './dashboard-item.model';
@@ -6,6 +7,9 @@ export interface DashboardObject {
   id: string;
   name?: string;
   displayName?: string;
+  isTrackerDashboard?: boolean;
+  program?: string;
+  periodType?: string;
   created?: string;
   lastUpdated?: string;
   description?: string;
@@ -62,6 +66,9 @@ export class Dashboard {
     return {
       id: this.dashboardResponse['id'] as string,
       name: this.dashboardResponse['name'] as string,
+      isTrackerDashboard: Boolean(this.dashboardResponse['isTrackerDashboard']),
+      program: this.dashboardResponse['program'] as string,
+      periodType: this.dashboardResponse['periodType'] as string,
       dashboardItems: this.dashboardItems,
       dashboardItemsLayout: this.dashboardItemsLayout,
     };

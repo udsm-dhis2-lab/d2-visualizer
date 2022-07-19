@@ -802,6 +802,7 @@ function getChartTitleObject(chartConfiguration: any): any {
   if (chartConfiguration.hideTitle) {
     return null;
   }
+
   return {
     text: chartConfiguration.title,
     align: 'center',

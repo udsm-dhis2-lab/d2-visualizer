@@ -12,12 +12,14 @@ import { DashboardItemObject, VisualizationDataSelection } from '../../models';
 import { DashboardItemService } from '../../services';
 
 @Component({
-  selector: 'iapps-dashboard-item',
+  selector: 'd2-dashboard-item',
   templateUrl: './dashboard-item.component.html',
   styleUrls: ['./dashboard-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardItemComponent implements OnInit, OnChanges {
+  @Input() trackedEntityInstances?: any[];
+  @Input() isTrackerDashboard?: boolean;
   @Input() dashboardItem!: DashboardItemObject;
   @Input() dataSelections?: VisualizationDataSelection[];
 
@@ -65,6 +67,7 @@ export class DashboardItemComponent implements OnInit, OnChanges {
           .setSelections(this.dataSelections || [])
           .setType(this.visualizationConfig.type)
           .setChartType(this.visualizationConfig.type)
+          .setTrackedEntityInstances(this.trackedEntityInstances as any[])
           .draw();
       } catch (error) {
         this._loading$.next(false);

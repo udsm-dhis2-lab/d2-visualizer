@@ -30,7 +30,7 @@ export class VisualizationConfiguration {
     return this.config?.id;
   }
   get title(): string {
-    return this.config?.title || this.config?.displayName;
+    return this.config?.title || this.config?.displayName || this.config?.name;
   }
 
   get subTitle(): string {

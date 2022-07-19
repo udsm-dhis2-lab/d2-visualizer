@@ -6,7 +6,7 @@ import { DashboardObject, VisualizationDataSelection } from '../../models';
 import { DashboardService } from '../../services';
 
 @Component({
-  selector: 'iapps-current-dashboard',
+  selector: 'd2-current-dashboard',
   templateUrl: './current-dashboard.component.html',
   styleUrls: ['./current-dashboard.component.scss'],
 })

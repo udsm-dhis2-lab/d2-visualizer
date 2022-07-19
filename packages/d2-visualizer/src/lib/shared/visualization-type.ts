@@ -4,7 +4,9 @@ export type ChartType =
   | 'BAR'
   | 'DOTTED'
   | 'PIE'
-  | 'SINGLE_VALUE';
+  | 'SINGLE_VALUE'
+  | 'STACKED_COLUMN'
+  | 'STACKED_BAR';
 export type VisualizationType =
   | ChartType
   | 'CHART'
@@ -13,4 +15,5 @@ export type VisualizationType =
   | 'MAP'
   | 'DICTIONARY'
   | 'CUSTOM'
-  | 'MAPBOX';
+  | 'MAPBOX'
+  | 'TRACKED_ENTITY_LAYER';

@@ -5,6 +5,7 @@
   "scripts": {
     "postinstall": "ngcc --properties es2020 browser module main",
     "pack:d2-visualizer": "nx build d2-visualizer && cd dist/packages/d2-visualizer && npm pack",
+    "publish:d2-visualizer": "nx build d2-visualizer && cd dist/packages/d2-visualizer && npm publish --access public",
     "link:d2-visualizer": "nx build d2-visualizer && cd dist/packages/d2-visualizer && npm link",
     "build:d2-visualizer": "nx build d2-visualizer",
     "publish": "node tools/scripts/publish.mjs",
@@ -40,6 +41,7 @@
     "html-to-image": "^1.9.0",
     "lodash": "^4.17.21",
     "mapbox-gl": "^2.9.1",
+    "moment": "^2.29.4",
     "ngx-monaco-editor": "^12.0.0",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",

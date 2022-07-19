@@ -2,6 +2,7 @@ import { BaseVisualizer, Visualizer } from '../../shared/base-visualizer';
 import { VisualizationDataSelection } from '../../shared/visualization-data-selection';
 import { CustomVisualizationTemplate } from './models/custom-visualization-template.model';
 import { find, intersection, keys, sortBy, uniqBy } from 'lodash';
+import { TrackedEntityInstanceData } from './models/tracked-entity-instance-data.model';
 
 export class CustomVisualizer extends BaseVisualizer implements Visualizer {
   /**
@@ -16,8 +17,24 @@ export class CustomVisualizer extends BaseVisualizer implements Visualizer {
     return this._config.customTemplate as CustomVisualizationTemplate;
   }
 
-  draw() {
-    const dataVariables = this.template.html.match(/\{{([^{^)]+)}}/g);
+  private renderElement(htmlContent: string) {
+    const renderingElement = document.getElementById(this._id);
+
+    if (renderingElement) {
+      renderingElement?.replaceChildren();
+      renderingElement.innerHTML = `
+      <style>${this.template.cssStyles}</style>
+      ${htmlContent}
+      `;
+    }
+  }
+
+  private getDataVariablesFromTemplate(htmlTemplate: string) {
+    return htmlTemplate.match(/\{{([^{^)]+)}}/g);
+  }
+
+  private drawWithAnalytics() {
+    const dataVariables = this.getDataVariablesFromTemplate(this.template.html);
 
     let htmlContent = this.template.html;
 
@@ -60,14 +77,42 @@ export class CustomVisualizer extends BaseVisualizer implements Visualizer {
       );
     });
 
-    const renderingElement = document.getElementById(this._id);
+    this.renderElement(htmlContent);
+  }
 
-    if (renderingElement) {
-      renderingElement?.replaceChildren();
-      renderingElement.innerHTML = `
-      <style>${this.template.cssStyles}</style>
-      ${htmlContent}
-      `;
+  private drawWithTrackedEntityInstances() {
+    const trackerDataInstance = new TrackedEntityInstanceData(
+      this._trackedEntityInstances as any[]
+    );
+
+    const dataVariables = this.getDataVariablesFromTemplate(this.template.html);
+    let htmlContent = this.template.html;
+
+    (dataVariables || []).forEach((dataVariable) => {
+      const dataDimensionEntity = dataVariable
+        .replace(/[{}']/g, '')
+        .split(';')
+        .reduce((dimensionObject, dimensionVariable) => {
+          const dimensionParams = dimensionVariable.split(':');
+          const dimension: string = dimensionParams[0];
+          return { ...dimensionObject, [dimension]: dimensionParams[1] };
+        }, {});
+
+      htmlContent = htmlContent.replace(
+        new RegExp(dataVariable, 'g'),
+        trackerDataInstance.getExpressionData(dataDimensionEntity)?.toString()
+      );
+    });
+    this.renderElement(htmlContent);
+  }
+
+  draw() {
+    if (this._data) {
+      this.drawWithAnalytics();
+    }
+
+    if (this._trackedEntityInstances) {
+      this.drawWithTrackedEntityInstances();
     }
   }
 }
