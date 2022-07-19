@@ -7,9 +7,15 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { D2Visualizer } from '@iapps/d2-visualizer';
-import { BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  firstValueFrom,
+  lastValueFrom,
+  Observable,
+  Subject,
+} from 'rxjs';
 import { DashboardItemObject, VisualizationDataSelection } from '../../models';
-import { DashboardItemService } from '../../services';
+import { DashboardItemService, TrackerDashboardService } from '../../services';
 
 @Component({
   selector: 'd2-dashboard-item',
@@ -29,7 +35,10 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   loading$: Observable<boolean>;
   error?: any;
   visualizationContainerHeight!: number;
-  constructor(private dashboardItemService: DashboardItemService) {
+  constructor(
+    private dashboardItemService: DashboardItemService,
+    private trackerDashboardService: TrackerDashboardService
+  ) {
     this._loading$ = new BehaviorSubject<boolean>(true);
     this.loading$ = this._loading$.asObservable();
   }
@@ -61,13 +70,18 @@ export class DashboardItemComponent implements OnInit, OnChanges {
             )
           ));
 
+        const trackedEntityInstances = this.visualizationConfig
+          .isTrackerVisualization
+          ? await this._getTrackedEntityInstances()
+          : undefined;
+
         await new D2Visualizer()
           .setId(this.visualizationConfig?.id)
           .setConfig(this.visualizationConfig)
           .setSelections(this.dataSelections || [])
           .setType(this.visualizationConfig.type)
           .setChartType(this.visualizationConfig.type)
-          .setTrackedEntityInstances(this.trackedEntityInstances as any[])
+          .setTrackedEntityInstances(trackedEntityInstances as any[])
           .draw();
       } catch (error) {
         this._loading$.next(false);
@@ -75,5 +89,15 @@ export class DashboardItemComponent implements OnInit, OnChanges {
       }
     }
     this._loading$.next(false);
+  }
+
+  private _getTrackedEntityInstances() {
+    return firstValueFrom(
+      this.trackerDashboardService.getTrackedEntityInstances(
+        this.visualizationConfig.program as string,
+        this.visualizationConfig.periodType as string,
+        this.dataSelections
+      )
+    );
   }
 }

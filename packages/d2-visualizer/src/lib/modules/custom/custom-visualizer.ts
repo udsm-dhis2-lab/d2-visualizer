@@ -90,7 +90,7 @@ export class CustomVisualizer extends BaseVisualizer implements Visualizer {
 
     (dataVariables || []).forEach((dataVariable) => {
       const dataDimensionEntity = dataVariable
-        .replace(/[{}']/g, '')
+        .replace(/[{}]/g, '')
         .split(';')
         .reduce((dimensionObject, dimensionVariable) => {
           const dimensionParams = dimensionVariable.split(':');

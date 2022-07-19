@@ -1,20 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChildren,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { KtdGridLayout, ktdTrackById } from '@katoid/angular-grid-layout';
-import { Observable, of, switchMap } from 'rxjs';
-import {
-  DashboardItemObject,
-  DashboardObject,
-  VisualizationDataSelection,
-} from '../../models';
-import { DashboardItemService, TrackerDashboardService } from '../../services';
+import { DashboardItemObject, VisualizationDataSelection } from '../../models';
 
 @Component({
   selector: 'd2-dashboard-items',
@@ -22,8 +8,7 @@ import { DashboardItemService, TrackerDashboardService } from '../../services';
   styleUrls: ['./dashboard-items.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardItemsComponent implements OnInit, OnChanges {
-  @Input() dashboard$?: Observable<DashboardObject | undefined>;
+export class DashboardItemsComponent {
   @Input() dashboardItems!: DashboardItemObject[];
   @Input() dashboardItemsLayout!: KtdGridLayout;
   @Input() dataSelections?: VisualizationDataSelection[];
@@ -32,31 +17,4 @@ export class DashboardItemsComponent implements OnInit, OnChanges {
   rowHeight = 20;
 
   trackById = ktdTrackById;
-
-  trackedEntityInstances$?: Observable<any>;
-
-  constructor(private trackerDashboardService: TrackerDashboardService) {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dataSelections'] && !changes['dataSelections'].firstChange) {
-      this._setTrackedEntityInstances();
-    }
-  }
-
-  ngOnInit(): void {
-    this._setTrackedEntityInstances();
-  }
-
-  private _setTrackedEntityInstances() {
-    this.trackedEntityInstances$ = this.dashboard$?.pipe(
-      switchMap((dashboard: DashboardObject | undefined) =>
-        dashboard?.isTrackerDashboard
-          ? this.trackerDashboardService.getTrackedEntityInstances(
-              dashboard,
-              this.dataSelections
-            )
-          : of(undefined)
-      )
-    );
-  }
 }

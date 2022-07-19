@@ -18,6 +18,9 @@ export interface DashboardItemObject {
   singleValue?: boolean;
   hasExtension?: boolean;
   visualization: DashboardVisualization;
+  isTrackerVisualization?: boolean;
+  program?: string;
+  periodType?: string;
 }
 
 export class DashboardItem {
@@ -71,6 +74,11 @@ export class DashboardItem {
       visualization: this.dashboardItemResponse[
         'visualization'
       ] as DashboardVisualization,
+      isTrackerVisualization: Boolean(
+        this.dashboardItemResponse['isTrackerVisualization']
+      ),
+      program: this.dashboardItemResponse['program'] as string,
+      periodType: this.dashboardItemResponse['periodType'] as string,
     };
   }
 }

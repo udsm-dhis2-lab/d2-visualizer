@@ -15,7 +15,6 @@
   </div>
 
   <d2-dashboard-items
-    [dashboard$]="currentDashboard$ || undefined"
     [dashboardItems]="currentDashboard?.dashboardItems || []"
     [dataSelections]="(globalSelection$ | async) || []"
     [dashboardItemsLayout]="currentDashboard?.dashboardItemsLayout || []"

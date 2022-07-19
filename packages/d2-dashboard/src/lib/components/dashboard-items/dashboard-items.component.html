@@ -12,26 +12,10 @@
       class="d2-dashboard__dashboard-item dashboard-item-{{ dashboardItem.id }}"
     >
       <div class="d2-dashboard__dashboard-item-card">
-        <ng-container *ngIf="dashboard$ | async as dashboard">
-          <ng-container *ngIf="dashboard?.isTrackerDashboard">
-            <ng-container
-              *ngIf="trackedEntityInstances$ | async as trackedEntityInstances"
-            >
-              <d2-dashboard-item
-                [dashboardItem]="dashboardItem"
-                [dataSelections]="dataSelections"
-                [isTrackerDashboard]="true"
-                [trackedEntityInstances]="trackedEntityInstances"
-              ></d2-dashboard-item>
-            </ng-container>
-          </ng-container>
-          <ng-container *ngIf="!dashboard?.isTrackerDashboard">
-            <d2-dashboard-item
-              [dashboardItem]="dashboardItem"
-              [dataSelections]="dataSelections"
-            ></d2-dashboard-item>
-          </ng-container>
-        </ng-container>
+        <d2-dashboard-item
+          [dashboardItem]="dashboardItem"
+          [dataSelections]="dataSelections"
+        ></d2-dashboard-item>
       </div>
     </ktd-grid-item>
   </ktd-grid>

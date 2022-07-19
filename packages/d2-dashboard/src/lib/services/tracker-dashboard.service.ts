@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Period } from '@iapps/period-utilities';
-import { firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
+import {
+  catchError,
+  firstValueFrom,
+  map,
+  Observable,
+  of,
+  switchMap,
+} from 'rxjs';
 import { DashboardObject, VisualizationDataSelection } from '../models';
 import { DashboardConfigService } from './dashboard-config.service';
 import * as moment from 'moment';
@@ -14,13 +21,11 @@ export class TrackerDashboardService {
   ) {}
 
   getTrackedEntityInstances(
-    dashboard: DashboardObject,
+    program: string,
+    periodType: string,
     dataSelections?: VisualizationDataSelection[]
   ): Observable<any> {
-    const period = this._getPeriod(
-      dashboard.periodType as string,
-      dataSelections
-    );
+    const period = this._getPeriod(periodType as string, dataSelections);
 
     return this._getOrgUnit(dataSelections).pipe(
       switchMap((orgUnit) =>
@@ -28,14 +33,13 @@ export class TrackerDashboardService {
           .get(
             `trackedEntityInstances.json?fields=attributes[attribute,value],enrollments[enrollment,orgUnit,orgUnitName,geometry]&ou=${
               orgUnit.id
-            }&ouMode=DESCENDANTS&&order=created:desc&program=${
-              dashboard.program
-            }&skipPaging=true&programStartDate=${
+            }&ouMode=DESCENDANTS&&order=created:desc&program=${program}&skipPaging=true&programStartDate=${
               period.startDate || period.startdate
             }&programEndDate=${period.endDate || period.enddate}`
           )
           .pipe(map((res) => res?.trackedEntityInstances || []))
-      )
+      ),
+      catchError(() => of(undefined))
     );
   }
 
