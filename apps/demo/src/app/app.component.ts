@@ -10,6 +10,8 @@ import { Fn } from '@iapps/function-analytics';
 export class AppComponent implements OnInit {
   title = 'demo';
 
+  html = ``;
+
   ngOnInit(): void {
     // Initializer for D2 Visualizer
     // const visualizer = new D2Visualizer().setId('vis').draw();

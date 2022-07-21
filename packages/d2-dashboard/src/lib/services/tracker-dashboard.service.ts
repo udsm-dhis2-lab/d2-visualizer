@@ -74,16 +74,43 @@ export class TrackerDashboardService {
     }
 
     const date = new Date().toISOString();
-    const period: any = (new Period()
+
+    console.log(
+      new Period()
+        .setType(periodType)
+        .setPreferences({ allowFuturePeriods: true })
+        .get()
+        .list()
+    );
+
+    const periodInstance = (new Period()
       .setType(periodType)
       .setPreferences({ allowFuturePeriods: true })
       .get()
-      .list() || [])[0] || {
-      startDate: date,
-      endDate: date,
-    };
+      .list() || [])[0];
 
-    return period;
+    if (!periodInstance) {
+      return {
+        startDate: date,
+        endDate: date,
+      };
+    }
+
+    const splitedStartDate = (periodInstance.startDate || '').split('-');
+
+    const startDate =
+      splitedStartDate[0].length < 4
+        ? splitedStartDate.reverse().join('-')
+        : periodInstance.startDate;
+
+    const splitedEndDate = (periodInstance.endDate || '').split('-');
+
+    const endDate =
+      splitedEndDate[0].length < 4
+        ? splitedEndDate.reverse().join('-')
+        : periodInstance.endDate;
+
+    return { ...periodInstance, startDate, endDate };
   }
 
   private _getOrgUnit(
