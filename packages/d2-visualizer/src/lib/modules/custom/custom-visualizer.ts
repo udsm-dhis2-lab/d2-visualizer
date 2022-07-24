@@ -89,7 +89,7 @@ export class CustomVisualizer extends BaseVisualizer implements Visualizer {
     let htmlContent = this.template.html;
 
     (dataVariables || []).forEach((dataVariable) => {
-      const dataDimensionEntity = dataVariable
+      const dataDimensionEntity: any = dataVariable
         .replace(/[{}]/g, '')
         .split(';')
         .reduce((dimensionObject, dimensionVariable) => {
@@ -100,7 +100,9 @@ export class CustomVisualizer extends BaseVisualizer implements Visualizer {
 
       htmlContent = htmlContent.replace(
         new RegExp(dataVariable, 'g'),
-        trackerDataInstance.getExpressionData(dataDimensionEntity)?.toString()
+        trackerDataInstance
+          .getExpressionData(dataDimensionEntity['dx'])
+          ?.toString()
       );
     });
     this.renderElement(htmlContent);

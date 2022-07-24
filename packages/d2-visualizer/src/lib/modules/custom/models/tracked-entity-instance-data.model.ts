@@ -64,9 +64,23 @@ export class TrackedEntityInstanceData {
   }
 
   getPercent(dataVariable: string) {
-    // console.log(dataVariable);
-    // console.log(dataVariable?.replace(/(^PERCENT<)|(>$)/g, ''));
-    return 0;
+    const percentageVariable = dataVariable
+      ?.replace(/(^PERCENT<)|(>$)/g, '')
+      ?.replace(/\s/g, '');
+    const numeratorVariable = (percentageVariable?.match(
+      /(COUNT|SUM)<.+?(?=,COUNT|SUM)/g
+    ) || [])[0];
+    const denominatorVariable = (percentageVariable?.match(
+      /(?=,COUNT|SUM).*/g
+    ) || [])[0]?.substring(1);
+
+    const numerator = this.getExpressionData(numeratorVariable);
+    const denominator = this.getExpressionData(denominatorVariable);
+
+    if (denominator === 0) {
+      return 0;
+    }
+    return parseFloat(((numerator / denominator) * 100).toFixed(1));
   }
 
   getCount(dataVariable: string) {
@@ -83,24 +97,24 @@ export class TrackedEntityInstanceData {
     }
   }
 
-  getExpressionData(dataVariableDimension: any): number {
+  getExpressionData(dataVariable: string): number {
     /**
      * PERCENT EXPRESSION
      */
-    if (dataVariableDimension.dx.indexOf('PERCENT') === 0) {
-      return this.getPercent(dataVariableDimension.dx);
+    if (dataVariable.indexOf('PERCENT') === 0) {
+      return this.getPercent(dataVariable);
     }
 
     /**
      * COUNT EXPRESSION
      */
-    if (dataVariableDimension.dx.indexOf('COUNT') === 0) {
-      return this.getCount(dataVariableDimension.dx);
+    if (dataVariable.indexOf('COUNT') === 0) {
+      return this.getCount(dataVariable);
     }
 
-    switch (dataVariableDimension.dx) {
+    switch (dataVariable) {
       case 'COUNT<enrollment>':
-        return this.getEnrollmentCount(dataVariableDimension.filter);
+        return this.getEnrollmentCount(dataVariable);
       default:
         return 0;
     }
