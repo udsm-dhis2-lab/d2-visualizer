@@ -384,6 +384,7 @@ export class D2Visualizer {
       case 'TRACKED_ENTITY_LAYER':
         return new TrackedEntityLayer()
           .setId(this.id)
+          .setConfig(this.config)
           .setTrackedEntityInstances(this.trackedEntityInstances)
           .draw();
       default:

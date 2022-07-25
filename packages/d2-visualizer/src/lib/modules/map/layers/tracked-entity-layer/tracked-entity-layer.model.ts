@@ -29,9 +29,9 @@ export class TrackedEntityLayer extends BaseVisualizer {
 
       (geojson.features || []).forEach((marker: any) => {
         const markerEl = document.createElement('div');
-        markerEl.style.backgroundImage = 'url(./assets/images/marker-dot.svg)';
-        markerEl.style.width = '32px';
-        markerEl.style.height = '32px';
+        markerEl.style.backgroundImage = `url(${marker?.properties?.symbol})`;
+        markerEl.style.width = '30px';
+        markerEl.style.height = '30px';
         markerEl.style.backgroundSize = '100%';
 
         new mapboxgl.Marker(markerEl)
@@ -56,12 +56,27 @@ export class TrackedEntityLayer extends BaseVisualizer {
                 return [];
               }
 
+              const symbols = this._config?.symbols;
+              const attributeValue =
+                symbols?.dimensionType === 'ATTRIBUTE'
+                  ? trackedEntityInstance.attributes.find(
+                      (attribute: any) =>
+                        attribute.attribute === symbols.dimensionItem
+                    )
+                  : null;
+
+              const markerSymbol = (symbols?.symbols || []).find(
+                (symbol: any) => symbol.value === attributeValue?.value
+              );
+
               return {
                 type: 'Feature',
                 geometry,
                 properties: {
                   title: orgUnitName,
                   description: orgUnitName,
+                  symbol:
+                    markerSymbol?.symbol || './assets/images/marker-dot.svg',
                 },
               };
             })
@@ -72,7 +87,6 @@ export class TrackedEntityLayer extends BaseVisualizer {
   }
 
   draw(): void {
-    console.log(this._trackedEntityInstances);
     this.buildInitialMap();
   }
 }

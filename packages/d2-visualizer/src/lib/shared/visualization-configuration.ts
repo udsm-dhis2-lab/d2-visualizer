@@ -215,6 +215,10 @@ export class VisualizationConfiguration {
     return this.config?.legendSet;
   }
 
+  get symbols(): any {
+    return this.config?.symbols;
+  }
+
   get customTemplate(): CustomVisualizationTemplate {
     return new CustomVisualizationTemplate(this.config?.template);
   }
