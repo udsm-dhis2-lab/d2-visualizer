@@ -1,5 +1,6 @@
 import { BaseVisualizer } from '../../../../shared/base-visualizer';
 declare let mapboxgl: any;
+import { flatten } from 'lodash';
 
 export class TrackedEntityLayer extends BaseVisualizer {
   private map: any;
@@ -19,50 +20,59 @@ export class TrackedEntityLayer extends BaseVisualizer {
       this.map = new mapboxgl.Map({
         container: this._id,
         style: this.style,
-        // center: this.getCenterCoordinates(),
         center: [34.8888, -5.66901],
-        zoom: 5,
+        zoom: 5.4,
       });
-
-      // Add zoom and rotation controls to the map.
       this.map.addControl(new mapboxgl.NavigationControl());
 
-      /// Add data on map load
-      this.map.on('load', (event: any) => {
-        /// register source
-        // const markersPins = convertMapPinsToMarkers(this.mapPins);
-        this.map.addSource(this._id, {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: [],
-          },
-        });
-        /// get source
-        this.source = this.map.getSource(this._data);
-        /// create map layers
-        this.map.addLayer({
-          id: this._id,
-          source: this._id,
-          type: 'symbol',
-          layout: {
-            'text-size': 24,
-            'text-transform': 'uppercase',
-            'text-offset': [0, 1.5],
-          },
-          paint: {
-            'text-color': '#f16624',
-            'text-halo-color': '#fff',
-            'text-halo-width': 2,
-          },
-        });
+      const geojson = this.getGeoJSON();
+
+      (geojson.features || []).forEach((marker: any) => {
+        const markerEl = document.createElement('div');
+        markerEl.style.backgroundImage = 'url(./assets/images/marker-dot.svg)';
+        markerEl.style.width = '32px';
+        markerEl.style.height = '32px';
+        markerEl.style.backgroundSize = '100%';
+
+        new mapboxgl.Marker(markerEl)
+          .setLngLat(marker.geometry.coordinates)
+          .addTo(this.map);
       });
     } catch (e) {
       console.warn('There ', e);
     }
   }
 
+  getGeoJSON() {
+    return {
+      type: 'FeatureCollection',
+      features: flatten(
+        this._trackedEntityInstances?.map((trackedEntityInstance) => {
+          return flatten(
+            (trackedEntityInstance.enrollments || []).map((enrollment: any) => {
+              const { geometry, orgUnitName } = enrollment;
+
+              if (!geometry) {
+                return [];
+              }
+
+              return {
+                type: 'Feature',
+                geometry,
+                properties: {
+                  title: orgUnitName,
+                  description: orgUnitName,
+                },
+              };
+            })
+          );
+        })
+      ),
+    };
+  }
+
   draw(): void {
+    console.log(this._trackedEntityInstances);
     this.buildInitialMap();
   }
 }
