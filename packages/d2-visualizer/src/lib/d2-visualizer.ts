@@ -13,6 +13,7 @@ import { TableUtil } from './modules/table/utils/table.util';
 import { TableAnalytics } from './modules/table/models/table-analytics.model';
 import { TableDashboardItem } from './modules/table/models/table-dashboard-item.model';
 import { TableConfiguration } from './modules/table/models/table-config.model';
+import { DataStoreConfig } from './shared/models/datastore.model';
 
 export class D2Visualizer {
   dataSelections: any[] = [];
@@ -27,6 +28,7 @@ export class D2Visualizer {
   mapDashboardExtensionItem: MapDashboardExtensionItem | any;
   geoFeatures: any[] = [];
   dataAnalytics: unknown = null;
+  dataStoreConfig!: DataStoreConfig;
   layerStyle = 'default';
 
   nxAnalytic: any = {
@@ -309,6 +311,23 @@ export class D2Visualizer {
   }
 
   /**
+   * 
+   * @param dataStoreConfig 
+   */
+  setDataStoreConfig(dataStoreConfig: DataStoreConfig) {
+    this.dataStoreConfig = dataStoreConfig;
+    return this;
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  getDataStoreConfig(): DataStoreConfig {
+    return this.dataStoreConfig;
+  }
+
+  /**
    *
    * @param analytics
    * @returns
@@ -417,6 +436,9 @@ export class D2Visualizer {
     return this.mapDashboardExtensionItem;
   }
 
+
+  
+
   /**
    *
    * @returns
@@ -489,7 +511,7 @@ export class D2Visualizer {
         return new ChartVisualization()
           .setId(this.id)
           .setDataStoreConfig(
-            !this.chartType || this.chartType === 'cascade'
+            !this.chartType || this.chartType === 'cascade' && !this.dataStoreConfig
               ? this.nxDataStoreConfig
               : undefined
           )
