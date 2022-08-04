@@ -4,6 +4,7 @@ import { drawChart } from './helpers/draw-chart.helper';
 import { VisualizationLayout } from '../../shared/visualization-layout';
 import { DownloadFormat } from '../../shared/download-format';
 import { VisualizationType } from '../../shared/visualization-type';
+import { DataStoreConfig } from '../../shared/models/datastore.model';
 
 declare const require: any;
 const HighchartsGroupedCategories = require('highcharts-grouped-categories')(
@@ -28,6 +29,7 @@ export class ChartVisualization {
   private _layout: VisualizationLayout = new VisualizationLayout();
   private _chart: any;
   private _dataSelections: any;
+  private dataStoreConfig!: DataStoreConfig;
 
   /**
    *
@@ -91,12 +93,26 @@ export class ChartVisualization {
 
   /**
    *
+   * @param dataStoreConfig
+   * @returns
+   */
+  setDataStoreConfig = (dataStoreConfig: DataStoreConfig) => {
+    this.dataStoreConfig = dataStoreConfig;
+    return this;
+  };
+
+  /**
+   *
    */
   draw() {
-    const chartObject = drawChart(this._data, {
-      ...this._config,
-      type: this._chart ? this._chart : 'column',
-    });
+    const chartObject = drawChart(
+      this._data,
+      {
+        ...this._config,
+        type: this._chart ? this._chart : 'column',
+      },
+      this.dataStoreConfig
+    );
     setTimeout(() => {
       this._chart = Highcharts.chart(chartObject);
     }, 20);

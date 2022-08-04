@@ -29,6 +29,165 @@ export class D2Visualizer {
   dataAnalytics: unknown = null;
   layerStyle = 'default';
 
+  nxAnalytic: any = {
+    headers: [
+      {
+        name: 'dx',
+        column: 'Data',
+        valueType: 'TEXT',
+        type: 'java.lang.String',
+        hidden: false,
+        meta: true,
+      },
+      {
+        name: 'pe',
+        column: 'Period',
+        valueType: 'TEXT',
+        type: 'java.lang.String',
+        hidden: false,
+        meta: true,
+      },
+      {
+        name: 'value',
+        column: 'Value',
+        valueType: 'NUMBER',
+        type: 'java.lang.Double',
+        hidden: false,
+        meta: false,
+      },
+    ],
+    metaData: {
+      items: {
+        '2018': {
+          name: '2018',
+        },
+        '2019': {
+          name: '2019',
+        },
+        '2020': {
+          name: '2020',
+        },
+        '2021': {
+          name: '2021',
+        },
+        '2022': {
+          name: '2022',
+        },
+        zTV6mfXXO8I: {
+          name: 'TB-LTB: No. of household contacts of bacteriologically confirmed pulmonary TB started IPT, children under 5 years',
+        },
+        dx: {
+          name: 'Data',
+        },
+        pe: {
+          name: 'Period',
+        },
+        ou: {
+          name: 'Organisation unit',
+        },
+        CAWjYmd5Dea: {
+          name: 'United Republic of Tanzania',
+        },
+      },
+      dimensions: {
+        dx: ['zTV6mfXXO8I'],
+        pe: ['2018', '2019', '2020', '2021', '2022'],
+        ou: ['CAWjYmd5Dea'],
+        co: [],
+      },
+    },
+    width: 3,
+    height: 5,
+    rows: [
+      ['zTV6mfXXO8I', '2018', '4754.0'],
+      ['zTV6mfXXO8I', '2019', '8467.0'],
+      ['zTV6mfXXO8I', '2020', '13225.0'],
+      ['zTV6mfXXO8I', '2021', '16241.0'],
+      ['zTV6mfXXO8I', '2022', '9780.0'],
+    ],
+    headerWidth: 3,
+    id: 'pdb5xUfLHnM',
+  };
+
+  nxConfiguration: any = {
+    renderId: 'visualization-container',
+    type: 'cascade',
+    title: 'Total Preventative Therapy (PT) targets',
+    subtitle: 'Total Preventative Therapy (PT) targets',
+    hideTitle: false,
+    hideSubtitle: false,
+    showData: true,
+    hideEmptyRows: true,
+    hideLegend: true,
+    cumulativeValues: false,
+    targetLineValue: 0,
+    targetLineLabel: '',
+    baseLineValue: 0,
+    baseLineLabel: '',
+    legendAlign: 'bottom',
+    reverseLegend: false,
+    showLabels: true,
+    axes: [],
+    rangeAxisMaxValue: 0,
+    rangeAxisMinValue: 0,
+    sortOrder: 0,
+    percentStackedValues: false,
+    multiAxisTypes: [],
+    xAxisType: ['pe'],
+    yAxisType: 'dx',
+    zAxisType: ['ou'],
+  };
+
+  nxDataStoreConfig: any = {
+    categories: [
+      {
+        color: '#70C8BE',
+        id: '2018',
+        name: '2018',
+        sortOrder: '1',
+        target: '303150',
+      },
+      {
+        color: '#70C8BE',
+        id: '2019',
+        name: '2019',
+        sortOrder: '2',
+        target: '104460',
+      },
+      {
+        color: '#70C8BE',
+        id: '2020',
+        name: '2020',
+        sortOrder: '3',
+        target: '148160',
+      },
+      {
+        color: '#70C8BE',
+        id: '2021',
+        name: '2021',
+        sortOrder: '4',
+        target: '153680',
+      },
+      {
+        color: '#70C8BE',
+        id: '2022',
+        name: '2022',
+        sortOrder: '5',
+        target: '161250',
+      },
+    ],
+    id: 'pdb5xUfLHnM',
+    indicator: {
+      description:
+        'TB-LTB: No. of household contacts of bacteriologically confirmed pulmonary TB started IPT, children under 5 years',
+      id: 'zTV6mfXXO8I',
+      name: 'TB-LTB: No. of household contacts of bacteriologically confirmed pulmonary TB started IPT, children under 5 years',
+    },
+    xAlignment: 'pe',
+    yAlignment: 'dx',
+    zAlignment: 'ou',
+  };
+
   // Table Configuration
   tableDashboardItem: TableDashboardItem | any;
   tableAnalytics: TableAnalytics | any;
@@ -320,12 +479,32 @@ export class D2Visualizer {
   async draw(): Promise<any> {
     switch (this.visualizationType) {
       case 'CHART':
+        // return new ChartVisualization()
+        //   .setId(this.id)
+        //   .setConfig(this.config.config)
+        //   .setData(this.dataAnalytics)
+        //   .setVisualizationType(this.visualizationType as ChartType)
+        //   .setChartType(this.chartType)
+        //   .draw();
         return new ChartVisualization()
           .setId(this.id)
-          .setConfig(this.config.config)
-          .setData(this.dataAnalytics)
+          .setDataStoreConfig(
+            !this.chartType || this.chartType === 'cascade'
+              ? this.nxDataStoreConfig
+              : undefined
+          )
+          .setConfig(
+            !this.chartType || this.chartType === 'cascade'
+              ? this.nxConfiguration
+              : this.config.config
+          )
+          .setData(
+            !this.chartType || this.chartType === 'cascade'
+              ? this.nxAnalytic
+              : this.dataAnalytics
+          )
           .setVisualizationType(this.visualizationType as ChartType)
-          .setChartType(this.chartType)
+          .setChartType(this.chartType ? this.chartType : 'cascade')
           .draw();
       case 'MAP':
         return new MapUtil()

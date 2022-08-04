@@ -36,4 +36,9 @@ export const chartConfigs: Chart[] = [
     icon: '/assets/icons/gauge.png',
     name: 'Gauge Chart',
   },
+  {
+    id: 'cascade',
+    icon: '/assets/icons/gauge.png',
+    name: 'Cascade Chart',
+  },
 ];
