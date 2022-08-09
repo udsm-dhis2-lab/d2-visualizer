@@ -12,14 +12,17 @@ export const getTargetSeriesData = (dataStoreConfig: DataStoreConfig) => {
                 : []
         )
     );
-    
+
     return {
         name: 'Targets',
         stack: 1,
         zIndex: 1,
         pointPadding: 0,
         dashStyle: 'dash',
-        borderColor: '#70C8BE',
+        borderColor:
+            dataStoreConfig && dataStoreConfig.color
+                ? dataStoreConfig.color
+                : '#2b828b',
         borderWidth: 2,
         dataLabels: [
             {
@@ -54,13 +57,17 @@ export const getAchievementSeriesData = (
             ? dataStoreConfig.categories
             : [];
 
-    const categoriesObject = _.keyBy(categories);
+    const categoriesObject = _.keyBy(categories, 'id');
 
     return {
         name: 'Achieved',
         stack: 2,
         zIndex: 2,
         pointPadding: 0,
+        borderColor:
+            dataStoreConfig && dataStoreConfig.color
+                ? dataStoreConfig.color
+                : '#2b828b',
         dataLabels: [
             {
                 align: 'center',
@@ -80,7 +87,7 @@ export const getAchievementSeriesData = (
                         categoriesObject[data.id] &&
                         categoriesObject[data.id].color
                         ? categoriesObject[data.id].color
-                        : '#70C8BE',
+                        : '#2b828b',
                 y: data && data.y ? data.y : '',
             };
         }),

@@ -1,5 +1,6 @@
 export interface DataStoreConfig {
     id:         string;
+    color:      string;
     xAlignment: string;
     yAlignment: string;
     zAlignment: string;

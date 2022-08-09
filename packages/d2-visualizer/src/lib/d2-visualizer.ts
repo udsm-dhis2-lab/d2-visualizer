@@ -114,8 +114,8 @@ export class D2Visualizer {
   nxConfiguration: any = {
     renderId: 'visualization-container',
     type: 'cascade',
-    title: 'Total Preventative Therapy (PT) targets',
-    subtitle: 'Total Preventative Therapy (PT) targets',
+    title: 'Total Preventative Therapy (PT) targets 1',
+    subtitle: 'Total Preventative Therapy (PT) targets 1',
     hideTitle: false,
     hideSubtitle: false,
     showData: true,
@@ -143,35 +143,35 @@ export class D2Visualizer {
   nxDataStoreConfig: any = {
     categories: [
       {
-        color: '#70C8BE',
+        color: '#2b828b',
         id: '2018',
         name: '2018',
         sortOrder: '1',
         target: '303150',
       },
       {
-        color: '#70C8BE',
+        color: '#2b828b',
         id: '2019',
         name: '2019',
         sortOrder: '2',
         target: '104460',
       },
       {
-        color: '#70C8BE',
+        color: '#2b828b',
         id: '2020',
         name: '2020',
         sortOrder: '3',
         target: '148160',
       },
       {
-        color: '#70C8BE',
+        color: '#2b828b',
         id: '2021',
         name: '2021',
         sortOrder: '4',
         target: '153680',
       },
       {
-        color: '#70C8BE',
+        color: '#2b828b',
         id: '2022',
         name: '2022',
         sortOrder: '5',
@@ -311,8 +311,8 @@ export class D2Visualizer {
   }
 
   /**
-   * 
-   * @param dataStoreConfig 
+   *
+   * @param dataStoreConfig
    */
   setDataStoreConfig(dataStoreConfig: DataStoreConfig) {
     this.dataStoreConfig = dataStoreConfig;
@@ -320,8 +320,8 @@ export class D2Visualizer {
   }
 
   /**
-   * 
-   * @returns 
+   *
+   * @returns
    */
   getDataStoreConfig(): DataStoreConfig {
     return this.dataStoreConfig;
@@ -436,9 +436,6 @@ export class D2Visualizer {
     return this.mapDashboardExtensionItem;
   }
 
-
-  
-
   /**
    *
    * @returns
@@ -508,26 +505,35 @@ export class D2Visualizer {
         //   .setVisualizationType(this.visualizationType as ChartType)
         //   .setChartType(this.chartType)
         //   .draw();
-        return new ChartVisualization()
-          .setId(this.id)
-          .setDataStoreConfig(
-            !this.chartType || this.chartType === 'cascade' && !this.dataStoreConfig
-              ? this.nxDataStoreConfig
-              : undefined
-          )
-          .setConfig(
-            !this.chartType || this.chartType === 'cascade'
-              ? this.nxConfiguration
-              : this.config.config
-          )
-          .setData(
-            !this.chartType || this.chartType === 'cascade'
-              ? this.nxAnalytic
-              : this.dataAnalytics
-          )
-          .setVisualizationType(this.visualizationType as ChartType)
-          .setChartType(this.chartType ? this.chartType : 'cascade')
-          .draw();
+
+        return (
+          new ChartVisualization()
+            .setId(this.id)
+            .setDataStoreConfig(
+              !this.chartType ||
+                (this.chartType === 'cascade' && !this.dataStoreConfig)
+                ? this.nxDataStoreConfig
+                : this.dataStoreConfig
+            )
+            .setConfig(
+              this.chartType && this.chartType !== 'cascade'
+                ? this.config.config
+                : this.nxConfiguration
+            )
+            // .setConfig(
+            //   !this.chartType || this.chartType === 'cascade'
+            //     ? this.config.config ? this.config.config : this.nxConfiguration
+            //     : this.config.config
+            // )
+            .setData(
+              !this.chartType || this.chartType === 'cascade'
+                ? this.nxAnalytic
+                : this.dataAnalytics
+            )
+            .setVisualizationType(this.visualizationType as ChartType)
+            .setChartType(this.chartType ? this.chartType : 'cascade')
+            .draw()
+        );
       case 'MAP':
         return new MapUtil()
           .setMapAnalytics(this.dataAnalytics as MapAnalytics)

@@ -74,6 +74,7 @@ export function drawChart(
         chartObject,
         dataStoreConfig
       );
+
       break;
     case 'combined':
       break;

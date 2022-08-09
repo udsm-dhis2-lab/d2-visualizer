@@ -109,10 +109,11 @@ export class ChartVisualization {
       this._data,
       {
         ...this._config,
-        type: this._chart ? this._chart : 'column',
+        type: this._chart ? this._chart : 'cascade',
       },
       this.dataStoreConfig
     );
+
     setTimeout(() => {
       this._chart = Highcharts.chart(chartObject);
     }, 20);
