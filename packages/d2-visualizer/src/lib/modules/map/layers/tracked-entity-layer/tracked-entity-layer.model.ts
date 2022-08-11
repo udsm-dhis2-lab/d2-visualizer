@@ -20,8 +20,8 @@ export class TrackedEntityLayer extends BaseVisualizer {
       this.map = new mapboxgl.Map({
         container: this._id,
         style: this.style,
-        center: [34.8888, -5.66901],
-        zoom: 5.4,
+        center: this._config?.mapCenter,
+        zoom: this._config?.zoom || 5,
       });
       this.map.addControl(new mapboxgl.NavigationControl());
 
@@ -30,17 +30,32 @@ export class TrackedEntityLayer extends BaseVisualizer {
       (geojson.features || []).forEach((marker: any) => {
         const markerEl = document.createElement('div');
         markerEl.style.backgroundImage = `url(${marker?.properties?.symbol})`;
-        markerEl.style.width = '30px';
-        markerEl.style.height = '30px';
+        markerEl.style.width = '18px';
+        markerEl.style.height = '18px';
         markerEl.style.backgroundSize = '100%';
 
-        new mapboxgl.Marker(markerEl)
+        const markerElement = new mapboxgl.Marker(markerEl)
           .setLngLat(marker.geometry.coordinates)
+          .setPopup(new mapboxgl.Popup().setHTML(this.getPopupContent(marker)))
           .addTo(this.map);
+
+        const markerDiv = markerElement.getElement();
+
+        markerDiv.addEventListener('mouseenter', () =>
+          markerElement.togglePopup()
+        );
+        markerDiv.addEventListener('mouseleave', () =>
+          markerElement.togglePopup()
+        );
       });
     } catch (e) {
       console.warn('There ', e);
     }
+  }
+
+  getPopupContent(marker: any) {
+    console.log(this._config?.popUpTemplate, marker?.properties?.dimensionType);
+    return `${this._config?.popUpTemplate}`;
   }
 
   getGeoJSON() {
@@ -77,6 +92,9 @@ export class TrackedEntityLayer extends BaseVisualizer {
                   description: orgUnitName,
                   symbol:
                     markerSymbol?.symbol || './assets/images/marker-dot.svg',
+                  value: attributeValue?.value,
+                  dimensionItem: attributeValue.attribute,
+                  dimensionType: 'ATTRIBUTE',
                 },
               };
             })

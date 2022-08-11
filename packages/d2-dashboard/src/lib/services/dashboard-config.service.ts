@@ -4,16 +4,17 @@ import { DashboardConfig } from '../models';
 export class DashboardConfigClass implements DashboardConfig {
   useDataStore = false;
   dataStoreNamespace = '';
+  rootUrl = 'dashboard';
 }
 
-export const DASHBARD_CONFIG = new InjectionToken<DashboardConfig>(
+export const DASHBOARD_CONFIG = new InjectionToken<DashboardConfig>(
   'dashboardConfig'
 );
 
 @Injectable({ providedIn: 'root' })
 export class DashboardConfigService {
   constructor(
-    @Optional() @Inject(DASHBARD_CONFIG) private config: DashboardConfig
+    @Optional() @Inject(DASHBOARD_CONFIG) private config: DashboardConfig
   ) {}
 
   getConfig(): DashboardConfig {

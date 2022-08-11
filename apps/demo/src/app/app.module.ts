@@ -43,6 +43,7 @@ import { SharedModule } from './shared/shared.module';
     D2DashboardModule.forRoot({
       useDataStore: true,
       dataStoreNamespace: 'test-dashboard',
+      rootUrl: 'dashboard',
     }),
   ],
   providers: [],

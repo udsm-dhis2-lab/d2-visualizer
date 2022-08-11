@@ -7,6 +7,13 @@ const routes: Routes = [
     path: '',
     pathMatch: 'full',
     component: DashboardComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('@iapps/d2-dashboard').then((m) => m.D2DashboardModule),
+      },
+    ],
   },
 ];
 

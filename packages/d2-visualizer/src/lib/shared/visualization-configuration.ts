@@ -219,6 +219,14 @@ export class VisualizationConfiguration {
     return this.config?.symbols;
   }
 
+  get mapCenter(): number[] {
+    return this.config?.center;
+  }
+
+  get popUpTemplate(): string {
+    return this.config?.popUpTemplate;
+  }
+
   get customTemplate(): CustomVisualizationTemplate {
     return new CustomVisualizationTemplate(this.config?.template);
   }

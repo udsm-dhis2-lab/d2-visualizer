@@ -1,7 +1,6 @@
+import { find, intersection, sortBy } from 'lodash';
 import { BaseVisualizer, Visualizer } from '../../shared/base-visualizer';
-import { VisualizationDataSelection } from '../../shared/visualization-data-selection';
 import { CustomVisualizationTemplate } from './models/custom-visualization-template.model';
-import { find, intersection, keys, sortBy, uniqBy } from 'lodash';
 import { TrackedEntityInstanceData } from './models/tracked-entity-instance-data.model';
 
 export class CustomVisualizer extends BaseVisualizer implements Visualizer {

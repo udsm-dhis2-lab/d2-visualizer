@@ -14,7 +14,7 @@ import { DashboardConfig } from './models';
 import { d2DashboardModules } from './modules';
 import { d2DashboardPipes } from './pipes';
 import { d2DashboardServices } from './services';
-import { DASHBARD_CONFIG } from './services/dashboard-config.service';
+import { DASHBOARD_CONFIG } from './services/dashboard-config.service';
 import { d2DashboardMaterialModules } from './shared';
 
 @NgModule({
@@ -51,7 +51,7 @@ export class D2DashboardModule {
       ngModule: D2DashboardModule,
       providers: [
         {
-          provide: DASHBARD_CONFIG,
+          provide: DASHBOARD_CONFIG,
           useValue: config,
         },
       ],

@@ -6,7 +6,7 @@ import {
   MatSnackBarRef,
   TextOnlySnackBar,
 } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { find, isEqual } from 'lodash';
 import {
@@ -44,6 +44,7 @@ export class DashboardService {
   constructor(
     private httpClient: NgxDhis2HttpClientService,
     private router: Router,
+    private route: ActivatedRoute,
     private _snackBar: MatSnackBar,
     private _snackBarRef: MatSnackBarRef<TextOnlySnackBar>,
     private overlay: Overlay,
@@ -95,6 +96,7 @@ export class DashboardService {
   }
 
   async setCurrentDashboard(currentDashboardMenu: DashboardMenuObject) {
+    const config: DashboardConfig = this.dashboardConfigService.getConfig();
     if (this._firstTimeLoad) {
       this._snackBarRef = this._snackBar.open(
         `Loading ${currentDashboardMenu.name} Dashboard`,
@@ -111,8 +113,9 @@ export class DashboardService {
     const dashboardStore = await firstValueFrom(
       this._dashboardStoreObservable$.pipe(take(1))
     );
+
     this._dashboardStore$.next({ ...dashboardStore, currentDashboardMenu });
-    this.router.navigate(['/dashboard/' + currentDashboardMenu.id]);
+    this.router.navigate([config.rootUrl, currentDashboardMenu.id]);
   }
 
   async setGlobalSelections(
