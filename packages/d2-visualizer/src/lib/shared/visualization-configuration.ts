@@ -157,7 +157,24 @@ export class VisualizationConfiguration {
   get latitude(): string {
     return this.config?.latitude;
   }
+
   get longitude(): string {
     return this.config?.longitude;
+  }
+
+  get height(): string {
+    return this.config?.height;
+  }
+
+  get width(): string {
+    return this.config?.width;
+  }
+
+  get mapboxApiKey(): string {
+    return this.config?.mapboxApiKey;
+  }
+
+  get mapboxStyle(): string {
+    return this.config?.mapboxStyle;
   }
 }

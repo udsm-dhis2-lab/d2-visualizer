@@ -40,7 +40,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-list>
-          <mat-list-item
+          <!--<mat-list-item
             [routerLinkActive]="'active'"
             (click)="onMenuClick(chartConfig)"
             *ngFor="let chartConfig of chartConfigs; let i = index"
@@ -53,12 +53,29 @@
             />
             <div mat-line>Table Item {{ i + 1 }}</div>
           </mat-list-item>
+        -->
+          <mat-list-item
+            [routerLinkActive]="'active'"
+            (click)="onTableTypeChange()"
+          >
+            <img
+              mat-list-icon
+              class="side-menu-icon"
+              [src]="'assets/icons/table.png'"
+              [alt]=""
+            />
+            <div mat-line>EHS Color Scorecard</div>
+          </mat-list-item>
         </mat-list>
       </mat-expansion-panel>
       <!-- Dictionary Visualization Module  -->
     </mat-accordion>
   </mat-drawer>
   <mat-drawer-content>
-    <div>Table Workspace</div>
+    <iapps-ngx-d2-table *ngIf="tableDashboardItem && tableAnalytics && tableConfiguration"
+      [tableDashboardItem]="tableDashboardItem"
+      [tableAnalytics]="tableAnalytics"
+      [tableConfiguration]="tableConfiguration"
+    ></iapps-ngx-d2-table>
   </mat-drawer-content>
 </mat-drawer-container>

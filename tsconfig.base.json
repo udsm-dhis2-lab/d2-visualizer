@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@iapps/d2-visualizer": ["packages/d2-visualizer/src/index.ts"]
+      "@iapps/d2-visualizer": ["packages/d2-visualizer/src/index.ts"],
+      "@iapps/ngx-d2-map": ["packages/ngx-d2-map/src/index.ts"],
+      "@iapps/ngx-d2-table": ["packages/ngx-d2-table/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

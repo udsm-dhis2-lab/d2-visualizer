@@ -1,0 +1,42 @@
+{
+  "projectType": "library",
+  "root": "packages/ngx-d2-table",
+  "sourceRoot": "packages/ngx-d2-table/src",
+  "prefix": "iapps",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "outputs": ["dist/packages/ngx-d2-table"],
+      "options": {
+        "project": "packages/ngx-d2-table/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "packages/ngx-d2-table/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "packages/ngx-d2-table/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/ngx-d2-table"],
+      "options": {
+        "jestConfig": "packages/ngx-d2-table/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "packages/ngx-d2-table/src/**/*.ts",
+          "packages/ngx-d2-table/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

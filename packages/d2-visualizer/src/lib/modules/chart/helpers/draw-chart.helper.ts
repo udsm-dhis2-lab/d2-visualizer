@@ -1,8 +1,14 @@
 import * as _ from 'lodash';
+import { DataStoreConfig } from '../../../shared/models/datastore.model';
+import {
+  getAchievementSeriesData,
+  getTargetSeriesData,
+} from './cascade.helper';
 
 export function drawChart(
   incomingAnalyticsObject: any,
-  chartConfiguration: any
+  chartConfiguration: any,
+  dataStoreConfig: DataStoreConfig
 ): any {
   const analyticsObject = sanitizeAnalyticsBasedOnConfiguration(
     incomingAnalyticsObject,
@@ -57,6 +63,19 @@ export function drawChart(
         chartConfiguration
       );
       break;
+    case 'cascade':
+      chartObject = extendOtherChartOptions(
+        chartObject,
+        analyticsObject,
+        chartConfiguration
+      );
+
+      chartObject = getCascadeVisualizationPayload(
+        chartObject,
+        dataStoreConfig
+      );
+
+      break;
     case 'combined':
       break;
     default:
@@ -70,6 +89,64 @@ export function drawChart(
 
   return getSanitizedChartObject(chartObject, chartConfiguration);
 }
+
+export const getCascadeVisualizationPayload = (
+  chartObject: any,
+  dataStoreConfig: DataStoreConfig
+) => {
+  if (dataStoreConfig) {
+    const targetSeries: any = getTargetSeriesData(dataStoreConfig);
+    const achievementSeries: any = getAchievementSeriesData(
+      chartObject,
+      dataStoreConfig
+    );
+
+    return {
+      ...chartObject,
+      chart: {
+        ...chartObject.chart,
+        type: 'column',
+      },
+      yAxis: {
+        title: {
+          text: '',
+        },
+        stackLabels: {
+          style: {
+            color: 'black',
+          },
+          enabled: true,
+          verticalAlign: 'top',
+        },
+        max: null,
+        min: null,
+      },
+      legend: {
+        reversed: true,
+        enabled: false,
+      },
+      plotOptions: {
+        series: {
+          dataLabels: {
+            enabled: false,
+            inside: true,
+          },
+          stacking: 'normal',
+          grouping: false,
+          shadow: false,
+          borderWidth: 0,
+          enableMouseTracking: false,
+          allowPointSelect: true,
+          verticalAlign: 'top',
+          align: 'center',
+        },
+      },
+      series: [targetSeries, achievementSeries],
+    };
+  } else {
+    return chartObject;
+  }
+};
 
 function extendSpiderWebChartOptions(
   initialChartObject: any,
@@ -296,13 +373,18 @@ function extendOtherChartOptions(
     chartConfiguration.yAxisType
   );
 
+  const xAxisCategoryItems = getAxisItemsNew(
+    analyticsObject,
+    chartConfiguration.xAxisType,
+    true
+  );
   /**
    * Sort the corresponding series
    */
   const sortedSeries = getSortableSeries(
     getChartSeries(
       analyticsObject,
-      getAxisItemsNew(analyticsObject, chartConfiguration.xAxisType, true),
+      xAxisCategoryItems,
       yAxisSeriesItems,
       chartConfiguration
     ),
@@ -748,9 +830,24 @@ function getAxisItemsNew(
   isCategory = false
 ) {
   let items: any[] = [];
-  const metadataNames = analyticsObject.metaData.names;
+  const metadataNames =
+    analyticsObject &&
+    analyticsObject.metaData &&
+    analyticsObject.metaData.names
+      ? analyticsObject.metaData.names
+      : analyticsObject.metaData.items;
+
   axisTypeArray.forEach((axisType, axisIndex) => {
-    const itemKeys = analyticsObject.metaData[axisType];
+    const itemKeys =
+      analyticsObject &&
+      analyticsObject.metaData &&
+      analyticsObject.metaData[axisType]
+        ? analyticsObject.metaData[axisType]
+        : analyticsObject.metaData &&
+          analyticsObject.metaData.dimensions &&
+          analyticsObject.metaData.dimensions[axisType]
+        ? analyticsObject.metaData.dimensions[axisType]
+        : [];
     if (itemKeys) {
       if (axisIndex > 0) {
         const availableItems = _.assign([], items);
@@ -759,7 +856,12 @@ function getAxisItemsNew(
           availableItems.forEach((item: { id: string; name: string }) => {
             items.push({
               id: item.id + '_' + itemKey,
-              name: item.name + '_' + metadataNames[itemKey].trim(),
+              name:
+                item.name + '_' + metadataNames &&
+                metadataNames[itemKey] &&
+                metadataNames[itemKey].name
+                  ? metadataNames[itemKey].name.trim()
+                  : metadataNames[itemKey].trim(),
             });
           });
         });
@@ -767,7 +869,12 @@ function getAxisItemsNew(
         items = _.map(itemKeys, (itemKey: string | number) => {
           return {
             id: itemKey,
-            name: metadataNames[itemKey].trim(),
+            name:
+              metadataNames &&
+              metadataNames[itemKey] &&
+              metadataNames[itemKey].name
+                ? metadataNames[itemKey].name.trim()
+                : metadataNames[itemKey].trim(),
           };
         });
       }
@@ -783,14 +890,32 @@ function getAxisItems(
   isCategory = false
 ) {
   let items: any[] = [];
-  const metadataNames = analyticsObject.metaData.names;
-  const itemKeys = analyticsObject.metaData[axisType];
+  const metadataNames =
+    analyticsObject &&
+    analyticsObject.metaData &&
+    analyticsObject.metaData.names
+      ? analyticsObject.metaData.names
+      : analyticsObject.metaData.items;
+
+  const itemKeys =
+    analyticsObject &&
+    analyticsObject.metaData &&
+    analyticsObject.metaData[axisType]
+      ? analyticsObject.metaData[axisType]
+      : analyticsObject.metaData &&
+        analyticsObject.metaData.dimensions &&
+        analyticsObject.metaData.dimensions[axisType]
+      ? analyticsObject.metaData.dimensions[axisType]
+      : [];
 
   if (itemKeys) {
     items = _.map(itemKeys, (itemKey: string | number) => {
       return {
         id: itemKey,
-        name: metadataNames[itemKey],
+        name:
+          metadataNames && metadataNames[itemKey] && metadataNames[itemKey].name
+            ? metadataNames[itemKey].name
+            : metadataNames[itemKey],
       };
     });
   }
@@ -1089,6 +1214,7 @@ function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
   if (
     _.has(xAxisOptions, 'categories') &&
     xAxisOptions.categories.length > 10 &&
+    xAxisOptions.categories[0] &&
     xAxisOptions.categories[0].name.length > 5
   ) {
     return {
@@ -1101,6 +1227,7 @@ function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
   } else if (
     _.has(xAxisOptions, 'categories') &&
     xAxisOptions.categories.length > 10 &&
+    xAxisOptions.categories[0] &&
     xAxisOptions.categories[0].name.length <= 5
   ) {
     return {
@@ -1113,6 +1240,7 @@ function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
   } else if (
     _.has(xAxisOptions, 'categories') &&
     xAxisOptions.categories.length <= 10 &&
+    xAxisOptions.categories[0] &&
     xAxisOptions.categories[0].name.length <= 5
   ) {
     return {
@@ -1125,6 +1253,7 @@ function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
   } else if (
     _.has(xAxisOptions, 'categories') &&
     xAxisOptions.categories.length <= 10 &&
+    xAxisOptions.categories[0] &&
     xAxisOptions.categories[0].name.length > 5
   ) {
     return {

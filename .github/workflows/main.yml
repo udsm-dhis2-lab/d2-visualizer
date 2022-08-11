@@ -55,9 +55,16 @@ jobs:
           npm ci
       - name: Install NX Global
         run: npm install -g nx
+      - name: Install GITHUB PAGES Global
+        run: npm i -g angular-cli-ghpages
+      - name: Install GITHUB PAGES Local
+        run: npm i angular-cli-ghpages --save-dev
+      - name: Install NPX Local
+        run: npm install npx
       - name: Build
         run: |
-          nx build --prod --base-href 'https://dhis2-club-tanzania.github.io/d2-visualizer/
+          nx build --prod --base-href "https://dhis2-club-tanzania.github.io/d2-visualizer/"
+          
       #       - name: Lint
       #         run: |
       #           npm run lint
@@ -83,5 +90,4 @@ jobs:
 
       - name: Deploy
         run: |
-#          npm run deploy
           npx angular-cli-ghpages --dir=dist/demo

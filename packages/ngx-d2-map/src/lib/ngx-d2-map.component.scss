@@ -1,0 +1,141 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.map-drawable-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.map-drawable-window {
+  width: 100%;
+}
+
+.map-title-drawable-overlay {
+  position: absolute;
+  background: #fff;
+  padding: 5px;
+  border-radius: 3px;
+
+  // Centering Transformation type 1
+  // top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
+
+  // Centering Transformation type 2
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 1;
+}
+
+/**
+* Set rules for how the map overlays
+* (information box and legend) will be displayed
+* on the page. */
+.map-drawable-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #fff;
+  margin-right: 20px;
+  font-family: Arial, sans-serif;
+  overflow: auto;
+  border-radius: 3px;
+}
+
+.map-drawable-title {
+  top: 42px;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  height: 25px;
+  font-weight: bold;
+  padding-right: 5px;
+  padding-left: 5px;
+
+  label {
+    color: #ccc !important;
+    border: 1px solid #fff !important;
+  }
+}
+
+.map-drawable-more {
+  top: 40px;
+  left: 15px;
+  width: 50px;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  height: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  cursor: pointer !important;
+  border: 1px solid #ccc !important;
+
+  mat-icon {
+    margin: auto;
+    text-align: center;
+  }
+}
+
+.map-drawable-legend {
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  height: 150px;
+  margin-bottom: 40px;
+  width: 250px;
+  // left: 15px;
+  // top: 100px;
+  // right: 15px;
+}
+
+.map-drawable-info {
+  // top: 25px;
+  left: 12px;
+  // height: 100px;
+  // margin-top: 150px;
+  // width: 250px;
+
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  height: 110px;
+  margin-bottom: 40px;
+  width: 300px;
+}
+
+.map-menu {
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-top: 5px;
+}
+
+.map-control {
+    margin: 10px
+}
+
+.divider {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.layer-title-bg {
+  background-color: #eee;
+}
+
+.layer-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  align-items: flex-start;
+}
+
+.layer-radio-button {
+  margin: 5px;
+}

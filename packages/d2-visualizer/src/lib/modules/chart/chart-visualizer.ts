@@ -4,6 +4,7 @@ import { drawChart } from './helpers/draw-chart.helper';
 import { VisualizationLayout } from '../../shared/visualization-layout';
 import { DownloadFormat } from '../../shared/download-format';
 import { VisualizationType } from '../../shared/visualization-type';
+import { DataStoreConfig } from '../../shared/models/datastore.model';
 
 declare const require: any;
 const HighchartsGroupedCategories = require('highcharts-grouped-categories')(
@@ -17,9 +18,9 @@ const HighchartsGroupedCategories = require('highcharts-grouped-categories')(
   HighchartGauge = require('highcharts/modules/solid-gauge.js')(Highcharts),
   HighchartDrilldown = require('highcharts/modules/drilldown.js')(Highcharts);
 
-  /**
-   * 
-   */
+/**
+ *
+ */
 export class ChartVisualization {
   private _visualizationType: VisualizationType = 'CHART';
   private _data: any;
@@ -27,6 +28,8 @@ export class ChartVisualization {
   private _id!: string;
   private _layout: VisualizationLayout = new VisualizationLayout();
   private _chart: any;
+  private _dataSelections: any;
+  private dataStoreConfig!: DataStoreConfig;
 
   /**
    *
@@ -69,6 +72,16 @@ export class ChartVisualization {
   }
 
   /**
+   * @description Set data selection criterias
+   * @param dataSelections {any[]}
+   * @returns {D2Visualizer}
+   */
+  setSelections(dataSelections: any[]) {
+    this._dataSelections = dataSelections;
+    return this;
+  }
+
+  /**
    *
    * @param config
    * @returns
@@ -80,12 +93,27 @@ export class ChartVisualization {
 
   /**
    *
+   * @param dataStoreConfig
+   * @returns
+   */
+  setDataStoreConfig = (dataStoreConfig: DataStoreConfig) => {
+    this.dataStoreConfig = dataStoreConfig;
+    return this;
+  };
+
+  /**
+   *
    */
   draw() {
-    const chartObject = drawChart(this._data, {
-      ...this._config,
-      type: this._chart ? this._chart : 'column',
-    });
+    const chartObject = drawChart(
+      this._data,
+      {
+        ...this._config,
+        type: this._chart ? this._chart : 'cascade',
+      },
+      this.dataStoreConfig
+    );
+
     setTimeout(() => {
       this._chart = Highcharts.chart(chartObject);
     }, 20);

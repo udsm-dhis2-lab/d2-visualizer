@@ -14,6 +14,8 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
+      <!-- Chart Visualization Menu  -->
+
       <!-- Map Visualization Menu  -->
       <mat-expansion-panel
         (opened)="panelOpenState = true"
@@ -25,27 +27,49 @@
           <mat-panel-title>
             <div mat-subheader>Map Visualization Module</div>
           </mat-panel-title>
-          <!-- <mat-panel-description>
-            Currently I am {{ panelOpenState ? 'open' : 'closed' }}
-          </mat-panel-description> -->
         </mat-expansion-panel-header>
-        <!-- <p>I'm visible because I am open</p> -->
         <mat-list>
           <mat-list-item
             [routerLinkActive]="'active'"
-            (click)="onMenuClick(chartConfig)"
-            *ngFor="let chartConfig of chartConfigs; let i = index"
+            (click)="onMapTypeChange('thematic')"
           >
             <img
               mat-list-icon
               class="side-menu-icon"
               [src]="'assets/icons/map.png'"
-              [alt]="chartConfig.name"
+              [alt]="'Map item'"
             />
-            <div mat-line>Map Item {{ i + 1 }}</div>
+            <div mat-line>Thematic Layer</div>
+          </mat-list-item>
+
+          <mat-list-item
+            [routerLinkActive]="'active'"
+            (click)="onMapTypeChange('thematic')"
+          >
+            <img
+              mat-list-icon
+              class="side-menu-icon"
+              [src]="'assets/icons/map.png'"
+              [alt]="'Map item'"
+            />
+            <div mat-line>Thematic Layer(mCBS)</div>
+          </mat-list-item>
+          <mat-list-item
+            [routerLinkActive]="'active'"
+            (click)="onMapTypeChange('facility')"
+          >
+            <img
+              mat-list-icon
+              class="side-menu-icon"
+              [src]="'assets/icons/map.png'"
+              [alt]="'Map item'"
+            />
+            <div mat-line>Organisation Unit Layer</div>
           </mat-list-item>
         </mat-list>
       </mat-expansion-panel>
+      <!-- Map Visualization Menu  -->
+
       <!-- Table Visualization Module  -->
       <mat-expansion-panel
         (opened)="panelOpenState = true"
@@ -62,7 +86,49 @@
       <!-- Dictionary Visualization Module  -->
     </mat-accordion>
   </mat-drawer>
+
   <mat-drawer-content>
-    <div>Map Workspace</div>
+    <div class="row mx-0 w-100">
+      <nav mat-tab-nav-bar>
+        <a mat-tab-link (click)="onMapConfigTabClick('analytics')">
+          <mat-icon>analytics</mat-icon>
+          &nbsp; DHIS2 Analytics Configuration
+        </a>
+        <a mat-tab-link (click)="onMapConfigTabClick('geoFeatures')">
+          <mat-icon>analytics</mat-icon>
+          &nbsp; DHIS2 GeoFeatures
+        </a>
+        <a mat-tab-link (click)="onMapConfigTabClick('mapConfigurations')">
+          <mat-icon>vertical_split</mat-icon>
+          &nbsp; Map Configuration
+        </a>
+        <a mat-tab-link (click)="onMapConfigTabClick('mapCode')">
+          <mat-icon>vertical_split</mat-icon>
+          &nbsp; Map Code
+        </a>
+      </nav>
+    </div>
+    <div
+      *ngIf="d2MapDashboardItemConfig"
+      class="row mx-0 w-100 container mat-typography"
+    >
+      <!-- Interactive MAP Component for drawing MAP  -->
+      <iapps-ngx-d2-map
+        [organisationUnitGroups]="d2OrganisationUnitGroups"
+        [mapAnalytics]="d2MapAnalytics"
+        [mapGeoFeatures]="d2GeoFeatureConfigs"
+        [mapLegendSets]="d2LegendSetConfigs"
+        [mapDashboardItem]="d2MapDashboardItemConfig"
+        [mapDashboardExtensionItem]="d2MapDashboardExtensionItem"
+        [container]="mapRenderId"
+      ></iapps-ngx-d2-map>
+    </div>
   </mat-drawer-content>
 </mat-drawer-container>
+
+<iapps-ngx-drawer
+  (cancel)="onInfoClose($event)"
+  [sourceCodeConfig]="mapCodeConfig"
+  [isInfoOpen]="isInfoOpen"
+>
+</iapps-ngx-drawer>

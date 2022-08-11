@@ -12,3 +12,17 @@ export interface Geometry {
   type: string;
   coordinates: string[];
 }
+
+export interface DhisGeoFeature {
+  id: string;
+  code: string;
+  na: string;
+  hcd: boolean;
+  hcu: boolean;
+  le: number;
+  pg: string;
+  pi: string;
+  pn: string;
+  ty: number;
+  co: string;
+}

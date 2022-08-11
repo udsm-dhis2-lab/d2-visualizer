@@ -33,6 +33,7 @@ export class NgxDrawerComponent implements OnInit, OnChanges {
     theme: 'vs-white',
     language: 'json',
   };
+
   monacoEditorHeight = '80vh';
 
   monacoForm: FormGroup = new FormGroup({
@@ -48,10 +49,21 @@ export class NgxDrawerComponent implements OnInit, OnChanges {
         sourceCodeChanges?.sourceCodeConfig?.currentValue;
 
       this.code =
-        sourceCodeConfig && sourceCodeConfig.snippet
-          ? JSON.stringify(sourceCodeConfig.snippet)
-          : '';
+        this.sourceCodeConfig?.language === 'json'
+          ? sourceCodeConfig && sourceCodeConfig?.snippet
+            ? JSON.stringify(sourceCodeConfig?.snippet)
+            : ''
+          : sourceCodeConfig?.snippet;
     }
+
+    this.editorOptions = {
+      theme: this.sourceCodeConfig?.theme
+        ? this.sourceCodeConfig?.theme
+        : 'vs-white',
+      language: this.sourceCodeConfig?.language
+        ? this.sourceCodeConfig?.language
+        : 'json',
+    };
   }
 
   ngOnInit(): void {}
