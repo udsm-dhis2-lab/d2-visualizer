@@ -1,217 +1,196 @@
+import * as _ from 'lodash';
+import { D2MapEngine } from '../utils/map-engine.util';
 import { MapAnalytics } from '../models/map-analytic.model';
+import {
+    MapDashboardExtensionItem,
+    MapViewExtension,
+} from '../models/map-dashboard-extension.model';
+import { MapDashboardItem, MapView } from '../models/map-dashboard-item.model';
 import { MapDrawablePayload } from '../models/map-drawable-payload.model';
+import { GeoFeatureSnapshot } from '../models/map-geofeature-snapshot.model';
 import { GeoFeature } from '../models/map-geofeature.model';
 import { MapUtil } from '../utils/map.util';
-import { MapDrawable } from './map-drawable.class';
-import * as _ from 'lodash';
-import { Legend, LegendSet } from '../models/legend-set.model';
-import { MapView } from '../models/map-dashboard-item.model';
 import * as turf from '@turf/turf';
-import { D2MapEngine } from '../utils/map-engine.util';
+import { Legend, LegendSet } from '../models/legend-set.model';
 import * as mapboxgl from 'mapbox-gl';
+import { OrganisationUnitGroup } from '../models/organisation-unit-group.model';
+import { FacilityThematicDrawableMap } from './facility.thematic';
 
-export class ThematicDrawableMap extends MapDrawable {
+/**
+ *
+ */
+export class ThematicDrawableMap extends D2MapEngine {
+    /**
+     * @description Set map type
+     */
+    private type: string;
+
+    /**
+     * @description Set map type
+     */
+    constructor() {
+        super();
+        this.type = 'thematic';
+    }
+
     /**
      *
-     * @param mapUtil
-     * @param mapAnalytic
-     * @param geoFeature
+     * @param type
      * @returns
      */
-    public getMapFeaturePayload(
+    setMapType(type: string): ThematicDrawableMap {
+        this.type = type;
+        return this;
+    }
+
+    /**
+     *
+     * @returns
+     */
+    getMapType(): string {
+        return this.type;
+    }
+
+    /**
+     *
+     * @param type
+     * @param mapUtil
+     * @param geoFeatures
+     * @param mapAnalytics
+     * @returns
+     */
+    getMapDrawablePayload(
+        type: string,
         mapUtil: MapUtil,
-        mapView: MapView,
-        geoFeature: GeoFeature[],
-        mapAnalytic: MapAnalytics
-    ): MapDrawablePayload | any {
-        // CHange Array of GeoFeature to Object of GeoFeature
-        const geoFeatureObject: { [key: string]: GeoFeature } = _.keyBy(
-            geoFeature,
+        geoFeatures: GeoFeatureSnapshot[],
+        mapAnalytics: MapAnalytics[],
+        mapDashboardItem: MapDashboardItem,
+        mapDashboardExtensionItem: MapDashboardExtensionItem,
+        organisationUnitGroups: OrganisationUnitGroup[]
+    ): MapDrawablePayload[] | any {
+        this.setMapType(type);
+
+        const thematicDrawableMap = new D2MapEngine();
+
+        const mapLayers = [];
+
+        const mapDashboardItemSanitized: MapDashboardItem =
+            this.getSanitizedMapDrawableItem(
+                mapDashboardItem,
+                mapDashboardExtensionItem
+            );
+
+        const geoFeatureObject: { [key: string]: GeoFeatureSnapshot } = _.keyBy(
+            geoFeatures,
             'id'
         );
 
-        const isValueShown: boolean = mapUtil.getShowValue();
-        const isLabelShown: boolean = mapUtil.getShowLabel();
-
-        // Get Index Reference for Organisation Unit in Map Analytics Header Info
-        const ouIndex: number = this.getAnalyticHeaderMetadataIndex(
-            mapAnalytic,
-            'ou'
+        const analyticsObject: { [key: string]: MapAnalytics } = _.keyBy(
+            mapAnalytics,
+            'id'
         );
 
-        if (
-            mapView &&
-            mapView.thematicMapType &&
-            _.toUpper(_.trim(mapView.thematicMapType)) === 'CHOROPLETH'
-        ) {
-            // Implement Map Feature
-            return {
-                mapType: mapView?.thematicMapType,
-                legendSet: mapView?.legendSet?.id,
-                type: 'geojson',
-                data: {
-                    type: 'FeatureCollection',
-                    features:
-                        mapAnalytic && mapAnalytic.rows
-                            ? _.map(mapAnalytic.rows, (row: string[]) => {
-                                const geoFeatureId = row[ouIndex];
-                                const mapCoordinates = JSON.parse(
-                                    geoFeatureObject[geoFeatureId]?.co
-                                );
+        if (mapDashboardItemSanitized) {
+            for (const mapItem of mapDashboardItemSanitized.map.mapViews) {
+                const sanitizedGeofeatures: GeoFeature[] =
+                    mapItem &&
+                        mapItem.id &&
+                        geoFeatureObject &&
+                        geoFeatureObject[mapItem.id] &&
+                        geoFeatureObject[mapItem.id].geoFeatures
+                        ? geoFeatureObject[mapItem.id].geoFeatures
+                        : [];
 
-                                return {
-                                    type: 'Feature',
-                                    id: geoFeatureId,
-                                    geometry: {
-                                        type: 'Polygon',
-                                        coordinates:
-                                            mapCoordinates && mapCoordinates.length > 1
-                                                ? _.flatten(mapCoordinates) &&
-                                                    _.flatten(mapCoordinates).length > 1
-                                                    ? [_.flatten(_.flatten(mapCoordinates))]
-                                                    : _.flatten(mapCoordinates)
-                                                : mapCoordinates,
-                                    },
-                                    properties: {
-                                        description: this.getToggleBetweenValueAndLabel(
-                                            mapAnalytic,
-                                            row,
-                                            isLabelShown,
-                                            isValueShown,
-                                            ouIndex
-                                        ),
+                const sanitizedAnalytics: MapAnalytics | any =
+                    mapItem &&
+                        mapItem.id &&
+                        analyticsObject &&
+                        analyticsObject[mapItem.id]
+                        ? analyticsObject[mapItem.id]
+                        : [];
 
-                                        value: `${row[
-                                            this.getAnalyticHeaderMetadataIndex(
-                                                mapAnalytic,
-                                                'value'
-                                            )
-                                            ]
-                                            }`,
-                                        datavalue: parseFloat(
-                                            row[
-                                            this.getAnalyticHeaderMetadataIndex(
-                                                mapAnalytic,
-                                                'value'
-                                            )
-                                            ]
-                                        ),
-                                        color: '#ffffff',
-                                    },
-                                };
-                            })
-                            : [],
-                },
-            };
-        } else if (
-            mapView &&
-            mapView.thematicMapType &&
-            _.toUpper(_.trim(mapView.thematicMapType)) === 'BUBBLE'
-        ) {
-            // Implement Return Statement
-            return {
-                mapType: mapView?.thematicMapType,
-                legendSet: mapView?.legendSet?.id,
-                type: 'geojson',
-                data: {
-                    type: 'FeatureCollection',
-                    crs: {
-                        type: 'name',
-                        properties: {
-                            name: 'urn:ogc:def:crs:OGC:1.3:CRS84',
-                        },
-                    },
-                    features:
-                        mapAnalytic && mapAnalytic.rows
-                            ? _.compact(
-                                _.map(mapAnalytic.rows, (row: string[]) => {
-                                    const geoFeatureId = row[ouIndex];
-                                    const mapCoordinates = JSON.parse(
-                                        geoFeatureObject[geoFeatureId]?.co
-                                    );
+                if (
+                    mapItem &&
+                    mapItem.layer &&
+                    _.toUpper(_.trim(mapItem.layer)) === 'THEMATIC'
+                ) {
+                    // Implement Section
+                    const mapDrawablePayload: MapDrawablePayload =
+                        thematicDrawableMap.getMapFeaturePayload(
+                            mapUtil,
+                            mapItem,
+                            sanitizedGeofeatures,
+                            sanitizedAnalytics
+                        );
+                    mapLayers.push({ ...mapDrawablePayload, id: mapItem.id });
+                } else if (
+                    mapItem &&
+                    mapItem.layer &&
+                    _.toUpper(_.trim(mapItem.layer)) === 'FACILITY'
+                ) {
+                    const facilityThematicDrawableMap = new FacilityThematicDrawableMap();
+                    // Implement Facility Map
+                    const mapDrawablePayload: MapDrawablePayload =
+                        facilityThematicDrawableMap.getFacilityMapFeaturePayload(
+                            mapUtil,
+                            mapItem,
+                            sanitizedGeofeatures,
+                            organisationUnitGroups
+                        );
 
-                                    const dataValue: any = parseFloat(
-                                        row[
-                                        this.getAnalyticHeaderMetadataIndex(
-                                            mapAnalytic,
-                                            'value'
-                                        )
-                                        ]
-                                    );
-
-                                    if (
-                                        mapCoordinates &&
-                                        mapCoordinates[0] &&
-                                        mapCoordinates[0].length > 100
-                                    ) {
-                                        const polygon = turf.polygon(
-                                            mapCoordinates ? mapCoordinates : []
-                                        );
-
-                                        const centroid = turf.centroid(polygon);
-
-                                        const centerOfMassPolygon = turf.polygon(mapCoordinates);
-
-                                        const mapCenterOfMass =
-                                            turf.centerOfMass(centerOfMassPolygon);
-
-                                        return {
-                                            type: 'Feature',
-                                            id: geoFeatureId,
-                                            geometry: {
-                                                type: 'Point',
-                                                coordinates:
-                                                    mapCenterOfMass &&
-                                                        mapCenterOfMass.geometry &&
-                                                        mapCenterOfMass.geometry.coordinates
-                                                        ? [
-                                                            ...mapCenterOfMass.geometry.coordinates,
-                                                            +dataValue,
-                                                        ]
-                                                        : [],
-                                            },
-                                            properties: {
-                                                id: geoFeatureId,
-                                                description: this.getToggleBetweenValueAndLabel(
-                                                    mapAnalytic,
-                                                    row,
-                                                    isLabelShown,
-                                                    isValueShown,
-                                                    ouIndex
-                                                ),
-                                                mag: +dataValue,
-                                                // value: dataValue,
-                                                // datavalue: dataValue,
-                                                // color: '#ffffff',
-                                                time: 1507422626990,
-                                                felt: null,
-                                                tsunami: 0,
-                                            },
-                                        };
-                                    } else {
-                                        return null;
-                                    }
-                                })
-                            )
-                            : [],
-                },
-                cluster: true,
-                clusterMaxZoom: 14, // Max zoom to cluster points on
-                clusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
-            };
+                    mapLayers.push({ ...mapDrawablePayload, id: mapItem.id });
+                } else {
+                    // Implement Section
+                }
+            }
+            return mapLayers;
         }
+
+        // if (this.type === 'thematic') {
+        //     const thematicDrawableMap = new ThematicDrawableMap();
+        //     return thematicDrawableMap.getMapFeaturePayload(
+        //         mapUtil,
+        //         geoFeatures,
+        //         mapAnalytics
+        //     );
+        // }
     }
 
-    public getAnalyticHeaderMetadataIndex = (
-        mapAnalytic: MapAnalytics,
-        lookUp: string
-    ) => {
-        return mapAnalytic && mapAnalytic.headers && lookUp
-            ? _.findIndex(mapAnalytic.headers, (data: any) => {
-                return _.trim(data.name) == _.trim(lookUp);
-            })
-            : 0;
-    };
+    getSanitizedMapDrawableItem(
+        mapDashboardItem: MapDashboardItem,
+        mapDashboardExtensionItem: MapDashboardExtensionItem
+    ): MapDashboardItem {
+        return {
+            ...mapDashboardItem,
+            map: {
+                ...mapDashboardItem.map,
+                mapViews: _.map(mapDashboardItem.map.mapViews, (mapView: MapView) => {
+                    const mapViewExtensionObject: { [key: string]: MapViewExtension } =
+                        _.keyBy(mapDashboardExtensionItem.map.mapViews, 'id');
+
+                    return {
+                        ...mapView,
+                        layer:
+                            mapView &&
+                                mapView.id &&
+                                mapViewExtensionObject &&
+                                mapViewExtensionObject[mapView.id] &&
+                                mapViewExtensionObject[mapView.id].layer
+                                ? mapViewExtensionObject[mapView.id].layer
+                                : mapView.layer,
+                        thematicMapType:
+                            mapView &&
+                                mapView.id &&
+                                mapViewExtensionObject &&
+                                mapViewExtensionObject[mapView.id] &&
+                                mapViewExtensionObject[mapView.id].thematicMapType
+                                ? mapViewExtensionObject[mapView.id].thematicMapType
+                                : mapView.thematicMapType,
+                    };
+                }),
+            },
+        };
+    }
 
     public getLegendSetInfoFromDrawablePayload = (
         legendSets: LegendSet[],
@@ -276,34 +255,9 @@ export class ThematicDrawableMap extends MapDrawable {
         ) as number[];
     };
 
-    public getToggleBetweenValueAndLabel = (
-        mapAnalytic: MapAnalytics,
-        row: string[],
-        showLabel: boolean,
-        showValue: boolean,
-        ouIndex: number
-    ): any => {
-        if (
-            showLabel &&
-            mapAnalytic.metaData &&
-            mapAnalytic.metaData.items &&
-            mapAnalytic.metaData.items[row[ouIndex]] &&
-            mapAnalytic.metaData.items[row[ouIndex]].name &&
-            row &&
-            ouIndex &&
-            row[ouIndex]
-        ) {
-            return _.capitalize(
-                _.head(_.split(mapAnalytic.metaData.items[row[ouIndex]].name, ' '))
-            );
-        } else if (showValue) {
-            return '';
-        }
-    };
-
     public drawNormalThematicLayer(
         mapUtil: MapUtil,
-        d2MapEngine: D2MapEngine,
+        d2MapEngine: ThematicDrawableMap,
         map: any,
         mapContainerSourceId: string,
         mapDrawablePayload: MapDrawablePayload,
@@ -483,7 +437,7 @@ export class ThematicDrawableMap extends MapDrawable {
 
     public drawBubbleThematicLayer(
         mapUtil: MapUtil,
-        d2MapEngine: D2MapEngine,
+        d2MapEngine: ThematicDrawableMap,
         map: any,
         mapDrawablePayload: MapDrawablePayload,
         mapContainerSourceId: string
@@ -578,7 +532,7 @@ export class ThematicDrawableMap extends MapDrawable {
      */
     public createLegendSet(
         mapUtil: MapUtil,
-        d2MapEngine: D2MapEngine,
+        d2MapEngine: ThematicDrawableMap,
         mapAnalytics: MapAnalytics,
         legendSet: LegendSet,
         legendSetContainerId: string

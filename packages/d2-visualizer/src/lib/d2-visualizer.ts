@@ -14,6 +14,7 @@ import { TableAnalytics } from './modules/table/models/table-analytics.model';
 import { TableDashboardItem } from './modules/table/models/table-dashboard-item.model';
 import { TableConfiguration } from './modules/table/models/table-config.model';
 import { DataStoreConfig } from './shared/models/datastore.model';
+import { OrganisationUnitGroup } from './modules/map/models/organisation-unit-group.model';
 
 export class D2Visualizer {
   dataSelections: any[] = [];
@@ -24,9 +25,13 @@ export class D2Visualizer {
   id!: string;
   d2VisualizerMapControl: D2VisualizerMapControl | any;
   legendSets: LegendSet[] | any = null;
+
+  // Map Dependencies 
   mapDashboardItem: MapDashboardItem | any;
   mapDashboardExtensionItem: MapDashboardExtensionItem | any;
+  organisationUnitGroups: OrganisationUnitGroup[] | any;
   geoFeatures: any[] = [];
+
   dataAnalytics: unknown = null;
   dataStoreConfig!: DataStoreConfig;
   layerStyle = 'default';
@@ -437,6 +442,24 @@ export class D2Visualizer {
   }
 
   /**
+   * 
+   * @param organisationUnitGroups 
+   * @returns 
+   */
+  setOrganisationUnitGroups(organisationUnitGroups: OrganisationUnitGroup[]) {
+    this.organisationUnitGroups = organisationUnitGroups;
+    return this;
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  getOrganisationUnitGroups(): OrganisationUnitGroup[] {
+    return this.organisationUnitGroups;
+  }
+
+  /**
    *
    * @returns
    */
@@ -538,6 +561,7 @@ export class D2Visualizer {
         return new MapUtil()
           .setMapAnalytics(this.dataAnalytics as MapAnalytics)
           .setGeofeature(this.geoFeatures as any)
+          .setOrganisationUnitGroups(this.organisationUnitGroups)
           .setLegendSet(this.legendSets)
           .setMapDashboardItem(this.mapDashboardItem)
           .setMapDashboardExtensionItem(this.mapDashboardExtensionItem)

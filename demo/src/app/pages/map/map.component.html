@@ -31,7 +31,7 @@
         <mat-list>
           <mat-list-item
             [routerLinkActive]="'active'"
-            (click)="onMapTypeChange()"
+            (click)="onMapTypeChange('thematic')"
           >
             <img
               mat-list-icon
@@ -44,7 +44,7 @@
 
           <mat-list-item
             [routerLinkActive]="'active'"
-            (click)="onMapTypeChange()"
+            (click)="onMapTypeChange('thematic')"
           >
             <img
               mat-list-icon
@@ -53,6 +53,18 @@
               [alt]="'Map item'"
             />
             <div mat-line>Thematic Layer(mCBS)</div>
+          </mat-list-item>
+          <mat-list-item
+            [routerLinkActive]="'active'"
+            (click)="onMapTypeChange('facility')"
+          >
+            <img
+              mat-list-icon
+              class="side-menu-icon"
+              [src]="'assets/icons/map.png'"
+              [alt]="'Map item'"
+            />
+            <div mat-line>Organisation Unit Layer</div>
           </mat-list-item>
         </mat-list>
       </mat-expansion-panel>
@@ -97,12 +109,12 @@
       </nav>
     </div>
     <div
-      *ngIf="d2MapDashboardItemConfigs"
+      *ngIf="d2MapDashboardItemConfig"
       class="row mx-0 w-100 container mat-typography"
     >
       <!-- Interactive MAP Component for drawing MAP  -->
       <iapps-ngx-d2-map
-        *ngFor="let d2MapDashboardItemConfig of d2MapDashboardItemConfigs"
+        [organisationUnitGroups]="d2OrganisationUnitGroups"
         [mapAnalytics]="d2MapAnalytics"
         [mapGeoFeatures]="d2GeoFeatureConfigs"
         [mapLegendSets]="d2LegendSetConfigs"

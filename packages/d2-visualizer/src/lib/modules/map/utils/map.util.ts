@@ -1,13 +1,15 @@
 import * as mapboxgl from 'mapbox-gl';
-import { Legend, LegendSet } from '../models/legend-set.model';
+import { LegendSet } from '../models/legend-set.model';
 import { MapAnalytics } from '../models/map-analytic.model';
 import { MapDrawablePayload } from '../models/map-drawable-payload.model';
 import { GeoFeature } from '../models/map-geofeature.model';
 import * as _ from 'lodash';
-import { D2MapEngine } from './map-engine.util';
+import { ThematicDrawableMap as D2MapEngine } from '../class/thematic.class';
 import { MapDashboardItem } from '../models/map-dashboard-item.model';
 import { MapDashboardExtensionItem } from '../models/map-dashboard-extension.model';
 import { GeoFeatureSnapshot } from '../models/map-geofeature-snapshot.model';
+import { OrganisationUnitGroup } from '../models/organisation-unit-group.model';
+import { FacilityThematicDrawableMap } from '../class/facility.thematic';
 
 export class MapUtil {
   private accessToken: string;
@@ -71,6 +73,7 @@ export class MapUtil {
   private mapAnalytics: MapAnalytics[] | any;
   private geoFeatures: GeoFeatureSnapshot[] | any;
   private legendSets: LegendSet[] | any;
+  private organisationUnitGroups: OrganisationUnitGroup[] | any;
 
   constructor() {
     /**
@@ -138,6 +141,7 @@ export class MapUtil {
     this.type = 'thematic';
     this.mapDashboardItem = null;
     this.mapDashboardExtensionItem = null;
+    this.organisationUnitGroups = [];
   }
 
   /**
@@ -1537,6 +1541,26 @@ export class MapUtil {
 
   /**
    *
+   * @param organisationUnitGroups
+   * @returns
+   */
+  setOrganisationUnitGroups(
+    organisationUnitGroups: OrganisationUnitGroup[]
+  ): MapUtil {
+    this.organisationUnitGroups = organisationUnitGroups;
+    return this;
+  }
+
+  /**
+   *
+   * @returns
+   */
+  getOrganisationUnitGroups(): OrganisationUnitGroup {
+    return this.organisationUnitGroups;
+  }
+
+  /**
+   *
    */
   draw(): void {
     try {
@@ -1576,9 +1600,9 @@ export class MapUtil {
             this.geoFeatures,
             this.mapAnalytics,
             this.mapDashboardItem,
-            this.mapDashboardExtensionItem
+            this.mapDashboardExtensionItem,
+            this.organisationUnitGroups
           );
-
 
         if (mapDrawablePayloads && mapDrawablePayloads.length) {
           for (const mapDrawablePayload of mapDrawablePayloads) {
@@ -1589,20 +1613,36 @@ export class MapUtil {
                 d2MapEngine,
                 map,
                 mapDrawablePayload,
+                mapContainerSourceId
+              );
+            } else if (
+              mapDrawablePayload &&
+              mapDrawablePayload.mapType === 'FACILITY'
+            ) {
+              const facilityThematicDrawableMap =
+                new FacilityThematicDrawableMap();
+
+              // Organisation Unit MapBox Map Drawable Item
+              facilityThematicDrawableMap.drawOrganisationUnitThematicLayer(
+                this,
+                map,
+                mapDrawablePayload,
                 mapContainerSourceId,
+                this.organisationUnitGroups,
+                legendSetContainerId
               );
             } else {
               // Thematic MapBox Map Drawable Item
-              d2MapEngine.drawNormalThematicLayer(
-                this,
-                d2MapEngine,
-                map,
-                mapContainerSourceId,
-                mapDrawablePayload,
-                legendSetContainerId,
-                this.getMapTitleContainerId(),
-                this.mapAnalytics
-              );
+              // d2MapEngine.drawNormalThematicLayer(
+              //   this,
+              //   d2MapEngine,
+              //   map,
+              //   mapContainerSourceId,
+              //   mapDrawablePayload,
+              //   legendSetContainerId,
+              //   this.getMapTitleContainerId(),
+              //   this.mapAnalytics
+              // );
             }
           }
         }

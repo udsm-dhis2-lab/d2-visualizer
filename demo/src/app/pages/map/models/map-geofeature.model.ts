@@ -1,6 +1,6 @@
 export interface GeoFeature {
   id: string;
-  code: string;
+  code?: string;
   na: string;
   hcd: boolean;
   hcu: boolean;
@@ -10,6 +10,5 @@ export interface GeoFeature {
   pn?: string;
   ty: number;
   co: string;
-  dimensions: any;
+  dimensions: { [key: string]: string };
 }
-

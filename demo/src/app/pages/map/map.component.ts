@@ -18,10 +18,14 @@ import { d2LegendSets } from './config/d2-legend-set.config';
 import { d2GeoFeatureSnapshotConfigs } from './config/d2-geofeature-snapshot.config';
 import { GeoFeatureSnapshot } from './models/map-geofeature-snapshot.model';
 import { d2ConfigAnalytics } from './config/d2-config-analytics.config';
-import { mapDashboardItemConfigs } from './config/d2-map-dashboard-item.config';
+import { mapDashboardItemConfig } from './config/d2-map-dashboard-item.config';
 import { MapDashboardItem } from './models/map-dashboard-item.model';
 import { MapDashboardExtensionItem } from './models/map-dashboard-extension.model';
 import { mapDashboardExtensionItem } from './config/d2-map-dashboard-extension.config';
+import { OrganisationUnitGroup } from './models/organisation-unit-group.model';
+import { organisationUnitGroups } from './config/facility/organisation-unit-group.config';
+import { facilityDashboardItemConfig } from './config/facility/facility-dashboard-item.config';
+import { d2FacilityGeofeatures } from './config/facility/geofeature.config';
 
 @Component({
   selector: 'iapps-map',
@@ -39,13 +43,16 @@ export class MapComponent implements OnInit {
   panelOpenState = false;
   step? = 0;
   mapRenderId: string = 'map-container';
-  d2MapDashboardItemConfigs: MapDashboardItem[] = mapDashboardItemConfigs;
+  d2MapDashboardItemConfig: MapDashboardItem = mapDashboardItemConfig;
   d2MapDashboardExtensionItem: MapDashboardExtensionItem =
     mapDashboardExtensionItem;
   d2LegendSetConfigs: LegendSet[] = d2LegendSets;
   d2GeoFeatureConfigs: GeoFeatureSnapshot[] = d2GeoFeatureSnapshotConfigs;
   d2MapAnalytics: MapAnalytics[] = d2ConfigAnalytics;
   // d2LegendSetConfigs:
+
+  // Facility Map
+  d2OrganisationUnitGroups!: OrganisationUnitGroup[];
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
@@ -131,11 +138,18 @@ export class MapComponent implements OnInit {
     this.mapCodeConfig = mapCodeConfig;
   }
 
-  onMapTypeChange() {
-    // Supportive Configuration for Map
-    this.mapAnalytics = demoMapAnalytic;
-    this.mapGeoFeature = demoGeofeatures;
-    this.mapLegendSet = demoLegendSet;
-    this.mapRenderId = (Math.random() + 1).toString(36).substring(2);
+  onMapTypeChange(status: string) {
+    if (_.toUpper(status) === 'FACILITY') {
+      this.d2GeoFeatureConfigs = d2FacilityGeofeatures;
+      this.d2OrganisationUnitGroups = organisationUnitGroups;
+      this.d2MapDashboardItemConfig = facilityDashboardItemConfig;
+      this.mapRenderId = (Math.random() + 1).toString(36).substring(2);
+    } else {
+      // Supportive Configuration for Map
+      this.mapAnalytics = demoMapAnalytic;
+      this.mapGeoFeature = demoGeofeatures;
+      this.mapLegendSet = demoLegendSet;
+      this.mapRenderId = (Math.random() + 1).toString(36).substring(2);
+    }
   }
 }

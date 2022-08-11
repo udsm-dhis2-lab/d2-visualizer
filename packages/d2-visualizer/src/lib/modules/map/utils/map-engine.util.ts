@@ -1,172 +1,308 @@
-import * as _ from 'lodash';
-import { ThematicDrawableMap } from '../class/thematic';
 import { MapAnalytics } from '../models/map-analytic.model';
-import {
-    MapDashboardExtensionItem,
-    MapViewExtension,
-} from '../models/map-dashboard-extension.model';
-import { MapDashboardItem, MapView } from '../models/map-dashboard-item.model';
 import { MapDrawablePayload } from '../models/map-drawable-payload.model';
-import { GeoFeatureSnapshot } from '../models/map-geofeature-snapshot.model';
 import { GeoFeature } from '../models/map-geofeature.model';
 import { MapUtil } from './map.util';
+import { MapDrawable } from '../class/map-drawable.class';
+import * as _ from 'lodash';
+import { Legend, LegendSet } from '../models/legend-set.model';
+import { MapView } from '../models/map-dashboard-item.model';
+import * as turf from '@turf/turf';
+import { ThematicDrawableMap } from '../class/thematic.class';
+import * as mapboxgl from 'mapbox-gl';
+import { OrganisationUnitGroup } from '../models/organisation-unit-group.model';
+import { FacilityThematicDrawableMap } from '../class/facility.thematic';
 
-/**
- *
- */
-export class D2MapEngine extends ThematicDrawableMap {
-    /**
-     * @description Set map type
-     */
-    private type: string;
-
-    /**
-     * @description Set map type
-     */
-    constructor() {
-        super();
-        this.type = 'thematic';
-    }
-
-    /**
-     *
-     * @param type
-     * @returns
-     */
-    setMapType(type: string): D2MapEngine {
-        this.type = type;
-        return this;
-    }
-
+export class D2MapEngine extends MapDrawable {
     /**
      *
      * @returns
      */
-    getMapType(): string {
-        return this.type;
+    public getVisualizationColors(): string[] {
+        return [
+            '#A9BE3B',
+            '#558CC0',
+            '#D34957',
+            '#FF9F3A',
+            '#4FBDAE',
+            '#968F8F',
+            '#B7409F',
+            '#FFDA64',
+            '#B78040',
+            '#676767',
+            '#6A33CF',
+            '#4A7833',
+            '#434348',
+            '#7CB5EC',
+            '#F7A35C',
+            '#F15C80',
+        ];
     }
 
     /**
      *
-     * @param type
      * @param mapUtil
+     * @param mapAnalytic
      * @param geoFeatures
-     * @param mapAnalytics
      * @returns
      */
-    getMapDrawablePayload(
-        type: string,
+    public getMapFeaturePayload(
         mapUtil: MapUtil,
-        geoFeatures: GeoFeatureSnapshot[],
-        mapAnalytics: MapAnalytics[],
-        mapDashboardItem: MapDashboardItem,
-        mapDashboardExtensionItem: MapDashboardExtensionItem
-    ): MapDrawablePayload[] | any {
-        this.setMapType(type);
-
-        const thematicDrawableMap = new ThematicDrawableMap();
-
-        const mapLayers = [];
-
-        const mapDashboardItemSanitized: MapDashboardItem =
-            this.getSanitizedMapDrawableItem(
-                mapDashboardItem,
-                mapDashboardExtensionItem
-            );
-
-        const geoFeatureObject: { [key: string]: GeoFeatureSnapshot } = _.keyBy(
+        mapView: MapView,
+        geoFeatures: GeoFeature[],
+        mapAnalytic?: MapAnalytics,
+    ): MapDrawablePayload | any {
+        // CHange Array of GeoFeature to Object of GeoFeature
+        const geoFeatureObject: { [key: string]: GeoFeature } = _.keyBy(
             geoFeatures,
             'id'
         );
 
-        const analyticsObject: { [key: string]: MapAnalytics } = _.keyBy(
-            mapAnalytics,
-            'id'
-        );
+        const isValueShown: boolean = mapUtil.getShowValue();
+        const isLabelShown: boolean = mapUtil.getShowLabel();
 
-        if (mapDashboardItemSanitized) {
-            for (const mapItem of mapDashboardItemSanitized.map.mapViews) {
-                const sanitizedGeofeatures: GeoFeature[] =
-                    mapItem &&
-                        mapItem.id &&
-                        geoFeatureObject &&
-                        geoFeatureObject[mapItem.id] &&
-                        geoFeatureObject[mapItem.id].geoFeatures
-                        ? geoFeatureObject[mapItem.id].geoFeatures
-                        : [];
+        if (
+            mapView &&
+            mapView.thematicMapType &&
+            _.toUpper(_.trim(mapView.thematicMapType)) === 'CHOROPLETH' &&
+            mapAnalytic
+        ) {
+            // Get Index Reference for Organisation Unit in Map Analytics Header Info
+            const ouIndex: number = this.getAnalyticHeaderMetadataIndex(
+                mapAnalytic,
+                'ou'
+            );
+            // Implement Map Feature
+            return {
+                mapType: mapView?.thematicMapType,
+                legendSet: mapView?.legendSet?.id,
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features:
+                        mapAnalytic && mapAnalytic.rows
+                            ? _.map(mapAnalytic.rows, (row: string[]) => {
+                                const geoFeatureId = row[ouIndex];
+                                const mapCoordinates = JSON.parse(
+                                    geoFeatureObject[geoFeatureId]?.co
+                                );
 
-                const sanitizedAnalytics: MapAnalytics | any =
-                    mapItem &&
-                        mapItem.id &&
-                        analyticsObject &&
-                        analyticsObject[mapItem.id]
-                        ? analyticsObject[mapItem.id]
-                        : [];
+                                return {
+                                    type: 'Feature',
+                                    id: geoFeatureId,
+                                    geometry: {
+                                        type: 'Polygon',
+                                        coordinates:
+                                            mapCoordinates && mapCoordinates.length > 1
+                                                ? _.flatten(mapCoordinates) &&
+                                                    _.flatten(mapCoordinates).length > 1
+                                                    ? [_.flatten(_.flatten(mapCoordinates))]
+                                                    : _.flatten(mapCoordinates)
+                                                : mapCoordinates,
+                                    },
+                                    properties: {
+                                        description: this.getToggleBetweenValueAndLabel(
+                                            mapAnalytic,
+                                            row,
+                                            isLabelShown,
+                                            isValueShown,
+                                            ouIndex
+                                        ),
 
-                if (
-                    mapItem &&
-                    mapItem.layer &&
-                    _.toLower(_.trim(mapItem.layer)) === 'thematic'
-                ) {
-                    // Implement Section
-                    const mapDrawablePayload: MapDrawablePayload =
-                        thematicDrawableMap.getMapFeaturePayload(
-                            mapUtil,
-                            mapItem,
-                            sanitizedGeofeatures,
-                            sanitizedAnalytics
-                        );
-                    mapLayers.push({ ...mapDrawablePayload, id: mapItem.id });
-                } else {
-                    // Implement Section
-                }
-            }
-            return mapLayers;
+                                        value: `${row[
+                                            this.getAnalyticHeaderMetadataIndex(
+                                                mapAnalytic,
+                                                'value'
+                                            )
+                                            ]
+                                            }`,
+                                        datavalue: parseFloat(
+                                            row[
+                                            this.getAnalyticHeaderMetadataIndex(
+                                                mapAnalytic,
+                                                'value'
+                                            )
+                                            ]
+                                        ),
+                                        color: '#ffffff',
+                                    },
+                                };
+                            })
+                            : [],
+                },
+            };
+        } else if (
+            mapView &&
+            mapView.thematicMapType &&
+            _.toUpper(_.trim(mapView.thematicMapType)) === 'BUBBLE' &&
+            mapAnalytic
+        ) {
+            // Get Index Reference for Organisation Unit in Map Analytics Header Info
+            const ouIndex: number = this.getAnalyticHeaderMetadataIndex(
+                mapAnalytic,
+                'ou'
+            );
+
+            // Implement Return Statement
+            return {
+                mapType: mapView?.thematicMapType,
+                legendSet: mapView?.legendSet?.id,
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    crs: {
+                        type: 'name',
+                        properties: {
+                            name: 'urn:ogc:def:crs:OGC:1.3:CRS84',
+                        },
+                    },
+                    features:
+                        mapAnalytic && mapAnalytic.rows
+                            ? _.compact(
+                                _.map(mapAnalytic.rows, (row: string[]) => {
+                                    const geoFeatureId = row[ouIndex];
+                                    const mapCoordinates = JSON.parse(
+                                        geoFeatureObject[geoFeatureId]?.co
+                                    );
+
+                                    const dataValue: any = parseFloat(
+                                        row[
+                                        this.getAnalyticHeaderMetadataIndex(
+                                            mapAnalytic,
+                                            'value'
+                                        )
+                                        ]
+                                    );
+
+                                    if (
+                                        mapCoordinates &&
+                                        mapCoordinates[0] &&
+                                        mapCoordinates[0].length > 100
+                                    ) {
+                                        const polygon = turf.polygon(
+                                            mapCoordinates ? mapCoordinates : []
+                                        );
+
+                                        const centroid = turf.centroid(polygon);
+
+                                        const centerOfMassPolygon = turf.polygon(mapCoordinates);
+
+                                        const mapCenterOfMass =
+                                            turf.centerOfMass(centerOfMassPolygon);
+
+                                        return {
+                                            type: 'Feature',
+                                            id: geoFeatureId,
+                                            geometry: {
+                                                type: 'Point',
+                                                coordinates:
+                                                    mapCenterOfMass &&
+                                                        mapCenterOfMass.geometry &&
+                                                        mapCenterOfMass.geometry.coordinates
+                                                        ? [
+                                                            ...mapCenterOfMass.geometry.coordinates,
+                                                            +dataValue,
+                                                        ]
+                                                        : [],
+                                            },
+                                            properties: {
+                                                id: geoFeatureId,
+                                                description: this.getToggleBetweenValueAndLabel(
+                                                    mapAnalytic,
+                                                    row,
+                                                    isLabelShown,
+                                                    isValueShown,
+                                                    ouIndex
+                                                ),
+                                                mag: +dataValue,
+                                                // value: dataValue,
+                                                // datavalue: dataValue,
+                                                // color: '#ffffff',
+                                                time: 1507422626990,
+                                                felt: null,
+                                                tsunami: 0,
+                                            },
+                                        };
+                                    } else {
+                                        return null;
+                                    }
+                                })
+                            )
+                            : [],
+                },
+                cluster: true,
+                clusterMaxZoom: 14, // Max zoom to cluster points on
+                clusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
+            };
+        } else if (
+            mapView &&
+            mapView.layer &&
+            _.toUpper(_.trim(mapView.layer)) === 'FACILITY'
+        ) {
+            return {
+                mapType:
+                    mapView && mapView.layer
+                        ? _.toUpper(_.trim(mapView?.layer))
+                        : mapView?.thematicMapType,
+                legendSet: mapView?.legendSet?.id,
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features:
+                        geoFeatures && geoFeatures.length
+                            ? _.map(geoFeatures, (geoFeature: GeoFeature) => {
+                                return {
+                                    type: 'Feature',
+                                    properties: {
+                                        description: '',
+                                    },
+                                    geometry: {
+                                        type: 'Point',
+                                        coordinates:
+                                            geoFeature && geoFeature.co
+                                                ? JSON.parse(geoFeature.co)
+                                                : [],
+                                    },
+                                };
+                            })
+                            : [],
+                },
+            };
         }
-
-        // if (this.type === 'thematic') {
-        //     const thematicDrawableMap = new ThematicDrawableMap();
-        //     return thematicDrawableMap.getMapFeaturePayload(
-        //         mapUtil,
-        //         geoFeatures,
-        //         mapAnalytics
-        //     );
-        // }
     }
 
-    getSanitizedMapDrawableItem(
-        mapDashboardItem: MapDashboardItem,
-        mapDashboardExtensionItem: MapDashboardExtensionItem
-    ): MapDashboardItem {
-        return {
-            ...mapDashboardItem,
-            map: {
-                ...mapDashboardItem.map,
-                mapViews: _.map(mapDashboardItem.map.mapViews, (mapView: MapView) => {
-                    const mapViewExtensionObject: { [key: string]: MapViewExtension } =
-                        _.keyBy(mapDashboardExtensionItem.map.mapViews, 'id');
+    public getAnalyticHeaderMetadataIndex = (
+        mapAnalytic: MapAnalytics,
+        lookUp: string
+    ) => {
+        return mapAnalytic && mapAnalytic.headers && lookUp
+            ? _.findIndex(mapAnalytic.headers, (data: any) => {
+                return _.trim(data.name) == _.trim(lookUp);
+            })
+            : 0;
+    };
 
-                    return {
-                        ...mapView,
-                        layer:
-                            mapView &&
-                                mapView.id &&
-                                mapViewExtensionObject &&
-                                mapViewExtensionObject[mapView.id] &&
-                                mapViewExtensionObject[mapView.id].layer
-                                ? mapViewExtensionObject[mapView.id].layer
-                                : mapView.layer,
-                        thematicMapType:
-                            mapView &&
-                                mapView.id &&
-                                mapViewExtensionObject &&
-                                mapViewExtensionObject[mapView.id] &&
-                                mapViewExtensionObject[mapView.id].thematicMapType
-                                ? mapViewExtensionObject[mapView.id].thematicMapType
-                                : mapView.thematicMapType,
-                    };
-                }),
-            },
-        };
-    }
+    public getToggleBetweenValueAndLabel = (
+        mapAnalytic: MapAnalytics,
+        row: string[],
+        showLabel: boolean,
+        showValue: boolean,
+        ouIndex: number
+    ): any => {
+        if (
+            showLabel &&
+            mapAnalytic.metaData &&
+            mapAnalytic.metaData.items &&
+            mapAnalytic.metaData.items[row[ouIndex]] &&
+            mapAnalytic.metaData.items[row[ouIndex]].name &&
+            row &&
+            ouIndex &&
+            row[ouIndex]
+        ) {
+            return _.capitalize(
+                _.head(_.split(mapAnalytic.metaData.items[row[ouIndex]].name, ' '))
+            );
+        } else if (showValue) {
+            return '';
+        }
+    };
 }

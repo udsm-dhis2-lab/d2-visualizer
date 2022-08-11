@@ -14,7 +14,7 @@ import { MapLayerConfig } from './models/map-layer-config.model';
 import { GeoFeatureSnapshot } from './models/map-geofeature-snapshot.model';
 import { MapDashboardItem } from './models/map-dashboard-item.model';
 import { MapDashboardExtensionItem } from './models/map-dashboard-extension.model';
-
+import { OrganisationUnitGroup } from './models/organisation-unit-group.model'
 @Component({
   selector: 'iapps-ngx-d2-map',
   templateUrl: './ngx-d2-map.component.html',
@@ -33,6 +33,7 @@ export class NgxD2MapComponent implements OnChanges {
   @Input() mapLegendSets: LegendSet[] | any;
   @Input() mapDashboardItem: MapDashboardItem | any;
   @Input() mapDashboardExtensionItem: MapDashboardExtensionItem | any;
+  @Input() organisationUnitGroups: OrganisationUnitGroup[] | any;
 
   /**
    * D2VisualizerMapControl
@@ -107,6 +108,7 @@ export class NgxD2MapComponent implements OnChanges {
           .setGeoFeatures(this.mapGeoFeatures)
           .setLegendSet(this.mapLegendSets)
           .setDashboardItem(this.mapDashboardItem)
+          .setOrganisationUnitGroups(this.organisationUnitGroups)
           .setDashboardExtensionItem(this.mapDashboardExtensionItem)
           .setD2VisualizerMapControl(this.d2VisualizerMapControl)
           .draw();

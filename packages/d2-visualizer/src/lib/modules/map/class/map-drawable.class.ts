@@ -3,6 +3,7 @@ import { MapAnalytics } from '../models/map-analytic.model';
 import { MapView } from '../models/map-dashboard-item.model';
 import { MapDrawablePayload } from '../models/map-drawable-payload.model';
 import { GeoFeature } from '../models/map-geofeature.model';
+import { OrganisationUnitGroup } from '../models/organisation-unit-group.model';
 import { MapUtil } from '../utils/map.util';
 
 export abstract class MapDrawable {
@@ -13,7 +14,8 @@ export abstract class MapDrawable {
         mapUtil: MapUtil,
         mapView: MapView,
         geoFeature: GeoFeature[],
-        mapAnalytic: MapAnalytics
+        mapAnalytic: MapAnalytics,
+        organisationUnitGroups: OrganisationUnitGroup[],
     ): MapDrawablePayload;
 
     /**
@@ -21,14 +23,14 @@ export abstract class MapDrawable {
      * @param mapAnalytic
      * @param lookUp
      */
-    public abstract getAnalyticHeaderMetadataIndex(
-        mapAnalytic: MapAnalytics,
-        lookUp: string
-    ): number;
+    // public abstract getAnalyticHeaderMetadataIndex(
+    //     mapAnalytic: MapAnalytics,
+    //     lookUp: string
+    // ): number;
 
     /**
      *
      * @param legendSet
      */
-    public abstract getMapLegendSet(legendSet: LegendSet): string[];
+    // public abstract getMapLegendSet(legendSet: LegendSet): string[];
 }

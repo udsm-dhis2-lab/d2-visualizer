@@ -32,6 +32,9 @@ export interface Map {
     name: string;
     displayName: string;
     basemap: string;
+    publicAccess?: string;
+    description?: string;
+    displayDescription?: string;
     externalAccess: boolean;
     subscribed: boolean;
     sharing: Sharing;
@@ -56,10 +59,11 @@ export interface MapView {
     id: string;
     created: string;
     name: string;
+    labels?: boolean;
     userOrganisationUnitChildren: boolean;
     subscribed: boolean;
     userOrganisationUnit: boolean;
-    method: number;
+    method?: number;
     renderingStrategy: string;
     sortOrder: number;
     favorite: boolean;
@@ -76,13 +80,13 @@ export interface MapView {
     eventPointRadius: number;
     sharing: Sharing;
     displayFormName: string;
-    thematicMapType: string;
+    thematicMapType?: string;
     hideSubtitle: boolean;
     externalAccess: boolean;
     digitGroupSeparator: string;
     access: Access;
-    relativePeriods: { [key: string]: boolean };
-    legendSet: LegendSet;
+    relativePeriods?: { [key: string]: boolean };
+    legendSet?: LegendSet;
     dataElementGroupSetDimensions: any[];
     attributeDimensions: any[];
     translations: any[];
@@ -107,6 +111,9 @@ export interface MapView {
     organisationUnits: any[];
     filters: any[];
     rows: any[];
+    organisationUnitGroupSet?: {
+        id: string,
+    },
 }
 
 export interface DataDimensionItem {
@@ -139,4 +146,5 @@ export interface Sharing {
     users: any;
     userGroups: any;
     owner?: string;
+    public?: string;
 }
