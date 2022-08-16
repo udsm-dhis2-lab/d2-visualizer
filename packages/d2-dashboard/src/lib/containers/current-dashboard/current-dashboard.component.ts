@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { catchError, Observable, of, switchMap, tap } from 'rxjs';
 import { DashboardObject, VisualizationDataSelection } from '../../models';
+import { GlobalSelection } from '../../models/global-selection.model';
 import { DashboardService } from '../../services';
 
 @Component({
@@ -12,7 +13,7 @@ import { DashboardService } from '../../services';
 })
 export class CurrentDashboardComponent implements OnInit {
   currentDashboard$?: Observable<DashboardObject | undefined>;
-  globalSelection$?: Observable<VisualizationDataSelection[]>;
+  globalSelection$!: Observable<GlobalSelection>;
   error?: object;
   loading = true;
   constructor(

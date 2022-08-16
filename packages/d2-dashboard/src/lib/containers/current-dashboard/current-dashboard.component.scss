@@ -8,5 +8,11 @@
 .d2-dashboard__dashboard-selection-summary {
   display: flex;
   justify-content: center;
-  padding: 16px;
+  padding: 8px 16px 16px 16px;
+}
+
+.d2-dashboard__selection-description {
+  margin-top: 16px;
+  font-style: italic;
+  color: #777;
 }

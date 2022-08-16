@@ -44,6 +44,10 @@ import { SharedModule } from './shared/shared.module';
       useDataStore: true,
       dataStoreNamespace: 'test-dashboard',
       rootUrl: 'dashboard',
+      selectionConfig: {
+        allowSelectionOnStartUp: true,
+        startUpPeriodType: 'Monthly',
+      },
     }),
   ],
   providers: [],

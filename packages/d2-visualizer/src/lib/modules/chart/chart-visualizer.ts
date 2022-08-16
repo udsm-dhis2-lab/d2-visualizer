@@ -1,10 +1,9 @@
-import { VisualizationConfiguration } from '../../shared/visualization-configuration';
 import * as Highcharts from 'highcharts';
-import { drawChart } from './helpers/draw-chart.helper';
-import { VisualizationLayout } from '../../shared/visualization-layout';
-import { DownloadFormat } from '../../shared/download-format';
-import { VisualizationType } from '../../shared/visualization-type';
 import { BaseVisualizer, Visualizer } from '../../shared/base-visualizer';
+import { DownloadFormat } from '../../shared/download-format';
+import { VisualizationLayout } from '../../shared/visualization-layout';
+import { VisualizationType } from '../../shared/visualization-type';
+import { drawChart } from './helpers/draw-chart.helper';
 
 declare const require: any;
 const HighchartsGroupedCategories = require('highcharts-grouped-categories')(

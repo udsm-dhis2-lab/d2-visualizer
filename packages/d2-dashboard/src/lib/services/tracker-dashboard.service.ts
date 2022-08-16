@@ -75,17 +75,9 @@ export class TrackerDashboardService {
 
     const date = new Date().toISOString();
 
-    console.log(
-      new Period()
-        .setType(periodType)
-        .setPreferences({ allowFuturePeriods: true })
-        .get()
-        .list()
-    );
-
     const periodInstance = (new Period()
       .setType(periodType)
-      .setPreferences({ allowFuturePeriods: true })
+      .setPreferences({ openFuturePeriods: 1 })
       .get()
       .list() || [])[0];
 

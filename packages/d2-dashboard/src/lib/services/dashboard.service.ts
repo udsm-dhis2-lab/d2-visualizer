@@ -8,30 +8,33 @@ import {
 } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
-import { find, isEqual } from 'lodash';
-import {
-  BehaviorSubject,
-  firstValueFrom,
-  Observable,
-  of,
-  tap,
-  throwError,
-} from 'rxjs';
-import { catchError, distinctUntilChanged, map, take } from 'rxjs/operators';
+import { Period } from '@iapps/period-utilities';
+import { find } from 'lodash';
+import { BehaviorSubject, firstValueFrom, Observable, tap } from 'rxjs';
+import { distinctUntilChanged, map, take } from 'rxjs/operators';
 import { DashboardLoaderComponent } from '../components/dashboard-loader/dashboard-loader.component';
+import { DIMENSION_LABELS } from '../constants/selection-dimension-label.constant';
 import {
   Dashboard,
   DashboardConfig,
   DashboardMenu,
   DashboardMenuObject,
   DashboardObject,
+  DashboardSelectionConfig,
   VisualizationDataSelection,
 } from '../models';
+import { GlobalSelection } from '../models/global-selection.model';
 import { DashboardConfigService } from './dashboard-config.service';
 
 interface DashboardStore {
   currentDashboardMenu?: DashboardMenuObject;
-  globalSelections: { [id: string]: VisualizationDataSelection[] };
+  globalSelections: {
+    [id: string]: {
+      default: boolean;
+      dataSelections: VisualizationDataSelection[];
+    };
+  };
+  startUpDataSelections: any;
 }
 
 @Injectable()
@@ -50,8 +53,10 @@ export class DashboardService {
     private overlay: Overlay,
     private dashboardConfigService: DashboardConfigService
   ) {
+    const config: DashboardConfig = this.dashboardConfigService.getConfig();
     this._dashboardStore$ = new BehaviorSubject({
       globalSelections: {},
+      startUpDataSelections: this._getStartUpDataSelections(config),
     });
 
     this._dashboardStoreObservable$ = this._dashboardStore$.asObservable();
@@ -114,7 +119,19 @@ export class DashboardService {
       this._dashboardStoreObservable$.pipe(take(1))
     );
 
-    this._dashboardStore$.next({ ...dashboardStore, currentDashboardMenu });
+    this._dashboardStore$.next({
+      ...dashboardStore,
+      currentDashboardMenu,
+      globalSelections: {
+        ...dashboardStore.globalSelections,
+        [currentDashboardMenu.id]: dashboardStore.globalSelections[
+          currentDashboardMenu.id
+        ] || {
+          default: true,
+          dataSelections: dashboardStore.startUpDataSelections,
+        },
+      },
+    });
     this.router.navigate([config.rootUrl, currentDashboardMenu.id]);
   }
 
@@ -129,20 +146,40 @@ export class DashboardService {
       ...dashboardStore,
       globalSelections: {
         ...dashboardStore.globalSelections,
-        [id]: dataSelections,
+        [id]: {
+          dataSelections,
+          default: false,
+        },
       },
     });
   }
 
-  getGlobalSelection(): Observable<VisualizationDataSelection[]> {
+  getGlobalSelection(): Observable<GlobalSelection> {
     return this._dashboardStoreObservable$.pipe(
       distinctUntilChanged(),
-      map(
-        (dashboardStore) =>
-          (dashboardStore?.globalSelections || {})[
-            dashboardStore?.currentDashboardMenu?.id as string
-          ]
-      )
+      map((dashboardStore) => {
+        const globalSelection = (dashboardStore?.globalSelections || {})[
+          dashboardStore?.currentDashboardMenu?.id as string
+        ];
+
+        const selectionSummary = (globalSelection?.dataSelections || [])
+          .map(
+            (dataSelection: any) =>
+              (DIMENSION_LABELS || {})[dataSelection.dimension] +
+              ': ' +
+              dataSelection.items
+                .map((item: any) => item.name || item.id)
+                .join(',')
+          )
+          .join('-');
+
+        return {
+          ...globalSelection,
+          summary: selectionSummary
+            ? 'Showing data for ' + selectionSummary
+            : undefined,
+        };
+      })
     );
   }
 
@@ -214,5 +251,27 @@ export class DashboardService {
 
   private _detachOverlay() {
     this._overlayRef?.detach();
+  }
+
+  private _getStartUpDataSelections(config: DashboardConfig) {
+    const selectionConfig: DashboardSelectionConfig | undefined =
+      config?.selectionConfig;
+
+    if (!selectionConfig?.allowSelectionOnStartUp) {
+      return [];
+    }
+
+    const periodInstance = (new Period()
+      .setType(selectionConfig.startUpPeriodType)
+      .setPreferences({ openFuturePeriods: 1 })
+      .get()
+      .list() || [])[0];
+
+    return [
+      {
+        dimension: 'pe',
+        items: [periodInstance],
+      },
+    ];
   }
 }

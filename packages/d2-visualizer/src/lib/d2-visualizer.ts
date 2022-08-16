@@ -150,7 +150,6 @@ export class D2Visualizer {
    */
   setConfig(config: any) {
     this.config = new VisualizationConfiguration(config);
-
     return this;
   }
 
@@ -331,6 +330,8 @@ export class D2Visualizer {
     const data = !this.trackedEntityInstances
       ? this.dataAnalytics || (await this._getData())._data
       : undefined;
+
+    console.log({ dataInVisualizer: data, vizType: this.visualizationType });
 
     switch (this.visualizationType) {
       case 'CHART':

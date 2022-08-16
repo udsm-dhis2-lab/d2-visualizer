@@ -1,34 +1,34 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { find } from 'lodash';
+import { DIMENSION_LABELS } from '../../constants/selection-dimension-label.constant';
 import { VisualizationDataSelection } from '../../models';
+import { GlobalSelection } from '../../models/global-selection.model';
 
 @Component({
-  selector: 'iapps-dashboard-selection-summary',
+  selector: 'd2-dashboard-selection-summary',
   templateUrl: './dashboard-selection-summary.component.html',
   styleUrls: ['./dashboard-selection-summary.component.scss'],
 })
-export class DashboardSelectionSummaryComponent implements OnInit {
-  @Input() dataSelections: VisualizationDataSelection[] = [];
+export class DashboardSelectionSummaryComponent {
+  @Input() globalSelection?: GlobalSelection;
 
   @Output() removeSelection: EventEmitter<VisualizationDataSelection[]> =
     new EventEmitter<VisualizationDataSelection[]>();
-  constructor() {}
 
-  ngOnInit(): void {}
+  dimensionLabels: any = DIMENSION_LABELS;
 
   onRemoveSelection(e: MouseEvent, dimension: string) {
     e.stopPropagation();
 
-    const availableSelection = find(this.dataSelections, [
-      'dimension',
-      dimension,
-    ]);
+    const dataSelections = this.globalSelection?.dataSelections || [];
+
+    const availableSelection = find(dataSelections, ['dimension', dimension]);
 
     if (availableSelection) {
-      const indexToRemove = this.dataSelections.indexOf(availableSelection);
+      const indexToRemove = dataSelections?.indexOf(availableSelection);
       this.removeSelection.emit([
-        ...this.dataSelections.slice(0, indexToRemove),
-        ...this.dataSelections.slice(indexToRemove + 1),
+        ...dataSelections.slice(0, indexToRemove),
+        ...dataSelections.slice(indexToRemove + 1),
       ]);
     }
   }
