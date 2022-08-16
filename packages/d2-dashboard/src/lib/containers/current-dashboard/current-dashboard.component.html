@@ -14,7 +14,10 @@
     >
       {{ params.globalSelection?.summary }}
     </div>
-    <div class="d2-dashboard__dashboard-selection-summary">
+    <div
+      class="d2-dashboard__dashboard-selection-summary"
+      *ngIf="!params.globalSelection?.default"
+    >
       <d2-dashboard-selection-summary
         [globalSelection]="params?.globalSelection || undefined"
         (removeSelection)="onSetGlobalFilter($event, currentDashboard.id)"

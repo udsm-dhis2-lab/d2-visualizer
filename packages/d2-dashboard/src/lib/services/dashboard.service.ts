@@ -139,17 +139,29 @@ export class DashboardService {
     dataSelections: VisualizationDataSelection[],
     id: string
   ) {
+    console.log(dataSelections);
     const dashboardStore = await firstValueFrom(
       this._dashboardStoreObservable$.pipe(take(1))
     );
+
+    const newGlobalSelection =
+      dataSelections.length > 0
+        ? {
+            default: false,
+            dataSelections,
+          }
+        : dashboardStore.startUpDataSelections
+        ? {
+            default: true,
+            dataSelections: dashboardStore.startUpDataSelections,
+          }
+        : { default: false, dataSelections: [] };
+
     this._dashboardStore$.next({
       ...dashboardStore,
       globalSelections: {
         ...dashboardStore.globalSelections,
-        [id]: {
-          dataSelections,
-          default: false,
-        },
+        [id]: newGlobalSelection,
       },
     });
   }
@@ -171,7 +183,7 @@ export class DashboardService {
                 .map((item: any) => item.name || item.id)
                 .join(',')
           )
-          .join('-');
+          .join(' - ');
 
         return {
           ...globalSelection,
