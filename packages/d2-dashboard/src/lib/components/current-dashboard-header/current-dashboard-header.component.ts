@@ -8,7 +8,7 @@ import {
 import { DashboardObject, VisualizationDataSelection } from '../../models';
 
 @Component({
-  selector: 'iapps-current-dashboard-header',
+  selector: 'd2-current-dashboard-header',
   templateUrl: './current-dashboard-header.component.html',
   styleUrls: ['./current-dashboard-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,12 +1,13 @@
-<div class="d2-dashboard__current-dashboard-header">
+<div class="d2-dashboard__current-dashboard-header" *ngIf="dashboard">
   <div class="d2-dashboard__current-dashboard-title-container">
     <h2 class="d2-dashboard__current-dashboard-title" [id]="dashboard?.id">
       {{ dashboard?.name }}
     </h2>
     <div class="d2-dashboard__dashboard-filters">
-      <iapps-dashboard-selection-filters
+      <d2-dashboard-selection-filters
+        [additionalFilters]="dashboard.additionalFilters"
         (setFilterSelection)="onFilterSelection($event)"
-      ></iapps-dashboard-selection-filters>
+      ></d2-dashboard-selection-filters>
     </div>
   </div>
   <div>

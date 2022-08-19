@@ -235,6 +235,12 @@ export class VisualizationConfiguration {
     return [];
   }
 
+  get trackerSelectionExist(): any {
+    return this.dataSelections.some(
+      (dataSelection) => dataSelection.domain === 'TRACKER'
+    );
+  }
+
   mergeDataSelections(dataSelections: any[]): void {
     this.dataSelections = _.unionBy(
       dataSelections,

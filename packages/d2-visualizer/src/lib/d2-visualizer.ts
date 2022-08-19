@@ -268,7 +268,6 @@ export class D2Visualizer {
    * @returns
    */
   private _getData(): Promise<any> {
-    console.log(this.trackedEntityInstances);
     const analyticPromise = new Fn.Analytics();
 
     this.config.mergeDataSelections(this.dataSelections);
@@ -330,8 +329,6 @@ export class D2Visualizer {
     const data = !this.trackedEntityInstances
       ? this.dataAnalytics || (await this._getData())._data
       : undefined;
-
-    console.log({ dataInVisualizer: data, vizType: this.visualizationType });
 
     switch (this.visualizationType) {
       case 'CHART':

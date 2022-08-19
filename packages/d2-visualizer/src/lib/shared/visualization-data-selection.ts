@@ -7,6 +7,7 @@ export interface VisualizationDataSelection {
   legendSet?: string;
   changed?: boolean;
   title?: string;
+  domain?: 'TRACKER' | 'AGGREGATE';
   items: Array<{
     id: string;
     name: string;

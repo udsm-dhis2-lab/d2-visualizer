@@ -20,5 +20,15 @@
       <mat-icon>account_tree</mat-icon>
       <mat-label>{{ 'Organisation unit' }}</mat-label>
     </button>
+
+    <button
+      mat-menu-item
+      class="filter-menu-item"
+      *ngFor="let additionalFilter of additionalFilters"
+      (click)="onOpenFilterDialog($event, additionalFilter)"
+    >
+      <mat-icon>filter</mat-icon>
+      <mat-label>{{ additionalFilter.label }}</mat-label>
+    </button>
   </mat-menu>
 </div>

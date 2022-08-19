@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
 
 export const d2DashboardMaterialModules: any[] = [
   MatChipsModule,
@@ -22,4 +23,5 @@ export const d2DashboardMaterialModules: any[] = [
   MatProgressSpinnerModule,
   MatMenuModule,
   MatDialogModule,
+  MatListModule,
 ];

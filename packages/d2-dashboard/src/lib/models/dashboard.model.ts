@@ -1,6 +1,7 @@
 import { PeriodType } from '@iapps/period-utilities';
 import { KtdGridLayout } from '@katoid/angular-grid-layout';
 import { DashboardAccess } from './dashboard-access.model';
+import { DashboardAdditionalFilter } from './dashboard-additional-filter.model';
 import { DashboardItem, DashboardItemObject } from './dashboard-item.model';
 
 export interface DashboardObject {
@@ -30,6 +31,7 @@ export interface DashboardObject {
   userGroupAccesses?: any[];
   dashboardItems?: DashboardItemObject[];
   dashboardItemsLayout?: KtdGridLayout;
+  additionalFilters?: DashboardAdditionalFilter[];
   userAccesses?: any[];
   user?: {
     id: string;
@@ -65,6 +67,9 @@ export class Dashboard {
       name: this.dashboardResponse['name'] as string,
       dashboardItems: this.dashboardItems,
       dashboardItemsLayout: this.dashboardItemsLayout,
+      additionalFilters: this.dashboardResponse[
+        'additionalFilters'
+      ] as DashboardAdditionalFilter[],
     };
   }
 }

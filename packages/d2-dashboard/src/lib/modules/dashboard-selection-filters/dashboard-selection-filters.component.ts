@@ -1,21 +1,23 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { keys } from 'lodash';
 import {
-  GlobalFilter,
+  DashboardAdditionalFilter,
   VisualizationDataSelection,
   VisualizationDataSelectionItem,
 } from '../../models';
+import { AdditionalFilterDialogComponent } from './dialogs/additional-filter-dialog/additional-filter-dialog.component';
 import { OrgUnitFilterDialogComponent } from './dialogs/org-unit-filter-dialog/org-unit-filter-dialog.component';
 import { PeriodFilterDialogComponent } from './dialogs/period-filter-dialog/period-filter-dialog.component';
-import { keys } from 'lodash';
 
 @Component({
-  selector: 'iapps-dashboard-selection-filters',
+  selector: 'd2-dashboard-selection-filters',
   templateUrl: './dashboard-selection-filters.component.html',
   styleUrls: ['./dashboard-selection-filters.component.scss'],
 })
 export class DashboardSelectionFiltersComponent {
   @Input() dataSelections!: VisualizationDataSelection[];
+  @Input() additionalFilters?: DashboardAdditionalFilter[];
   selectionEntities: { [key: string]: object } = {};
   @Output() setFilterSelection = new EventEmitter<
     VisualizationDataSelection[]
@@ -57,6 +59,28 @@ export class DashboardSelectionFiltersComponent {
           ou: res?.selectionItems?.items || [],
         };
 
+        this.setFilterSelection.emit(this._getVisualizationSelections());
+      }
+    });
+  }
+
+  onOpenFilterDialog(
+    e: MouseEvent,
+    additionalFilter: DashboardAdditionalFilter
+  ) {
+    e.stopPropagation();
+
+    const orgUnitDialog = this.dialog.open(AdditionalFilterDialogComponent, {
+      width: '800px',
+      data: additionalFilter,
+    });
+
+    orgUnitDialog.afterClosed().subscribe((res) => {
+      if (res) {
+        this.selectionEntities = {
+          ...this.selectionEntities,
+          [additionalFilter.dimension]: res?.selectedOptions || [],
+        };
         this.setFilterSelection.emit(this._getVisualizationSelections());
       }
     });

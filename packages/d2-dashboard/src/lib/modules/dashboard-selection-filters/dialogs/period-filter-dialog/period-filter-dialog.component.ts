@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PeriodFilterConfig } from '@iapps/ngx-dhis2-period-filter';
 
 @Component({
-  selector: 'iapps-period-filter-dialog',
+  selector: 'd2-period-filter-dialog',
   templateUrl: './period-filter-dialog.component.html',
   styleUrls: ['./period-filter-dialog.component.css'],
 })
