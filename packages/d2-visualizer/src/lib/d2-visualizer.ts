@@ -271,7 +271,9 @@ export class D2Visualizer {
     const analyticPromise = new Fn.Analytics();
 
     this.config.mergeDataSelections(this.dataSelections);
-    const dataSelections: any[] = this.config.dataSelections;
+    const dataSelections: any[] = this.config.dataSelections.filter(
+      (dataSelection) => dataSelection.domain !== 'TRACKER'
+    );
 
     (dataSelections || []).forEach((dataSelection) => {
       switch (dataSelection.dimension) {
@@ -372,19 +374,31 @@ export class D2Visualizer {
           .draw();
       case 'SINGLE_VALUE':
         return new SingleValueVisualizer().setId(this.id).setData(data).draw();
-      case 'CUSTOM':
+      case 'CUSTOM': {
+        this.config.mergeDataSelections(this.dataSelections);
+        const dataSelections: any[] = this.config.dataSelections.filter(
+          (dataSelection) => dataSelection.domain === 'TRACKER'
+        );
         return new CustomVisualizer()
           .setId(this.id)
           .setConfig(this.config)
           .setData(data)
+          .setSelections(dataSelections)
           .setTrackedEntityInstances(this.trackedEntityInstances)
           .draw();
-      case 'TRACKED_ENTITY_LAYER':
+      }
+      case 'TRACKED_ENTITY_LAYER': {
+        this.config.mergeDataSelections(this.dataSelections);
+        const dataSelections: any[] = this.config.dataSelections.filter(
+          (dataSelection) => dataSelection.domain === 'TRACKER'
+        );
         return new TrackedEntityLayer()
           .setId(this.id)
           .setConfig(this.config)
+          .setSelections(dataSelections)
           .setTrackedEntityInstances(this.trackedEntityInstances)
           .draw();
+      }
       default:
         return null;
     }

@@ -81,15 +81,24 @@ export class DashboardSelectionFiltersComponent {
           ...this.selectionEntities,
           [additionalFilter.dimension]: res?.selectedOptions || [],
         };
-        this.setFilterSelection.emit(this._getVisualizationSelections());
+        this.setFilterSelection.emit(
+          this._getVisualizationSelections(additionalFilter)
+        );
       }
     });
   }
 
-  private _getVisualizationSelections(): VisualizationDataSelection[] {
+  private _getVisualizationSelections(
+    additionalFilter?: DashboardAdditionalFilter
+  ): VisualizationDataSelection[] {
     return keys(this.selectionEntities).map((dimensionKey: string) => {
+      const additionalDimension =
+        additionalFilter?.dimension == dimensionKey
+          ? additionalFilter
+          : undefined;
       return {
         dimension: dimensionKey,
+        ...(additionalDimension || {}),
         items: this.selectionEntities[
           dimensionKey
         ] as VisualizationDataSelectionItem[],

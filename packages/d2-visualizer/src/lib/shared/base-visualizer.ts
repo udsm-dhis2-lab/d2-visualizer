@@ -9,7 +9,7 @@ export class BaseVisualizer {
   protected _id!: string;
   protected _data: any;
   protected _config?: VisualizationConfiguration;
-  private _dataSelections: any;
+  protected _dataSelections: any;
   protected _trackedEntityInstances?: any[];
   /**
    *

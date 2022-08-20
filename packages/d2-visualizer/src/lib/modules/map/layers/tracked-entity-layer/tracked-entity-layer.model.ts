@@ -1,6 +1,10 @@
 import { BaseVisualizer } from '../../../../shared/base-visualizer';
 declare let mapboxgl: any;
 import { flatten } from 'lodash';
+import {
+  SelectionFilterUtil,
+  TrackedEntityFilterUtil,
+} from 'packages/d2-visualizer/src/lib/shared/utilities';
 
 export class TrackedEntityLayer extends BaseVisualizer {
   private map: any;
@@ -59,10 +63,19 @@ export class TrackedEntityLayer extends BaseVisualizer {
   }
 
   getGeoJSON() {
+    const customFilter = SelectionFilterUtil.getCustomFilter(
+      this._dataSelections
+    );
     return {
       type: 'FeatureCollection',
       features: flatten(
-        this._trackedEntityInstances?.map((trackedEntityInstance) => {
+        (customFilter
+          ? TrackedEntityFilterUtil.filterTrackedEntityInstancesByExpression(
+              this._trackedEntityInstances || [],
+              customFilter
+            )
+          : this._trackedEntityInstances || []
+        ).map((trackedEntityInstance) => {
           return flatten(
             (trackedEntityInstance.enrollments || []).map((enrollment: any) => {
               const { geometry, orgUnitName } = enrollment;

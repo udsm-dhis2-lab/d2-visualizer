@@ -1,5 +1,6 @@
 import { find, intersection, sortBy } from 'lodash';
 import { BaseVisualizer, Visualizer } from '../../shared/base-visualizer';
+import { SelectionFilterUtil } from '../../shared/utilities';
 import { CustomVisualizationTemplate } from './models/custom-visualization-template.model';
 import { TrackedEntityInstanceData } from './models/tracked-entity-instance-data.model';
 
@@ -84,6 +85,10 @@ export class CustomVisualizer extends BaseVisualizer implements Visualizer {
       this._trackedEntityInstances as any[]
     );
 
+    const customFilter = SelectionFilterUtil.getCustomFilter(
+      this._dataSelections
+    );
+
     const dataVariables = this.getDataVariablesFromTemplate(this.template.html);
     let htmlContent = this.template.html;
 
@@ -100,7 +105,7 @@ export class CustomVisualizer extends BaseVisualizer implements Visualizer {
       htmlContent = htmlContent.replace(
         new RegExp(dataVariable, 'g'),
         trackerDataInstance
-          .getExpressionData(dataDimensionEntity['dx'])
+          .getExpressionData(dataDimensionEntity['dx'], customFilter)
           ?.toString()
       );
     });

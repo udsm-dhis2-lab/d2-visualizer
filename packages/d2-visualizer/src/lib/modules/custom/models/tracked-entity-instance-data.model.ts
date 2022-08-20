@@ -1,4 +1,5 @@
 import { flatten } from 'lodash';
+import { TrackedEntityFilterUtil } from '../../../shared/utilities';
 export class TrackedEntityInstanceData {
   private _attributes;
   constructor(private trackedEntityInstances: any[]) {
@@ -13,48 +14,13 @@ export class TrackedEntityInstanceData {
     );
   }
 
-  private evaluateAttributeFilterExpression(filter: string, attributes: any[]) {
-    let result = false;
-    try {
-      let newFilter = filter;
-      const attributeVariables = filter?.match(/\A<([^{^)]+)>/g);
-      attributeVariables?.forEach((attributeVariable) => {
-        const attributeId = attributeVariable?.match(/\<([^{^)]+)>/g)?.join();
-
-        const availableAttributeValue = (attributes || []).find(
-          (attribute: any) => `<${attribute.attribute}>` === attributeId
-        );
-
-        if (availableAttributeValue) {
-          newFilter = newFilter?.replace(
-            new RegExp(attributeVariable, 'g'),
-            `'${availableAttributeValue.value}'`
-          );
-        }
-      });
-      result = Function('return ' + newFilter)();
-    } catch (e) {
-      console.warn('FILTER ERROR::', e);
-    }
-
-    return result;
-  }
-
-  private filterTrackedEntityInstancesByExpression(filter: string) {
-    return (this.trackedEntityInstances || []).filter(
-      (trackedEntityInstance) => {
-        return this.evaluateAttributeFilterExpression(
-          filter,
-          trackedEntityInstance.attributes
-        );
-      }
-    );
-  }
-
   getEnrollmentCount(filter?: string): number {
     return (
       filter
-        ? this.filterTrackedEntityInstancesByExpression(filter)
+        ? TrackedEntityFilterUtil.filterTrackedEntityInstancesByExpression(
+            this.trackedEntityInstances,
+            filter
+          )
         : this.trackedEntityInstances || []
     ).reduce(
       (totalCount: number, trackerEntityInstance) =>
@@ -63,7 +29,7 @@ export class TrackedEntityInstanceData {
     );
   }
 
-  getPercent(dataVariable: string) {
+  getPercent(dataVariable: string, customFilter?: string) {
     const percentageVariable = dataVariable
       ?.replace(/(^PERCENT<)|(>$)/g, '')
       ?.replace(/\s/g, '');
@@ -74,8 +40,11 @@ export class TrackedEntityInstanceData {
       /(?=,COUNT|SUM).*/g
     ) || [])[0]?.substring(1);
 
-    const numerator = this.getExpressionData(numeratorVariable);
-    const denominator = this.getExpressionData(denominatorVariable);
+    const numerator = this.getExpressionData(numeratorVariable, customFilter);
+    const denominator = this.getExpressionData(
+      denominatorVariable,
+      customFilter
+    );
 
     if (denominator === 0) {
       return 0;
@@ -83,38 +52,50 @@ export class TrackedEntityInstanceData {
     return parseFloat(((numerator / denominator) * 100).toFixed(1));
   }
 
-  getCount(dataVariable: string) {
+  getCount(dataVariable: string, customFilter?: string) {
     const splitedVariables = dataVariable
       .replace(/(^COUNT<)|(>$)/g, '')
       .split(',');
 
     switch (splitedVariables[0]) {
-      case 'enrollment':
-        return this.getEnrollmentCount(splitedVariables[1]);
+      case 'enrollment': {
+        const enrollmentCountFilter = customFilter
+          ? splitedVariables[1]
+            ? splitedVariables[1] + '&&' + customFilter
+            : customFilter
+          : splitedVariables[1];
+        return this.getEnrollmentCount(enrollmentCountFilter);
+      }
 
       default:
         return 0;
     }
   }
 
-  getExpressionData(dataVariable: string): number {
+  getExpressionData(dataVariable: string, customFilter?: string): number {
     /**
      * PERCENT EXPRESSION
      */
     if (dataVariable.indexOf('PERCENT') === 0) {
-      return this.getPercent(dataVariable);
+      return this.getPercent(dataVariable, customFilter);
     }
 
     /**
      * COUNT EXPRESSION
      */
     if (dataVariable.indexOf('COUNT') === 0) {
-      return this.getCount(dataVariable);
+      return this.getCount(dataVariable, customFilter);
     }
 
     switch (dataVariable) {
-      case 'COUNT<enrollment>':
-        return this.getEnrollmentCount(dataVariable);
+      case 'COUNT<enrollment>': {
+        const enrollmentCountFilter = customFilter
+          ? dataVariable
+            ? dataVariable + '&&' + customFilter
+            : customFilter
+          : dataVariable;
+        return this.getEnrollmentCount(enrollmentCountFilter);
+      }
       default:
         return 0;
     }

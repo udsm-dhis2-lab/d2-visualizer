@@ -139,7 +139,6 @@ export class DashboardService {
     dataSelections: VisualizationDataSelection[],
     id: string
   ) {
-    console.log(dataSelections);
     const dashboardStore = await firstValueFrom(
       this._dashboardStoreObservable$.pipe(take(1))
     );
