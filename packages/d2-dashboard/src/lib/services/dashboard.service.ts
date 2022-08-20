@@ -176,7 +176,9 @@ export class DashboardService {
         const selectionSummary = (globalSelection?.dataSelections || [])
           .map(
             (dataSelection: any) =>
-              (DIMENSION_LABELS || {})[dataSelection.dimension] +
+              ((DIMENSION_LABELS || {})[dataSelection.dimension] ||
+                dataSelection.label ||
+                'Dimension') +
               ': ' +
               dataSelection.items
                 .map((item: any) => item.name || item.id)
