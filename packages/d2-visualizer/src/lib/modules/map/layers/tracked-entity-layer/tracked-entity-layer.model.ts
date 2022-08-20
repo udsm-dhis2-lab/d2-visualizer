@@ -4,7 +4,7 @@ import { flatten } from 'lodash';
 import {
   SelectionFilterUtil,
   TrackedEntityFilterUtil,
-} from 'packages/d2-visualizer/src/lib/shared/utilities';
+} from '../../../../shared/utilities';
 
 export class TrackedEntityLayer extends BaseVisualizer {
   private map: any;
@@ -58,8 +58,15 @@ export class TrackedEntityLayer extends BaseVisualizer {
   }
 
   getPopupContent(marker: any) {
-    console.log(this._config?.popUpTemplate, marker?.properties?.dimensionType);
-    return `${this._config?.popUpTemplate}`;
+    let htmlContent = this._config?.popUpTemplate || '';
+
+    // TODO: Find best way to handle custom templates
+    htmlContent = htmlContent.replace(
+      new RegExp('A<' + marker?.properties?.dimensionItem + '>', 'g'),
+      marker?.properties?.value
+    );
+
+    return htmlContent;
   }
 
   getGeoJSON() {
@@ -103,7 +110,7 @@ export class TrackedEntityLayer extends BaseVisualizer {
                 geometry,
                 properties: {
                   title: orgUnitName,
-                  description: orgUnitName,
+                  orgUnitName: orgUnitName,
                   symbol:
                     markerSymbol?.symbol || './assets/images/marker-dot.svg',
                   value: attributeValue?.value,
