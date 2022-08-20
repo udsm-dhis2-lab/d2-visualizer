@@ -66,6 +66,7 @@ export class TrackedEntityLayer extends BaseVisualizer {
     const customFilter = SelectionFilterUtil.getCustomFilter(
       this._dataSelections
     );
+
     return {
       type: 'FeatureCollection',
       features: flatten(

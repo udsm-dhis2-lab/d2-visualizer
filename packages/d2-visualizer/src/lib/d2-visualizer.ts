@@ -272,7 +272,7 @@ export class D2Visualizer {
 
     this.config.mergeDataSelections(this.dataSelections);
     const dataSelections: any[] = this.config.dataSelections.filter(
-      (dataSelection) => dataSelection.domain !== 'TRACKER'
+      (dataSelection) => dataSelection.dimension !== 'tea'
     );
 
     (dataSelections || []).forEach((dataSelection) => {
@@ -390,8 +390,9 @@ export class D2Visualizer {
       case 'TRACKED_ENTITY_LAYER': {
         this.config.mergeDataSelections(this.dataSelections);
         const dataSelections: any[] = this.config.dataSelections.filter(
-          (dataSelection) => dataSelection.domain === 'TRACKER'
+          (dataSelection) => dataSelection.dimension === 'tea'
         );
+
         return new TrackedEntityLayer()
           .setId(this.id)
           .setConfig(this.config)
