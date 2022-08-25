@@ -42,7 +42,7 @@ import { SharedModule } from './shared/shared.module';
     }),
     D2DashboardModule.forRoot({
       useDataStore: true,
-      dataStoreNamespace: 'test-dashboard',
+      dataStoreNamespace: 'eidsr-dashboard',
       rootUrl: 'dashboard',
       selectionConfig: {
         allowSelectionOnStartUp: true,

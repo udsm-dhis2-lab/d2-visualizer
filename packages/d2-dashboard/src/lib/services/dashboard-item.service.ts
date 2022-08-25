@@ -14,6 +14,16 @@ export class DashboardItemService {
     private dashboardConfigService: DashboardConfigService
   ) {}
 
+  getItem(id: string, type: string, hasExtension: boolean = false) {
+    switch (type) {
+      case 'MAP':
+        return this.getMap(id);
+
+      default:
+        return this.getVisualization(id, hasExtension);
+    }
+  }
+
   getVisualization(id: string, hasExtension: boolean = false) {
     return zip(
       this.httpClient.get(
@@ -27,6 +37,12 @@ export class DashboardItemService {
           ...(visualizationResponse[1] || {}),
         };
       })
+    );
+  }
+
+  getMap(id: string) {
+    return this.httpClient.get(
+      `maps/${id}.json?fields=id,displayName~rename(name),user,longitude,latitude,zoom,basemap,mapViews[id,displayName~rename(name),displayDescription~rename(description),columns[dimension,legendSet[id],filter,programStage,items[dimensionItem~rename(id),displayName~rename(name),dimensionItemType]],rows[dimension,legendSet[id],filter,programStage,items[dimensionItem~rename(id),displayName~rename(name),dimensionItemType]],filters[dimension,legendSet[id],filter,programStage,items[dimensionItem~rename(id),displayName~rename(name),dimensionItemType]],*,!attributeDimensions,!attributeValues,!category,!categoryDimensions,!categoryOptionGroupSetDimensions,!columnDimensions,!dataDimensionItems,!dataElementDimensions,!dataElementGroupSetDimensions,!filterDimensions,!itemOrganisationUnitGroups,!lastUpdatedBy,!organisationUnitGroupSetDimensions,!organisationUnitLevels,!organisationUnits,!programIndicatorDimensions,!relativePeriods,!reportParams,!rowDimensions,!translations,!userOrganisationUnit,!userOrganisationUnitChildren,!userOrganisationUnitGrandChildren]`
     );
   }
 

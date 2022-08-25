@@ -353,7 +353,7 @@ export class D2Visualizer {
           .setMapAnalytics(data as MapAnalytics)
           .setGeofeature(this.geoFeatures as any)
           .setLegendSet(this.legendSets)
-          .setMapDashboardItem(this.mapDashboardItem)
+          .setMapDashboardItem(this.config.config)
           .setMapDashboardExtensionItem(this.mapDashboardExtensionItem)
           .setContainer(this.id)
           .setStyle(this.layerStyle)

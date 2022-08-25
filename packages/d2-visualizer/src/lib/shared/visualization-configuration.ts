@@ -16,7 +16,7 @@ export class VisualizationConfiguration {
   constructor(public config: any) {
     this.dataSelections = getSelectionDimensionsFromFavorite(this.config);
 
-    if (this.type.toUpperCase() === 'CUSTOM') {
+    if (this.type?.toUpperCase() === 'CUSTOM') {
       this.dataSelections = getCustomTemplateDataSelections(
         this.customTemplate.html,
         _.unionBy(this.dataSelections, DEFAULT_ORG_UNIT_SELECTIONS)
@@ -38,7 +38,7 @@ export class VisualizationConfiguration {
   }
 
   get type(): VisualizationType {
-    return this.config?.type.toLowerCase();
+    return this.config?.type?.toLowerCase();
   }
 
   get hideEmptyColumns(): boolean {

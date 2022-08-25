@@ -71,9 +71,9 @@ export class DashboardItem {
       y: this.y,
       h: this.height,
       w: this.width,
-      visualization: this.dashboardItemResponse[
-        'visualization'
-      ] as DashboardVisualization,
+      visualization: (this.dashboardItemResponse['visualization'] ||
+        this.dashboardItemResponse['chart'] ||
+        this.dashboardItemResponse['map']) as DashboardVisualization,
       isTrackerVisualization: Boolean(
         this.dashboardItemResponse['isTrackerVisualization']
       ),

@@ -64,8 +64,9 @@ export class DashboardItemComponent implements OnInit, OnChanges {
         this.visualizationConfig =
           this.visualizationConfig ||
           (await firstValueFrom(
-            this.dashboardItemService.getVisualization(
-              this.dashboardItem?.visualization?.id as string,
+            this.dashboardItemService.getItem(
+              this.dashboardItem.visualization.id as string,
+              this.dashboardItem.type,
               this.dashboardItem.hasExtension
             )
           ));
