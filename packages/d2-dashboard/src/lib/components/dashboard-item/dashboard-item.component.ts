@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -34,7 +35,36 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   private _loading$: BehaviorSubject<boolean>;
   loading$: Observable<boolean>;
   error?: any;
-  visualizationContainerHeight!: number;
+  visualizationContainerHeight!: string;
+  fullScreen!: boolean;
+  visualizationElement: any;
+
+  get dashboardContainerId(): string {
+    return (
+      (this.dashboardItem?.visualization?.id || 'visualization_id') +
+      '__container'
+    );
+  }
+
+  get dashboardVisualizationId(): string {
+    return this.dashboardItem?.visualization?.id || 'visualization_id';
+  }
+
+  @HostListener('document:fullscreenchange', ['$event'])
+  @HostListener('document:webkitfullscreenchange', ['$event'])
+  @HostListener('document:mozfullscreenchange', ['$event'])
+  @HostListener('document:MSFullscreenChange', ['$event'])
+  fullScreenModes(event: any) {
+    event.stopPropagation();
+
+    console.log(this.visualizationElement?.clientHeight);
+
+    if (!document.fullscreenElement) {
+      this.fullScreen = !this.fullScreen;
+    }
+
+    event.stopPropagation();
+  }
   constructor(
     private dashboardItemService: DashboardItemService,
     private trackerDashboardService: TrackerDashboardService
@@ -51,9 +81,9 @@ export class DashboardItemComponent implements OnInit, OnChanges {
 
   async ngOnInit() {
     this.visualizationContainerHeight =
-      document.getElementsByClassName(
+      (document.getElementsByClassName(
         'dashboard-item-' + this.dashboardItem.id
-      )[0]?.clientHeight || 400;
+      )[0]?.clientHeight || 400) + 'px';
     this.setVisualization();
   }
 
@@ -90,6 +120,45 @@ export class DashboardItemComponent implements OnInit, OnChanges {
       }
     }
     this._loading$.next(false);
+  }
+
+  onFullScreenAction(event: MouseEvent) {
+    event.stopPropagation();
+    this.visualizationElement = document.getElementById(
+      this.dashboardContainerId
+    );
+
+    const container = document.getElementById(this.dashboardContainerId);
+
+    if (!this.fullScreen) {
+      // if (container) {
+      //   container.style.height = '100vh';
+      // }
+      this.openFullscreen();
+    } else {
+      this.closeFullscreen();
+    }
+
+    this.fullScreen = !this.fullScreen;
+  }
+
+  openFullscreen() {
+    if (this.visualizationElement.requestFullscreen) {
+      this.visualizationElement.requestFullscreen();
+    } else if (this.visualizationElement.mozRequestFullScreen) {
+      /* Firefox */
+      this.visualizationElement.mozRequestFullScreen();
+    } else if (this.visualizationElement.webkitRequestFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.visualizationElement.webkitRequestFullscreen();
+    } else if (this.visualizationElement.msRequestFullscreen) {
+      /* IE/Edge */
+      this.visualizationElement.msRequestFullscreen();
+    }
+  }
+
+  closeFullscreen() {
+    document.exitFullscreen();
   }
 
   private _getTrackedEntityInstances() {

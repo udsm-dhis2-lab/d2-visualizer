@@ -1,7 +1,9 @@
 import { Fn } from '@iapps/function-analytics';
 import { ChartVisualizer } from './modules/chart/chart-visualizer';
 import { CustomVisualizer } from './modules/custom/custom-visualizer';
-import { TrackedEntityLayer } from './modules/map/layers/tracked-entity-layer/tracked-entity-layer.model';
+import { MapLayer } from './modules/map/layers/map-layer.model';
+import { TrackedEntityLayer } from './modules/map/layers/tracked-entity-layer.model';
+import { MapVisualizer } from './modules/map/map-visualizer';
 import { LegendSet } from './modules/map/models/legend-set.model';
 import { MapAnalytics } from './modules/map/models/map-analytic.model';
 import { D2VisualizerMapControl } from './modules/map/models/map-control.model';
@@ -13,8 +15,13 @@ import { TableAnalytics } from './modules/table/models/table-analytics.model';
 import { TableConfiguration } from './modules/table/models/table-config.model';
 import { TableDashboardItem } from './modules/table/models/table-dashboard-item.model';
 import { TableUtil } from './modules/table/utils/table.util';
-import { VisualizationConfiguration } from './shared/visualization-configuration';
-import { ChartType, VisualizationType } from './shared/visualization-type';
+import { getSelectionDimensionsFromFavorite } from './shared/helpers';
+import { VisualizationConfiguration } from './shared/models/visualization-configuration.model';
+import {
+  ChartType,
+  VisualizationType,
+} from './shared/models/visualization-type.model';
+import * as _ from 'lodash';
 
 export class D2Visualizer {
   dataSelections!: any[];
@@ -328,6 +335,27 @@ export class D2Visualizer {
    * @returns
    */
   async draw(): Promise<any> {
+    const mapVisualizer = new MapVisualizer()
+      .setId(this.id)
+      .setBaseMap(this.config?.config?.basemap);
+
+    (this.config?.config?.mapViews || []).forEach((mapView: any) => {
+      const dataSelections = _.unionBy(
+        this.dataSelections,
+        getSelectionDimensionsFromFavorite(mapView),
+        'dimension'
+      );
+
+      mapVisualizer.addLayer(
+        new MapLayer()
+          .setId(mapView.id)
+          .setType(mapView.layer)
+          .setDataSelections(dataSelections)
+      );
+    });
+
+    mapVisualizer.draw();
+
     const data = !this.trackedEntityInstances
       ? this.dataAnalytics || (await this._getData())._data
       : undefined;
@@ -348,7 +376,7 @@ export class D2Visualizer {
           .setVisualizationType(this.visualizationType as ChartType)
           .setChartType(this.chartType)
           .draw();
-      case 'MAP':
+      case 'MAP': {
         return new MapUtil()
           .setMapAnalytics(data as MapAnalytics)
           .setGeofeature(this.geoFeatures as any)
@@ -364,6 +392,7 @@ export class D2Visualizer {
           .setShowBoundary(this.d2VisualizerMapControl?.showMapBoundary)
           .setShowMapSummary(this.d2VisualizerMapControl?.showMapSummary)
           .draw();
+      }
       case 'REPORT_TABLE':
       case 'PIVOT_TABLE':
         return new TableUtil()

@@ -1,5 +1,8 @@
 import { find, intersection, sortBy } from 'lodash';
-import { BaseVisualizer, Visualizer } from '../../shared/base-visualizer';
+import {
+  BaseVisualizer,
+  Visualizer,
+} from '../../shared/models/base-visualizer.model';
 import { SelectionFilterUtil } from '../../shared/utilities';
 import { CustomVisualizationTemplate } from './models/custom-visualization-template.model';
 import { TrackedEntityInstanceData } from './models/tracked-entity-instance-data.model';

@@ -718,7 +718,7 @@ function getSeriesValue(
     }
   }
 
-  return finalValue !== 0 ? finalValue : null;
+  return finalValue !== 0 ? finalValue : 0;
 }
 
 function getDataLabelsOptions(chartConfiguration: any) {
@@ -829,7 +829,7 @@ function getChartSubtitleObject(
         .join(',');
     })
     .filter((item: any) => item)
-    .join('-');
+    .join(' - ');
 
   return {
     text: subtitle,

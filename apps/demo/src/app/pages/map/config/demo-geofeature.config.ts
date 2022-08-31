@@ -1,4 +1,4 @@
-import { GeoFeature } from 'packages/d2-visualizer/src/lib/modules/map/models/map-geofeature.model';
+import { GeoFeature } from '../models/geo-feature.model';
 
 export const demoGeofeatures: GeoFeature[] = [
   {

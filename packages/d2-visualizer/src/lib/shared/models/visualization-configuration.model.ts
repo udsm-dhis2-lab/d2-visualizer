@@ -1,14 +1,14 @@
 import {
   getCustomTemplateDataSelections,
   getSelectionDimensionsFromFavorite,
-} from './helpers';
-import { VisualizationDataSelection } from './visualization-data-selection';
-import { VisualizationLayout } from './visualization-layout';
-import { VisualizationType } from './visualization-type';
+} from '../helpers';
+import { VisualizationDataSelection } from './visualization-data-selection.model';
+import { VisualizationLayout } from './visualization-layout.model';
+import { VisualizationType } from './visualization-type.model';
 import * as _ from 'lodash';
-import { TableConfiguration } from '../modules/table/models/table-config.model';
-import { CustomVisualizationTemplate } from '../modules/custom/models/custom-visualization-template.model';
-import { DEFAULT_ORG_UNIT_SELECTIONS } from './constants/default-data-selections.constant';
+import { TableConfiguration } from '../../modules/table/models/table-config.model';
+import { CustomVisualizationTemplate } from '../../modules/custom/models/custom-visualization-template.model';
+import { DEFAULT_ORG_UNIT_SELECTIONS } from '../constants/default-data-selections.constant';
 
 export class VisualizationConfiguration {
   dataSelections: VisualizationDataSelection[];
@@ -158,7 +158,12 @@ export class VisualizationConfiguration {
   }
 
   get multiAxisTypes(): string[] {
-    return this.config?.selectedChartTypes;
+    return (this.config?.series || []).map((series: any) => {
+      return {
+        id: series.dimensionItem,
+        type: series.type?.toLowerCase() || this.type,
+      };
+    });
   }
 
   get axes(): any[] {

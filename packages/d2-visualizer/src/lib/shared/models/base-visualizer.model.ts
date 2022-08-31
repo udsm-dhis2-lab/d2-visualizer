@@ -1,5 +1,4 @@
-import { VisualizationConfiguration } from './visualization-configuration';
-import { VisualizationType } from './visualization-type';
+import { VisualizationConfiguration } from './visualization-configuration.model';
 
 export interface Visualizer {
   draw: () => void;

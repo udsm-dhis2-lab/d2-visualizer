@@ -1,5 +1,8 @@
 import { find } from 'lodash';
-import { BaseVisualizer, Visualizer } from '../../shared/base-visualizer';
+import {
+  BaseVisualizer,
+  Visualizer,
+} from '../../shared/models/base-visualizer.model';
 
 export class SingleValueVisualizer
   extends BaseVisualizer

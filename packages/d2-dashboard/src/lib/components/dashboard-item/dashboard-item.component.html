@@ -1,7 +1,10 @@
-<div class="d2-dashboard__visualization-container">
+<div class="d2-dashboard__visualization-container" [id]="dashboardContainerId">
+  <!-- <div class="d2-dashboard__visualization-header">
+    <button (click)="onFullScreenAction($event)">Fullscreen</button>
+  </div> -->
   <div
     [id]="dashboardItem?.visualization?.id || 'visualization_id'"
-    [style.height]="'calc(' + visualizationContainerHeight + 'px - 16px)'"
+    [style.height]="'calc(' + visualizationContainerHeight + ' - 16px)'"
   ></div>
 
   <div

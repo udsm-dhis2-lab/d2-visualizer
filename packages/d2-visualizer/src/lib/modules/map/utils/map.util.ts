@@ -2,7 +2,7 @@ import * as mapboxgl from 'mapbox-gl';
 import { Legend, LegendSet } from '../models/legend-set.model';
 import { MapAnalytics } from '../models/map-analytic.model';
 import { MapDrawablePayload } from '../models/map-drawable-payload.model';
-import { GeoFeature } from '../models/map-geofeature.model';
+import { GeoFeature } from '../models/geo-feature.model';
 import * as _ from 'lodash';
 import { D2MapEngine } from './map-engine.util';
 import { MapDashboardItem } from '../models/map-dashboard-item.model';
@@ -1579,7 +1579,6 @@ export class MapUtil {
             this.mapDashboardExtensionItem
           );
 
-
         if (mapDrawablePayloads && mapDrawablePayloads.length) {
           for (const mapDrawablePayload of mapDrawablePayloads) {
             if (mapDrawablePayload && mapDrawablePayload.mapType === 'BUBBLE') {
@@ -1589,7 +1588,7 @@ export class MapUtil {
                 d2MapEngine,
                 map,
                 mapDrawablePayload,
-                mapContainerSourceId,
+                mapContainerSourceId
               );
             } else {
               // Thematic MapBox Map Drawable Item

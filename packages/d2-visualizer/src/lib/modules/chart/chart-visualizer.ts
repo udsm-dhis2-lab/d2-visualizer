@@ -1,8 +1,11 @@
 import * as Highcharts from 'highcharts';
-import { BaseVisualizer, Visualizer } from '../../shared/base-visualizer';
-import { DownloadFormat } from '../../shared/download-format';
-import { VisualizationLayout } from '../../shared/visualization-layout';
-import { VisualizationType } from '../../shared/visualization-type';
+import {
+  BaseVisualizer,
+  Visualizer,
+} from '../../shared/models/base-visualizer.model';
+import { DownloadFormat } from '../../shared/models/download-format.model';
+import { VisualizationLayout } from '../../shared/models/visualization-layout.model';
+import { VisualizationType } from '../../shared/models/visualization-type.model';
 import { drawChart } from './helpers/draw-chart.helper';
 
 declare const require: any;

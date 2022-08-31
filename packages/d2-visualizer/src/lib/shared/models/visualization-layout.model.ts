@@ -1,4 +1,4 @@
-import { VisualizationDataSelection } from './visualization-data-selection';
+import { VisualizationDataSelection } from './visualization-data-selection.model';
 import * as _ from 'lodash';
 
 export class VisualizationLayout {

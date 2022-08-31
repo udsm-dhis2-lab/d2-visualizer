@@ -1,5 +1,5 @@
 import { keys, unionBy, uniqBy } from 'lodash';
-import { VisualizationDataSelection } from '../visualization-data-selection';
+import { VisualizationDataSelection } from '../models/visualization-data-selection.model';
 
 export function getCustomTemplateDataSelections(
   templateHTML: string,

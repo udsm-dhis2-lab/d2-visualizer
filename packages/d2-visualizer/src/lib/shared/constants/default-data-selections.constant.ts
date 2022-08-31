@@ -1,4 +1,4 @@
-import { VisualizationDataSelection } from '../visualization-data-selection';
+import { VisualizationDataSelection } from '../models/visualization-data-selection.model';
 
 export const DEFAULT_ORG_UNIT_SELECTIONS: VisualizationDataSelection[] = [
   {
