@@ -33,6 +33,7 @@
     "@iapps/ngx-dhis2-period-filter": "^2.0.0-rc.15",
     "@iapps/period-utilities": "^1.0.0",
     "@katoid/angular-grid-layout": "^1.2.0",
+    "@turf/collect": "^6.5.0",
     "@turf/turf": "^6.5.0",
     "axios": "^0.27.2",
     "bootstrap": "^4.6.1",

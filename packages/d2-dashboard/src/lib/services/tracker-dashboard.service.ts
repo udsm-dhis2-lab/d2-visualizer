@@ -31,7 +31,7 @@ export class TrackerDashboardService {
       switchMap((orgUnit) =>
         this.httpClient
           .get(
-            `trackedEntityInstances.json?fields=attributes[attribute,value],enrollments[enrollment,orgUnit,orgUnitName,geometry]&ou=${
+            `trackedEntityInstances.json?fields=attributes[attribute,value],enrollments[enrollment,orgUnit,orgUnitName,geometry,events[event,programStage,dataValues[dataElement, value]]]&ou=${
               orgUnit.id
             }&ouMode=DESCENDANTS&&order=created:desc&program=${program}&skipPaging=true&programStartDate=${
               period.startDate || period.startdate
