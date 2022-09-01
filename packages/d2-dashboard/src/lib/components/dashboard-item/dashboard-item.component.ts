@@ -38,6 +38,7 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   visualizationContainerHeight!: string;
   fullScreen!: boolean;
   visualizationElement: any;
+  hideVisualization?: boolean;
 
   get dashboardContainerId(): string {
     return (
@@ -56,14 +57,11 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   @HostListener('document:MSFullscreenChange', ['$event'])
   fullScreenModes(event: any) {
     event.stopPropagation();
-
-    console.log(this.visualizationElement?.clientHeight);
+    console.log('ARE REACHING listener', document.fullscreenElement);
 
     if (!document.fullscreenElement) {
-      this.fullScreen = !this.fullScreen;
+      this.fullScreen = false;
     }
-
-    event.stopPropagation();
   }
   constructor(
     private dashboardItemService: DashboardItemService,
@@ -128,18 +126,20 @@ export class DashboardItemComponent implements OnInit, OnChanges {
       this.dashboardContainerId
     );
 
-    const container = document.getElementById(this.dashboardContainerId);
+    this.hideVisualization = true;
 
     if (!this.fullScreen) {
-      // if (container) {
-      //   container.style.height = '100vh';
-      // }
       this.openFullscreen();
     } else {
       this.closeFullscreen();
     }
 
     this.fullScreen = !this.fullScreen;
+
+    setTimeout(() => {
+      this.hideVisualization = false;
+      this.setVisualization();
+    }, 100);
   }
 
   openFullscreen() {

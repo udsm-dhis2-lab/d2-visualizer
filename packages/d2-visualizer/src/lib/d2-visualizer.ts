@@ -335,27 +335,6 @@ export class D2Visualizer {
    * @returns
    */
   async draw(): Promise<any> {
-    const mapVisualizer = new MapVisualizer()
-      .setId(this.id)
-      .setBaseMap(this.config?.config?.basemap);
-
-    (this.config?.config?.mapViews || []).forEach((mapView: any) => {
-      const dataSelections = _.unionBy(
-        this.dataSelections,
-        getSelectionDimensionsFromFavorite(mapView),
-        'dimension'
-      );
-
-      mapVisualizer.addLayer(
-        new MapLayer()
-          .setId(mapView.id)
-          .setType(mapView.layer)
-          .setDataSelections(dataSelections)
-      );
-    });
-
-    mapVisualizer.draw();
-
     const data = !this.trackedEntityInstances
       ? this.dataAnalytics || (await this._getData())._data
       : undefined;
@@ -377,21 +356,42 @@ export class D2Visualizer {
           .setChartType(this.chartType)
           .draw();
       case 'MAP': {
-        return new MapUtil()
-          .setMapAnalytics(data as MapAnalytics)
-          .setGeofeature(this.geoFeatures as any)
-          .setLegendSet(this.legendSets)
-          .setMapDashboardItem(this.config.config)
-          .setMapDashboardExtensionItem(this.mapDashboardExtensionItem)
-          .setContainer(this.id)
-          .setStyle(this.layerStyle)
-          .setShowLegend(this.d2VisualizerMapControl?.showMapLegend)
-          .setShowLabel(this.d2VisualizerMapControl?.showMapLabel)
-          .setShowValue(this.d2VisualizerMapControl?.showMapValue)
-          .setShowMapTitle(this.d2VisualizerMapControl?.showMapTitle)
-          .setShowBoundary(this.d2VisualizerMapControl?.showMapBoundary)
-          .setShowMapSummary(this.d2VisualizerMapControl?.showMapSummary)
-          .draw();
+        // return new MapUtil()
+        //   .setMapAnalytics(data as MapAnalytics)
+        //   .setGeofeature(this.geoFeatures as any)
+        //   .setLegendSet(this.legendSets)
+        //   .setMapDashboardItem(this.config.config)
+        //   .setMapDashboardExtensionItem(this.mapDashboardExtensionItem)
+        //   .setContainer(this.id)
+        //   .setStyle(this.layerStyle)
+        //   .setShowLegend(this.d2VisualizerMapControl?.showMapLegend)
+        //   .setShowLabel(this.d2VisualizerMapControl?.showMapLabel)
+        //   .setShowValue(this.d2VisualizerMapControl?.showMapValue)
+        //   .setShowMapTitle(this.d2VisualizerMapControl?.showMapTitle)
+        //   .setShowBoundary(this.d2VisualizerMapControl?.showMapBoundary)
+        //   .setShowMapSummary(this.d2VisualizerMapControl?.showMapSummary)
+        //   .draw();
+        const mapVisualizer = new MapVisualizer()
+          .setId(this.id)
+          .setBaseMap(this.config?.config?.basemap);
+
+        (this.config?.config?.mapViews || []).forEach((mapView: any) => {
+          const dataSelections = _.unionBy(
+            this.dataSelections,
+            getSelectionDimensionsFromFavorite(mapView),
+            'dimension'
+          );
+
+          mapVisualizer.addLayer(
+            new MapLayer()
+              .setId(mapView.id)
+              .setType(mapView.layer)
+              .setDataSelections(dataSelections)
+          );
+        });
+
+        mapVisualizer.draw();
+        break;
       }
       case 'REPORT_TABLE':
       case 'PIVOT_TABLE':

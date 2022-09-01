@@ -10,6 +10,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export const d2DashboardMaterialModules: any[] = [
   MatChipsModule,
@@ -24,4 +25,5 @@ export const d2DashboardMaterialModules: any[] = [
   MatMenuModule,
   MatDialogModule,
   MatListModule,
+  MatTooltipModule,
 ];

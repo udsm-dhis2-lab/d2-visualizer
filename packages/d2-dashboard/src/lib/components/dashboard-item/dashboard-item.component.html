@@ -1,10 +1,21 @@
 <div class="d2-dashboard__visualization-container" [id]="dashboardContainerId">
-  <!-- <div class="d2-dashboard__visualization-header">
-    <button (click)="onFullScreenAction($event)">Fullscreen</button>
-  </div> -->
+  <div class="d2-dashboard__visualization-header">
+    <button
+      mat-stroked-button
+      (click)="onFullScreenAction($event)"
+      [matTooltip]="'Toggle fullscreen'"
+    >
+      <mat-icon>fullscreen</mat-icon>
+    </button>
+  </div>
   <div
+    *ngIf="!hideVisualization"
     [id]="dashboardItem?.visualization?.id || 'visualization_id'"
-    [style.height]="'calc(' + visualizationContainerHeight + ' - 16px)'"
+    [style.height]="
+      'calc(' +
+      (fullScreen ? '100vh' : visualizationContainerHeight) +
+      ' - 16px)'
+    "
   ></div>
 
   <div

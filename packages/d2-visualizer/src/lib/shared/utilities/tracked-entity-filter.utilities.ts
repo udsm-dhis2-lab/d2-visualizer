@@ -78,14 +78,6 @@ export class TrackedEntityFilterUtil {
             new RegExp(dataElementVariable, 'g'),
             `'${availableDataElementValue.value}'`
           );
-
-          console.log({
-            dataElementId,
-            dataValues,
-            availableDataElementValue,
-            newFilter,
-            filter,
-          });
         }
       });
 
