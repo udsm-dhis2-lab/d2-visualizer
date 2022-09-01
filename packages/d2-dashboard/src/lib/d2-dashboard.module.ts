@@ -16,6 +16,7 @@ import { d2DashboardPipes } from './pipes';
 import { d2DashboardServices } from './services';
 import { DASHBOARD_CONFIG } from './services/dashboard-config.service';
 import { d2DashboardMaterialModules } from './shared';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { d2DashboardMaterialModules } from './shared';
     D2DashboardRoutingModule,
     NgxDhis2HttpClientModule,
     KtdGridModule,
+    NgxPrintModule,
     ...d2DashboardMaterialModules,
     ...d2DashboardModules,
   ],

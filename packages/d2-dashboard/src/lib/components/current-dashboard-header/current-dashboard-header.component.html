@@ -3,7 +3,7 @@
     <h2 class="d2-dashboard__current-dashboard-title" [id]="dashboard?.id">
       {{ dashboard?.name }}
     </h2>
-    <div class="d2-dashboard__dashboard-filters">
+    <div class="d2-dashboard__dashboard-filters d-print-none">
       <d2-dashboard-selection-filters
         [additionalFilters]="dashboard.additionalFilters"
         (setFilterSelection)="onFilterSelection($event)"
@@ -11,9 +11,15 @@
     </div>
   </div>
   <div>
-    <!-- <button mat-stroked-button>
+    <button
+      class="d-print-none"
+      mat-stroked-button
+      printSectionId="d2_current_dashboard"
+      [useExistingCss]="true"
+      ngxPrint
+    >
       <mat-icon inline>print</mat-icon>
       <span class="d2-dashboard__print-label">Print</span>
-    </button> -->
+    </button>
   </div>
 </div>
