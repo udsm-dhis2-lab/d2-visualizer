@@ -38,6 +38,8 @@ export class D2Visualizer {
   dataAnalytics: unknown = null;
   layerStyle = 'default';
   trackedEntityInstances?: any[];
+  data!: any;
+  visualizer: any;
 
   // Table Configuration
   tableDashboardItem: TableDashboardItem | any;
@@ -348,13 +350,15 @@ export class D2Visualizer {
       case 'PIE':
       case 'STACKED_BAR':
       case 'STACKED_COLUMN':
-        return new ChartVisualizer()
+        this.visualizer = new ChartVisualizer()
           .setId(this.id)
           .setConfig(this.config)
           .setData(data)
           .setVisualizationType(this.visualizationType as ChartType)
-          .setChartType(this.chartType)
-          .draw();
+          .setChartType(this.chartType);
+
+        this.visualizer.draw();
+        return this;
       case 'MAP': {
         // return new MapUtil()
         //   .setMapAnalytics(data as MapAnalytics)
@@ -391,30 +395,34 @@ export class D2Visualizer {
         });
 
         mapVisualizer.draw();
-        break;
+        return this;
       }
       case 'REPORT_TABLE':
       case 'PIVOT_TABLE':
-        return new TableUtil()
+        new TableUtil()
           .setTableDashboardItem(this.tableDashboardItem)
           .setTableConfiguration(this.config.toTableConfig())
           .setTableAnalytics(data)
           .setLegendSet(this.legendSets)
           .draw();
+        return this;
       case 'SINGLE_VALUE':
-        return new SingleValueVisualizer().setId(this.id).setData(data).draw();
+        new SingleValueVisualizer().setId(this.id).setData(data).draw();
+        return this;
       case 'CUSTOM': {
         this.config.mergeDataSelections(this.dataSelections);
         const dataSelections: any[] = this.config.dataSelections.filter(
           (dataSelection) => dataSelection.domain === 'TRACKER'
         );
-        return new CustomVisualizer()
+        new CustomVisualizer()
           .setId(this.id)
           .setConfig(this.config)
           .setData(data)
           .setSelections(dataSelections)
           .setTrackedEntityInstances(this.trackedEntityInstances)
           .draw();
+
+        return this;
       }
       case 'TRACKED_ENTITY_LAYER': {
         this.config.mergeDataSelections(this.dataSelections);
@@ -422,15 +430,16 @@ export class D2Visualizer {
           (dataSelection) => dataSelection.dimension === 'tea'
         );
 
-        return new TrackedEntityLayer()
+        new TrackedEntityLayer()
           .setId(this.id)
           .setConfig(this.config)
           .setSelections(dataSelections)
           .setTrackedEntityInstances(this.trackedEntityInstances)
           .draw();
+        return this;
       }
       default:
-        return null;
+        return this;
     }
   }
 
@@ -439,19 +448,11 @@ export class D2Visualizer {
    * @param downloadFormat
    * @returns
    */
-  async download(downloadFormat: any): Promise<any> {
-    const data = await this._getData();
-
-    switch (this.visualizationType) {
-      case 'CHART':
-        return new ChartVisualizer()
-          .setId(this.id)
-          .setConfig(this.config)
-          .setData(data.data)
-          .setVisualizationType(this.visualizationType as ChartType)
-          .download(downloadFormat);
-      default:
-        return null;
+  download(downloadFormat: any) {
+    if (this.visualizer) {
+      this.visualizer.download(downloadFormat);
+    } else {
+      console.warn('Visualizer is not set yet');
     }
   }
 }

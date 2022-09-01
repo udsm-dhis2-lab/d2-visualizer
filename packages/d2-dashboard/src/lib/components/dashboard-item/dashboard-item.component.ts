@@ -39,6 +39,7 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   fullScreen!: boolean;
   visualizationElement: any;
   hideVisualization?: boolean;
+  visualizer!: D2Visualizer;
 
   get dashboardContainerId(): string {
     return (
@@ -62,6 +63,20 @@ export class DashboardItemComponent implements OnInit, OnChanges {
     if (!document.fullscreenElement) {
       this.fullScreen = false;
     }
+  }
+
+  get isChart(): boolean {
+    return (
+      (this.dashboardItem?.visualization?.type || this.dashboardItem.type) ===
+      ('CHART' ||
+        'LINE' ||
+        'COLUMN' ||
+        'BAR' ||
+        'DOTTED' ||
+        'PIE' ||
+        'STACKED_BAR' ||
+        'STACKED_COLUMN')
+    );
   }
   constructor(
     private dashboardItemService: DashboardItemService,
@@ -104,7 +119,7 @@ export class DashboardItemComponent implements OnInit, OnChanges {
           ? await this._getTrackedEntityInstances()
           : undefined;
 
-        await new D2Visualizer()
+        this.visualizer = await new D2Visualizer()
           .setId(this.visualizationConfig?.id)
           .setConfig(this.visualizationConfig)
           .setSelections(this.dataSelections || [])
@@ -118,6 +133,11 @@ export class DashboardItemComponent implements OnInit, OnChanges {
       }
     }
     this._loading$.next(false);
+  }
+
+  onDownload(event: MouseEvent, format: string) {
+    event.stopPropagation();
+    this.visualizer.download(format);
   }
 
   onFullScreenAction(event: MouseEvent) {
