@@ -158,12 +158,15 @@ export class VisualizationConfiguration {
   }
 
   get multiAxisTypes(): string[] {
-    return (this.config?.series || []).map((series: any) => {
-      return {
-        id: series.dimensionItem,
-        type: series.type?.toLowerCase() || this.type,
-      };
-    });
+    return (
+      this.config.selectedChartTypes ||
+      (this.config?.series || []).map((series: any) => {
+        return {
+          id: series.dimensionItem,
+          type: series.type?.toLowerCase() || this.type,
+        };
+      })
+    );
   }
 
   get axes(): any[] {

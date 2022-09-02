@@ -1165,6 +1165,7 @@ function getYAxisOptions(chartConfiguration: any) {
       [],
       [
         {
+          reversedStacks: false,
           min: chartConfiguration.rangeAxisMinValue,
           max: chartConfiguration.rangeAxisMaxValue,
           title: {
@@ -1181,6 +1182,7 @@ function getYAxisOptions(chartConfiguration: any) {
   } else {
     newYAxes = _.map(yAxes, (yAxis: any, yAxisIndex: any) => {
       return {
+        reversedStacks: false,
         min: chartConfiguration.rangeAxisMinValue,
         max: chartConfiguration.rangeAxisMaxValue,
         title: {

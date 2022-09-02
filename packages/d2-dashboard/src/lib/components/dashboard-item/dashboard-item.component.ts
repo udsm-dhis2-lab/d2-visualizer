@@ -8,13 +8,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { D2Visualizer } from '@iapps/d2-visualizer';
-import {
-  BehaviorSubject,
-  firstValueFrom,
-  lastValueFrom,
-  Observable,
-  Subject,
-} from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { DashboardItemObject, VisualizationDataSelection } from '../../models';
 import { DashboardItemService, TrackerDashboardService } from '../../services';
 
@@ -58,7 +52,6 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   @HostListener('document:MSFullscreenChange', ['$event'])
   fullScreenModes(event: any) {
     event.stopPropagation();
-    console.log('ARE REACHING listener', document.fullscreenElement);
 
     if (!document.fullscreenElement) {
       this.fullScreen = false;

@@ -5,6 +5,7 @@
       [matTooltip]="'Hide fullscreen'"
       (click)="onFullScreenAction($event)"
       *ngIf="fullScreen"
+      class="d2-dashboard__more-btn"
     >
       <mat-icon>fullscreen</mat-icon>
     </button>
@@ -12,7 +13,7 @@
       mat-stroked-button
       [matTooltip]="'More'"
       [matMenuTriggerFor]="menu"
-      class="d-print-none bg-white"
+      class="d-print-none bg-white d2-dashboard__more-btn"
       *ngIf="!fullScreen"
     >
       <mat-icon>more_vert</mat-icon>
