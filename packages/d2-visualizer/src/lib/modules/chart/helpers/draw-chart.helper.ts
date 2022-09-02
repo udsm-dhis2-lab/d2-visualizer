@@ -958,6 +958,8 @@ function getPlotOptions(chartConfiguration: any) {
         ] = {
           showInLegend: !chartConfiguration.hideLegend,
           colorByPoint: false,
+          pointPadding: 0,
+          groupPadding: chartConfiguration.noSpaceBetweenColumns ? 0 : 0.1,
         };
 
         /**

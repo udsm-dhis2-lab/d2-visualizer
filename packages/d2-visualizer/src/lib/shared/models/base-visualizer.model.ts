@@ -1,7 +1,9 @@
+import { DownloadFormat } from './download-format.model';
 import { VisualizationConfiguration } from './visualization-configuration.model';
 
 export interface Visualizer {
   draw: () => void;
+  download: (downloadFormat: DownloadFormat) => void;
 }
 
 export class BaseVisualizer {
@@ -59,4 +61,6 @@ export class BaseVisualizer {
     this._dataSelections = dataSelections;
     return this;
   }
+
+  download(downloadFormat: DownloadFormat) {}
 }

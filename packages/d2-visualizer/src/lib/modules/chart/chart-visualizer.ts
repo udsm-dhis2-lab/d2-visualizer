@@ -62,7 +62,7 @@ export class ChartVisualizer extends BaseVisualizer implements Visualizer {
    *
    * @param downloadFormat
    */
-  download(downloadFormat: DownloadFormat) {
+  override download(downloadFormat: DownloadFormat) {
     const filename = this._config?.title || 'chart-data';
     switch (downloadFormat) {
       case 'PNG':

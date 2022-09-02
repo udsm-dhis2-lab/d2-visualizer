@@ -22,6 +22,7 @@ import {
   VisualizationType,
 } from './shared/models/visualization-type.model';
 import * as _ from 'lodash';
+import { Visualizer } from './shared/models';
 
 export class D2Visualizer {
   dataSelections!: any[];
@@ -39,7 +40,7 @@ export class D2Visualizer {
   layerStyle = 'default';
   trackedEntityInstances?: any[];
   data!: any;
-  visualizer: any;
+  visualizer!: Visualizer;
 
   // Table Configuration
   tableDashboardItem: TableDashboardItem | any;
