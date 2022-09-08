@@ -1,35 +1,52 @@
 <div class="d2-dashboard__visualization-container" [id]="dashboardContainerId">
-  <div class="d2-dashboard__visualization-header">
-    <button
-      mat-stroked-button
-      [matTooltip]="'Hide fullscreen'"
-      (click)="onFullScreenAction($event)"
-      *ngIf="fullScreen"
-      class="d2-dashboard__more-btn"
-    >
-      <mat-icon>fullscreen</mat-icon>
-    </button>
+  <div
+    class="d2-dashboard__visualization-header {{
+      fullScreen ? 'd2-dashboard__fullscreen-header' : ''
+    }}"
+  >
+    <ng-container>
+      <button
+        mat-stroked-button
+        [matTooltip]="'More'"
+        [matMenuTriggerFor]="downloadMenu"
+        class="d-print-none bg-white d2-dashboard__more-btn mr-1"
+      >
+        <mat-icon inline>download</mat-icon>
+      </button>
+      <mat-menu #downloadMenu="matMenu" xPosition="before">
+        <button
+          mat-menu-item
+          (click)="onDownload($event, 'PNG')"
+          *ngIf="isChart"
+        >
+          <span>Download in png</span>
+        </button>
+        <button
+          mat-menu-item
+          (click)="onDownload($event, 'CSV')"
+          *ngIf="isChart"
+        >
+          <span>Download data in csv</span>
+        </button>
+      </mat-menu>
+    </ng-container>
     <button
       mat-stroked-button
       [matTooltip]="'More'"
-      [matMenuTriggerFor]="menu"
-      class="d-print-none bg-white d2-dashboard__more-btn"
-      *ngIf="!fullScreen"
+      class="d-print-none bg-white d2-dashboard__more-btn mr-1"
     >
-      <mat-icon>more_vert</mat-icon>
+      <mat-icon inline>more_horiz</mat-icon>
     </button>
-    <mat-menu #menu="matMenu" xPosition="before">
-      <button mat-menu-item (click)="onFullScreenAction($event)">
-        <mat-icon>fullscreen</mat-icon>
-        <span>{{ fullScreen ? 'Hide fullscreen' : 'View in fullscreen' }}</span>
-      </button>
-      <button mat-menu-item (click)="onDownload($event, 'PNG')" *ngIf="isChart">
-        <span>Download chart in png</span>
-      </button>
-      <button mat-menu-item (click)="onDownload($event, 'CSV')" *ngIf="isChart">
-        <span>Download chart data in csv</span>
-      </button>
-    </mat-menu>
+    <button
+      mat-stroked-button
+      [matTooltip]="fullScreen ? 'Hide fullscreen' : 'View in fullscreen'"
+      (click)="onFullScreenAction($event)"
+      class="d2-dashboard__more-btn"
+    >
+      <mat-icon inline>{{
+        fullScreen ? 'close_fullscreen' : 'open_in_full'
+      }}</mat-icon>
+    </button>
   </div>
   <div
     *ngIf="!hideVisualization"

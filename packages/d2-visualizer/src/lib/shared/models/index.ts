@@ -5,3 +5,4 @@ export * from './visualization-type.model';
 export * from './download-format.model';
 export * from './base-visualizer.model';
 export * from './visualization-data.model';
+export * from './visualization-downloader.model';

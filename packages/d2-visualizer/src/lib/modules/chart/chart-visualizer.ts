@@ -4,6 +4,7 @@ import {
   Visualizer,
 } from '../../shared/models/base-visualizer.model';
 import { DownloadFormat } from '../../shared/models/download-format.model';
+import { VisualizationDownloader } from '../../shared/models/visualization-downloader.model';
 import { VisualizationLayout } from '../../shared/models/visualization-layout.model';
 import { VisualizationType } from '../../shared/models/visualization-type.model';
 import { drawChart } from './helpers/draw-chart.helper';
@@ -69,7 +70,10 @@ export class ChartVisualizer extends BaseVisualizer implements Visualizer {
         this._chart.exportChart({ filename, type: 'image/png' });
         break;
       case 'CSV':
-        this._chart.getCSV();
+        new VisualizationDownloader()
+          .setFilename(this._config?.title || 'chart-data')
+          .setCSV(this._chart.getCSV())
+          .download();
         break;
     }
   }
