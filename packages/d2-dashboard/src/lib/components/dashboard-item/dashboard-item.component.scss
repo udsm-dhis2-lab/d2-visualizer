@@ -1,7 +1,10 @@
 .d2-dashboard__visualization-container {
   position: relative;
-  overflow: auto;
   background-color: #fff;
+}
+
+.d2-dashboard__visualization-content {
+  overflow: auto;
 }
 
 .d2-dashboard__visualization-loading-overlay {
@@ -14,24 +17,4 @@
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.7);
-}
-
-.d2-dashboard__visualization-header {
-  position: absolute;
-  z-index: 100;
-  top: 2px;
-  right: 2px;
-}
-
-.d2-dashboard__fullscreen-header {
-  top: 8px;
-  right: 8px;
-}
-
-.d2-dashboard__more-btn {
-  // border-color: #999;
-  padding: 2px;
-  line-height: 24px !important;
-  min-width: 30px !important;
-  background-color: #fff;
 }

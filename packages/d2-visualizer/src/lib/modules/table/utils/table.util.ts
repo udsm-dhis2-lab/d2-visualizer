@@ -1,7 +1,5 @@
-import {
-  TablePayload,
-  TablePayloadHeader,
-} from '../../map/models/table-object.model';
+import { VisualizerPlotOptions } from '../../../shared';
+import { TablePayload } from '../../map/models/table-object.model';
 import { LegendSet } from '../models/legend-set.model';
 import { TableAnalytics } from '../models/table-analytics.model';
 import { TableConfiguration } from '../models/table-config.model';
@@ -16,6 +14,7 @@ export class TableUtil {
   private tableConfiguration: TableConfiguration | any;
   private tableDashboardItem: TableDashboardItem | any;
   private legendSets: LegendSet[] | any;
+  private _plotOptions!: VisualizerPlotOptions;
 
   /**
    *
@@ -89,6 +88,11 @@ export class TableUtil {
    */
   setLegendSet(legendSets: LegendSet[]): TableUtil {
     this.legendSets = legendSets;
+    return this;
+  }
+
+  setPlotOptions(plotOptions: VisualizerPlotOptions) {
+    this._plotOptions = plotOptions;
     return this;
   }
 
@@ -178,6 +182,10 @@ export class TableUtil {
   getTableHTML(tablePayload: TablePayload) {
     return `
     <style>
+      .custom-table-container {
+        overflow: auto;
+        padding: 8px;
+      }
      .custom-table {
         font-family: arial, sans-serif;
         border-collapse: collapse;
@@ -234,25 +242,28 @@ export class TableUtil {
         background-color: #c7d5e9;
       }
     </style>
-    <table class="table table-bordered table-condensed custom-table"
-            #table
-            [id]="tableConfiguration?.id"
-            *ngIf="tablePayload?.rows?.length !== 0"
-            >
-                <thead>
-                    <!--title-->
-                    <tr class="table-title">
-                        <th colspan="${tablePayload?.rows[0]?.items?.length}">
-                        <div style="font-size: 13px" class="text-center text-muted">
-                            ${tablePayload?.subtitle}
-                        </div>
-                        </th>
-                    </tr>
-                    <!--headers-->
-                    ${this.getTableHTMLHeader(tablePayload)}
-                </thead>
-                ${this.getTableBody(tablePayload)}
-            </table>`;
+    <div class="custom-table-container table-responsive" style="height: calc(${
+      this._plotOptions?.height
+    } - 24px)" >
+     <table class="table table-bordered table-condensed custom-table"
+        #table
+        [id]="tableConfiguration?.id"
+        *ngIf="tablePayload?.rows?.length !== 0">
+          <thead>
+          <!--title-->
+          <tr class="table-title">
+              <th colspan="${tablePayload?.rows[0]?.items?.length}">
+                  <div style="font-size: 13px" class="text-center text-muted">
+                      ${tablePayload?.subtitle}
+                  </div>
+              </th>
+          </tr>
+          <!--headers-->
+          ${this.getTableHTMLHeader(tablePayload)}
+          </thead>
+        ${this.getTableBody(tablePayload)}
+      </table>
+    </div>`;
   }
 
   /**

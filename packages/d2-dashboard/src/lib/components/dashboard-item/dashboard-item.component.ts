@@ -7,7 +7,11 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { D2Visualizer } from '@iapps/d2-visualizer';
+import {
+  D2Visualizer,
+  DownloadFormat,
+  VisualizerPlotOptions,
+} from '@iapps/d2-visualizer';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { DashboardItemObject, VisualizationDataSelection } from '../../models';
 import { DashboardItemService, TrackerDashboardService } from '../../services';
@@ -71,6 +75,15 @@ export class DashboardItemComponent implements OnInit, OnChanges {
         'STACKED_COLUMN')
     );
   }
+
+  get visualizationHeight(): string {
+    return this.fullScreen
+      ? '100vh'
+      : (document.getElementsByClassName(
+          'dashboard-item-' + this.dashboardItem.id
+        )[0]?.clientHeight || 400) + 'px';
+  }
+
   constructor(
     private dashboardItemService: DashboardItemService,
     private trackerDashboardService: TrackerDashboardService
@@ -118,6 +131,9 @@ export class DashboardItemComponent implements OnInit, OnChanges {
           .setSelections(this.dataSelections || [])
           .setType(this.visualizationConfig.type)
           .setChartType(this.visualizationConfig.type)
+          .setPlotOptions(
+            new VisualizerPlotOptions().setHeight(this.visualizationHeight)
+          )
           .setTrackedEntityInstances(trackedEntityInstances as any[])
           .draw();
       } catch (error) {
@@ -128,13 +144,11 @@ export class DashboardItemComponent implements OnInit, OnChanges {
     this._loading$.next(false);
   }
 
-  onDownload(event: MouseEvent, format: string) {
-    event.stopPropagation();
+  onDownload(format: DownloadFormat) {
     this.visualizer.download(format);
   }
 
-  onFullScreenAction(event: MouseEvent) {
-    event.stopPropagation();
+  async onFullScreenAction() {
     this.visualizationElement = document.getElementById(
       this.dashboardContainerId
     );
@@ -148,11 +162,19 @@ export class DashboardItemComponent implements OnInit, OnChanges {
     }
 
     this.fullScreen = !this.fullScreen;
+    this.hideVisualization = false;
+    this.visualizer.plotOptions.height = this.visualizationHeight;
 
-    setTimeout(() => {
-      this.hideVisualization = false;
-      this.setVisualization();
-    }, 100);
+    await this.visualizer.draw();
+
+    // setTimeout(async () => {
+
+    // }, 100);
+  }
+
+  async onTypeChange(visualizationType: any) {
+    this.visualizer.setChartType(visualizationType).setType(visualizationType);
+    await this.visualizer.draw();
   }
 
   openFullscreen() {

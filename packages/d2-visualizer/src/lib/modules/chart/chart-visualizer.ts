@@ -6,7 +6,10 @@ import {
 import { DownloadFormat } from '../../shared/models/download-format.model';
 import { VisualizationDownloader } from '../../shared/models/visualization-downloader.model';
 import { VisualizationLayout } from '../../shared/models/visualization-layout.model';
-import { VisualizationType } from '../../shared/models/visualization-type.model';
+import {
+  ChartType,
+  VisualizationType,
+} from '../../shared/models/visualization-type.model';
 import { drawChart } from './helpers/draw-chart.helper';
 
 declare const require: any;
@@ -25,7 +28,7 @@ const HighchartsGroupedCategories = require('highcharts-grouped-categories')(
  *
  */
 export class ChartVisualizer extends BaseVisualizer implements Visualizer {
-  private _visualizationType: VisualizationType = 'CHART';
+  private _type: ChartType = 'COLUMN';
   private _layout: VisualizationLayout = new VisualizationLayout();
   private _chart: any;
 
@@ -34,8 +37,8 @@ export class ChartVisualizer extends BaseVisualizer implements Visualizer {
    * @param visualizationType
    * @returns
    */
-  setVisualizationType(visualizationType: VisualizationType) {
-    this._visualizationType = visualizationType;
+  setType(type: ChartType) {
+    this._type = type;
     return this;
   }
 
@@ -53,6 +56,9 @@ export class ChartVisualizer extends BaseVisualizer implements Visualizer {
    *
    */
   draw() {
+    if (this._config) {
+      this._config.config.type = this._type.toLowerCase();
+    }
     const chartObject = drawChart(this._data, this._config);
     setTimeout(() => {
       this._chart = Highcharts.chart(chartObject);

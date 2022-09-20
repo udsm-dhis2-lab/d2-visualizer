@@ -6,7 +6,10 @@ export type ChartType =
   | 'PIE'
   | 'SINGLE_VALUE'
   | 'STACKED_COLUMN'
-  | 'STACKED_BAR';
+  | 'STACKED_BAR'
+  | 'AREA'
+  | 'RADAR'
+  | 'SOLIDGAUGE';
 export type VisualizationType =
   | ChartType
   | 'CHART'

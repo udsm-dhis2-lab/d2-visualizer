@@ -6,3 +6,4 @@ export * from './download-format.model';
 export * from './base-visualizer.model';
 export * from './visualization-data.model';
 export * from './visualization-downloader.model';
+export * from './visualizer-plot-options.model';

@@ -1,61 +1,20 @@
 <div class="d2-dashboard__visualization-container" [id]="dashboardContainerId">
+  <d2-dashboard-item-header
+    [fullScreen]="fullScreen"
+    [isChart]="isChart"
+    [currentChartType]="visualizer?.visualizationType"
+    (download)="onDownload($event)"
+    (fullscreenChange)="onFullScreenAction()"
+    (typeChange)="onTypeChange($event)"
+  ></d2-dashboard-item-header>
   <div
-    class="d2-dashboard__visualization-header {{
-      fullScreen ? 'd2-dashboard__fullscreen-header' : ''
-    }}"
-  >
-    <ng-container>
-      <button
-        mat-stroked-button
-        [matTooltip]="'More'"
-        [matMenuTriggerFor]="downloadMenu"
-        class="d-print-none bg-white d2-dashboard__more-btn mr-1"
-      >
-        <mat-icon inline>download</mat-icon>
-      </button>
-      <mat-menu #downloadMenu="matMenu" xPosition="before">
-        <button
-          mat-menu-item
-          (click)="onDownload($event, 'PNG')"
-          *ngIf="isChart"
-        >
-          <span>Download in png</span>
-        </button>
-        <button
-          mat-menu-item
-          (click)="onDownload($event, 'CSV')"
-          *ngIf="isChart"
-        >
-          <span>Download data in csv</span>
-        </button>
-      </mat-menu>
-    </ng-container>
-    <button
-      mat-stroked-button
-      [matTooltip]="'More'"
-      class="d-print-none bg-white d2-dashboard__more-btn mr-1"
-    >
-      <mat-icon inline>more_horiz</mat-icon>
-    </button>
-    <button
-      mat-stroked-button
-      [matTooltip]="fullScreen ? 'Hide fullscreen' : 'View in fullscreen'"
-      (click)="onFullScreenAction($event)"
-      class="d2-dashboard__more-btn"
-    >
-      <mat-icon inline>{{
-        fullScreen ? 'close_fullscreen' : 'open_in_full'
-      }}</mat-icon>
-    </button>
-  </div>
-  <div
-    *ngIf="!hideVisualization"
     [id]="dashboardItem?.visualization?.id || 'visualization_id'"
     [style.height]="
       'calc(' +
       (fullScreen ? '100vh' : visualizationContainerHeight) +
       ' - 16px)'
     "
+    class="d2-dashboard__visualization-content"
   ></div>
 
   <div

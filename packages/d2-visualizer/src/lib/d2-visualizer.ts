@@ -22,7 +22,7 @@ import {
   VisualizationType,
 } from './shared/models/visualization-type.model';
 import * as _ from 'lodash';
-import { Visualizer } from './shared/models';
+import { Visualizer, VisualizerPlotOptions } from './shared/models';
 
 export class D2Visualizer {
   dataSelections!: any[];
@@ -41,6 +41,7 @@ export class D2Visualizer {
   trackedEntityInstances?: any[];
   data!: any;
   visualizer!: Visualizer;
+  plotOptions!: VisualizerPlotOptions;
 
   // Table Configuration
   tableDashboardItem: TableDashboardItem | any;
@@ -265,6 +266,11 @@ export class D2Visualizer {
     return this;
   }
 
+  setPlotOptions(plotOptions: VisualizerPlotOptions) {
+    this.plotOptions = plotOptions;
+    return this;
+  }
+
   /**
    *
    * @returns
@@ -351,11 +357,14 @@ export class D2Visualizer {
       case 'PIE':
       case 'STACKED_BAR':
       case 'STACKED_COLUMN':
+      case 'AREA':
+      case 'RADAR':
+      case 'SOLIDGAUGE':
         this.visualizer = new ChartVisualizer()
           .setId(this.id)
           .setConfig(this.config)
           .setData(data)
-          .setVisualizationType(this.visualizationType as ChartType)
+          .setType(this.visualizationType as ChartType)
           .setChartType(this.chartType);
 
         this.visualizer.draw();
@@ -405,6 +414,7 @@ export class D2Visualizer {
           .setTableConfiguration(this.config.toTableConfig())
           .setTableAnalytics(data)
           .setLegendSet(this.legendSets)
+          .setPlotOptions(this.plotOptions)
           .draw();
         return this;
       case 'SINGLE_VALUE':
