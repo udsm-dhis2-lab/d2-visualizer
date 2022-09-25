@@ -17,6 +17,7 @@ export interface DashboardItemObject {
   appKey?: string;
   singleValue?: boolean;
   hasExtension?: boolean;
+  hideChartTypes?: boolean;
   visualization: DashboardVisualization;
   isTrackerVisualization?: boolean;
   program?: string;
@@ -77,6 +78,9 @@ export class DashboardItem {
       isTrackerVisualization: Boolean(
         this.dashboardItemResponse['isTrackerVisualization']
       ),
+      hideChartTypes: this.dashboardItemResponse[
+        'hideChartTypes'
+      ] as unknown as boolean,
       program: this.dashboardItemResponse['program'] as string,
       periodType: this.dashboardItemResponse['periodType'] as string,
     };

@@ -111,7 +111,9 @@ export class DashboardService {
       this._firstTimeLoad = false;
     } else {
       this._snackBarRef = this._snackBar.open(
-        `Loading ${currentDashboardMenu.name} Dashboard`
+        `Loading ${currentDashboardMenu.name} Dashboard`,
+        '',
+        { duration: 5000 }
       );
     }
 

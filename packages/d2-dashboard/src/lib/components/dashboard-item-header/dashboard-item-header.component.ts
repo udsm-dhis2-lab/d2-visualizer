@@ -9,6 +9,7 @@ import { CHART_TYPES, DownloadFormat } from '@iapps/d2-visualizer';
 export class DashboardItemHeaderComponent {
   @Input() fullScreen!: boolean;
   @Input() isChart!: boolean;
+  @Input() hideChartTypes!: boolean | undefined;
   chartTypes!: any[];
   @Input() currentChartType!: any;
   @Output() download: EventEmitter<DownloadFormat> =

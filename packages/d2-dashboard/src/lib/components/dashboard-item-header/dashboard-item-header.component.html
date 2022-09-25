@@ -24,7 +24,7 @@
   </ng-container>
 
   <!-- visualization configuration section -->
-  <ng-container>
+  <!-- <ng-container>
     <button
       mat-stroked-button
       [matTooltip]="'More'"
@@ -32,8 +32,8 @@
     >
       <mat-icon inline>settings</mat-icon>
     </button>
-    <!-- <div class="d2-dashboard__visualization-settings">Here we put settings</div> -->
-  </ng-container>
+    <div class="d2-dashboard__visualization-settings">Here we put settings</div>
+  </ng-container> -->
 
   <!-- Fullscreen section -->
   <ng-container>
@@ -49,7 +49,7 @@
     </button>
   </ng-container>
 
-  <ng-container>
+  <ng-container *ngIf="!hideChartTypes">
     <ul class="chart-type-list animated fadeInRight">
       <li *ngFor="let chartType of chartTypes">
         <button

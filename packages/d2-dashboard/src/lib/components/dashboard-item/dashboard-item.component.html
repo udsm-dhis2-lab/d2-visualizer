@@ -2,6 +2,7 @@
   <d2-dashboard-item-header
     [fullScreen]="fullScreen"
     [isChart]="isChart"
+    [hideChartTypes]="dashboardItem.hideChartTypes"
     [currentChartType]="visualizer?.visualizationType"
     (download)="onDownload($event)"
     (fullscreenChange)="onFullScreenAction()"
