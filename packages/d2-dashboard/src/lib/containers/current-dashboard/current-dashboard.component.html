@@ -5,6 +5,7 @@
 >
   <d2-current-dashboard-header
     [dashboard]="currentDashboard"
+    [selectionConfig]="selectionConfig"
     (setGlobalFilter)="onSetGlobalFilter($event, currentDashboard.id)"
   ></d2-current-dashboard-header>
 

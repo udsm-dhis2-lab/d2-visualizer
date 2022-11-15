@@ -26,6 +26,7 @@ export class MapLayer {
   dataSelections!: any[];
   geoFeatures!: GeoFeature[];
   data!: any;
+  mapSourceData!: any;
 
   setId(id: string) {
     this.id = id;
@@ -91,6 +92,9 @@ export class MapLayer {
     this.geoFeatures = await new GeoFeature()
       .setDataSelections(this.dataSelections)
       .get();
+
+    this.setMapSourceData();
+    return this.geoFeatures;
   }
 
   async getData() {
@@ -99,5 +103,20 @@ export class MapLayer {
         .setSelections(this.dataSelections)
         .getAnalytics()
     )?._data;
+  }
+
+  setMapSourceData() {
+    this.mapSourceData = {
+      type: 'FeatureCollection',
+      features: (this.geoFeatures || []).map((geoFeature) => {
+        return {
+          type: 'Feature',
+          geometry: {
+            type: 'Polygon',
+            coordinates: JSON.parse(geoFeature.co),
+          },
+        };
+      }),
+    };
   }
 }

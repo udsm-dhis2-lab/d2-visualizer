@@ -6,6 +6,7 @@
     <div class="d2-dashboard__dashboard-filters d-print-none">
       <d2-dashboard-selection-filters
         [additionalFilters]="dashboard.additionalFilters"
+        [selectionConfig]="selectionConfig"
         (setFilterSelection)="onFilterSelection($event)"
       ></d2-dashboard-selection-filters>
     </div>

@@ -47,7 +47,6 @@ export class DashboardService {
   constructor(
     private httpClient: NgxDhis2HttpClientService,
     private router: Router,
-    private route: ActivatedRoute,
     private _snackBar: MatSnackBar,
     private _snackBarRef: MatSnackBarRef<TextOnlySnackBar>,
     private overlay: Overlay,

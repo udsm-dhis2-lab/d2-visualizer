@@ -2,9 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { catchError, Observable, of, switchMap, tap } from 'rxjs';
-import { DashboardObject, VisualizationDataSelection } from '../../models';
+import {
+  DashboardObject,
+  DashboardSelectionConfig,
+  VisualizationDataSelection,
+} from '../../models';
 import { GlobalSelection } from '../../models/global-selection.model';
-import { DashboardService } from '../../services';
+import { DashboardConfigService, DashboardService } from '../../services';
 
 @Component({
   selector: 'd2-current-dashboard',
@@ -16,12 +20,15 @@ export class CurrentDashboardComponent implements OnInit {
   globalSelection$!: Observable<GlobalSelection>;
   error?: object;
   loading = true;
+  selectionConfig?: DashboardSelectionConfig;
   constructor(
     private dashboardService: DashboardService,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    private dashboardConfig: DashboardConfigService
   ) {}
 
   ngOnInit() {
+    this.selectionConfig = this.dashboardConfig.getConfig()?.selectionConfig;
     this.currentDashboard$ = this.activateRoute.params.pipe(
       switchMap(({ id }) => {
         this.loading = true;

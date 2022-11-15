@@ -114,7 +114,7 @@ export class TrackedEntityLayer extends BaseVisualizer {
                   symbol:
                     markerSymbol?.symbol || './assets/images/marker-dot.svg',
                   value: attributeValue?.value,
-                  dimensionItem: attributeValue.attribute,
+                  dimensionItem: attributeValue?.attribute,
                   dimensionType: 'ATTRIBUTE',
                 },
               };

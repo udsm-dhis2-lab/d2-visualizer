@@ -8,6 +8,7 @@ import { MapDrawablePayload } from './models/map-drawable-payload.model';
 import { D2MapEngine } from './utils/map-engine.util';
 declare let mapboxgl: any;
 import * as turf from '@turf/turf';
+import { of } from 'rxjs';
 
 export class MapVisualizer extends BaseVisualizer implements Visualizer {
   basemap!: BaseMap;
@@ -34,64 +35,59 @@ export class MapVisualizer extends BaseVisualizer implements Visualizer {
     return this;
   }
 
-  draw(): void {
-    const map = new mapboxgl.Map({
-      container: this._id,
-      style: this.style,
-      center: [0, 0],
-    });
-
-    map.addControl(new mapboxgl.NavigationControl());
-
-    map.on('load', () => {
+  async getData() {
+    this.layers = await Promise.all(
       this.layers.map(async (layer: MapLayer) => {
         await layer.getGeoFeatures();
         await layer.getData();
-        // console.log(layer);
+        return layer;
+      })
+    );
+  }
 
-        const mapSourceData = {
-          type: 'FeatureCollection',
-          features: layer.geoFeatures.map((geoFeature) => {
-            return {
-              type: 'Feature',
-              geometry: {
-                type: 'Polygon',
-                coordinates: JSON.parse(geoFeature.co),
-              },
-            };
-          }),
-        };
+  async draw() {
+    await this.getData();
 
-        const bbox = turf.bbox(mapSourceData);
-        map.fitBounds(bbox, { padding: 20 });
+    if (this.layers?.length > 0) {
+      const bbox = turf.bbox(this.layers[0].mapSourceData);
+      const map = new mapboxgl.Map({
+        container: this._id,
+        style: this.style,
+      });
+      map.fitBounds(bbox, { padding: 40 });
 
-        map.addSource(layer.id, {
-          type: 'geojson',
-          data: mapSourceData,
-        });
+      map.addControl(new mapboxgl.NavigationControl());
 
-        map.addLayer({
-          id: layer.id,
-          type: 'line',
-          source: layer.id,
+      map.on('load', () => {
+        this.layers.forEach((layer: MapLayer) => {
+          map.addSource(layer.id, {
+            type: 'geojson',
+            data: layer.mapSourceData,
+          });
+
+          map.addLayer({
+            id: layer.id,
+            type: 'line',
+            source: layer.id,
+          });
         });
       });
-    });
 
-    // new MapUtil()
-    //   .setMapAnalytics(data as MapAnalytics)
-    //   .setGeofeature(this.geoFeatures as any)
-    //   .setLegendSet(this.legendSets)
-    //   .setMapDashboardItem(this.config.config)
-    //   .setMapDashboardExtensionItem(this.mapDashboardExtensionItem)
-    //   .setContainer(this._id)
-    //   .setStyle(this.layerStyle)
-    //   .setShowLegend(this.d2VisualizerMapControl?.showMapLegend)
-    //   .setShowLabel(this.d2VisualizerMapControl?.showMapLabel)
-    //   .setShowValue(this.d2VisualizerMapControl?.showMapValue)
-    //   .setShowMapTitle(this.d2VisualizerMapControl?.showMapTitle)
-    //   .setShowBoundary(this.d2VisualizerMapControl?.showMapBoundary)
-    //   .setShowMapSummary(this.d2VisualizerMapControl?.showMapSummary)
-    //   .draw();
+      // new MapUtil()
+      //   .setMapAnalytics(data as MapAnalytics)
+      //   .setGeofeature(this.geoFeatures as any)
+      //   .setLegendSet(this.legendSets)
+      //   .setMapDashboardItem(this.config.config)
+      //   .setMapDashboardExtensionItem(this.mapDashboardExtensionItem)
+      //   .setContainer(this._id)
+      //   .setStyle(this.layerStyle)
+      //   .setShowLegend(this.d2VisualizerMapControl?.showMapLegend)
+      //   .setShowLabel(this.d2VisualizerMapControl?.showMapLabel)
+      //   .setShowValue(this.d2VisualizerMapControl?.showMapValue)
+      //   .setShowMapTitle(this.d2VisualizerMapControl?.showMapTitle)
+      //   .setShowBoundary(this.d2VisualizerMapControl?.showMapBoundary)
+      //   .setShowMapSummary(this.d2VisualizerMapControl?.showMapSummary)
+      //   .draw();
+    }
   }
 }

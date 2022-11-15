@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { keys } from 'lodash';
 import {
   DashboardAdditionalFilter,
+  DashboardSelectionConfig,
   VisualizationDataSelection,
   VisualizationDataSelectionItem,
 } from '../../models';
@@ -18,6 +19,7 @@ import { PeriodFilterDialogComponent } from './dialogs/period-filter-dialog/peri
 export class DashboardSelectionFiltersComponent {
   @Input() dataSelections!: VisualizationDataSelection[];
   @Input() additionalFilters?: DashboardAdditionalFilter[];
+  @Input() selectionConfig?: DashboardSelectionConfig;
   selectionEntities: { [key: string]: object } = {};
   @Output() setFilterSelection = new EventEmitter<
     VisualizationDataSelection[]
@@ -29,7 +31,9 @@ export class DashboardSelectionFiltersComponent {
 
     const periodDialog = this.dialog.open(PeriodFilterDialogComponent, {
       width: '800px',
-      data: {},
+      data: {
+        periodConfig: this.selectionConfig?.periodConfig,
+      },
     });
 
     periodDialog.afterClosed().subscribe((res) => {

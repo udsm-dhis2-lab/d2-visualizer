@@ -5,7 +5,11 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { DashboardObject, VisualizationDataSelection } from '../../models';
+import {
+  DashboardObject,
+  DashboardSelectionConfig,
+  VisualizationDataSelection,
+} from '../../models';
 
 @Component({
   selector: 'd2-current-dashboard-header',
@@ -15,6 +19,7 @@ import { DashboardObject, VisualizationDataSelection } from '../../models';
 })
 export class CurrentDashboardHeaderComponent {
   @Input() dashboard!: Partial<DashboardObject>;
+  @Input() selectionConfig?: DashboardSelectionConfig;
 
   @Output() setGlobalFilter = new EventEmitter<VisualizationDataSelection[]>();
 

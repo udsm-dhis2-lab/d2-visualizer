@@ -45,8 +45,9 @@ import { SharedModule } from './shared/shared.module';
       dataStoreNamespace: 'eidsr-dashboard',
       rootUrl: 'dashboard',
       selectionConfig: {
-        allowSelectionOnStartUp: false,
+        allowSelectionOnStartUp: true,
         startUpPeriodType: 'Monthly',
+        periodConfig: { openFuturePeriods: 1 },
       },
     }),
   ],

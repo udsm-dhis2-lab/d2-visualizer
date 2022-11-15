@@ -2,6 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PeriodFilterConfig } from '@iapps/ngx-dhis2-period-filter';
 
+export interface PeridFilterDialogData {
+  periodConfig: PeriodFilterConfig;
+}
+
 @Component({
   selector: 'd2-period-filter-dialog',
   templateUrl: './period-filter-dialog.component.html',
@@ -19,10 +23,15 @@ export class PeriodFilterDialogComponent implements OnInit {
   };
   constructor(
     private dialogRef: MatDialogRef<PeriodFilterDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: object
+    @Inject(MAT_DIALOG_DATA) public data: PeridFilterDialogData
   ) {}
 
-  ngOnInit() {}
+  ngOnInit(): void {
+    this.periodFilterConfig = {
+      ...this.periodFilterConfig,
+      ...(this.data?.periodConfig || {}),
+    };
+  }
 
   onPeriodUpdate(periodObject: any, action: string): void {
     this.dialogRef.close({
