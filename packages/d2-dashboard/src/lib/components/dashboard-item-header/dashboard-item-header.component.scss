@@ -5,11 +5,39 @@
   background-color: #fff;
 }
 
+.d2-dashboard__visualization-title-block {
+  display: flex;
+  align-items: center;
+}
+
+.d2-dashboard__visualization-icon {
+  margin-right: 8px;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px;
+  img {
+    height: 24px;
+  }
+}
+
+.d2-dashboard__visualization-title {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .d2-dashboard__visualization-header {
-  position: absolute;
-  z-index: 100;
-  top: 2px;
-  right: 2px;
+  padding: 4px;
+  height: 40px;
+  background-color: #fff;
+  border-bottom: solid 1px #eee;
+  display: flex;
+  justify-content: space-between;
 }
 
 .d2-dashboard__fullscreen-header {
@@ -18,13 +46,63 @@
 }
 
 .d2-dashboard__visualization-settings {
+}
+.d2-dashboard__visualization-types-container {
   position: absolute;
   z-index: 100;
-  top: 36px;
-  right: 2px;
+  top: 42px;
+  left: 2px;
+  width: 300px;
+  height: 100px;
+  overflow: auto;
   background-color: #fff;
-  box-shadow: 0 0 3px 0 #999 !important;
+  box-shadow: 0 0 2px 0 #999 !important;
   border-radius: 3px !important;
+}
+.d2-dashboard__visualization-types {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8px;
+  position: relative;
+
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+
+  .d2-dashboard__visualization-type-close-btn {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    border: none;
+    background-color: transparent;
+  }
+
+  .d2-dashboard__visualization-type-icon {
+    margin: 4px;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    background-color: transparent;
+    padding: 4px;
+    img {
+      height: 20px;
+    }
+
+    &:hover {
+      -webkit-transform: scale(1.05);
+      -moz-transform: scale(1.05);
+      -o-transform: scale(1.05);
+      -ms-transform: scale(1.05);
+      transform: scale(1.05);
+      background-color: #eee;
+    }
+  }
+
+  .d2-dashboard__visualization-type-icon-selected {
+    background-color: #eee;
+  }
 }
 
 .chart-type-list {

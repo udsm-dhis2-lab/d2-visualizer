@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CHART_TYPES, DownloadFormat } from '@iapps/d2-visualizer';
 
 @Component({
@@ -11,9 +11,10 @@ export class DashboardItemHeaderComponent {
   @Input() isChart!: boolean;
   @Input() hideChartTypes!: boolean | undefined;
   chartTypes!: any[];
-  @Input() currentChartType!: any;
-  @Output() download: EventEmitter<DownloadFormat> =
-    new EventEmitter<DownloadFormat>();
+  @Input() visualizationTitle?: string;
+  @Input() visualizationType!: any;
+  @Output()
+  download: EventEmitter<DownloadFormat> = new EventEmitter<DownloadFormat>();
   @Output() fullscreenChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() typeChange: EventEmitter<any> = new EventEmitter<any>();
 
@@ -33,7 +34,7 @@ export class DashboardItemHeaderComponent {
 
   updateChartType(chartType: string, event: MouseEvent) {
     event.stopPropagation();
-    this.currentChartType = chartType;
+    // this.currentChartType = chartType;
     this.typeChange.emit(chartType);
   }
 }

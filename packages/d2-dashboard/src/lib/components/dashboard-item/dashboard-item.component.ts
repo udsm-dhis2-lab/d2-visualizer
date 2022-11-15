@@ -166,10 +166,6 @@ export class DashboardItemComponent implements OnInit, OnChanges {
     this.visualizer.plotOptions.height = this.visualizationHeight;
 
     await this.visualizer.draw();
-
-    // setTimeout(async () => {
-
-    // }, 100);
   }
 
   async onTypeChange(visualizationType: any) {
