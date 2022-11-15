@@ -1,5 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { keys } from 'lodash';
 import {
   DashboardAdditionalFilter,
@@ -24,10 +31,12 @@ export class DashboardSelectionFiltersComponent {
   @Output() setFilterSelection = new EventEmitter<
     VisualizationDataSelection[]
   >();
+  @ViewChild(MatMenuTrigger) menu!: MatMenuTrigger;
   constructor(private dialog: MatDialog) {}
 
   onOpenPeriodDialog(e: MouseEvent) {
     e.stopPropagation();
+    this.menu.closeMenu();
 
     const periodDialog = this.dialog.open(PeriodFilterDialogComponent, {
       width: '800px',
@@ -50,6 +59,7 @@ export class DashboardSelectionFiltersComponent {
 
   onOpenOrgUnitDialog(e: MouseEvent) {
     e.stopPropagation();
+    this.menu.closeMenu();
 
     const orgUnitDialog = this.dialog.open(OrgUnitFilterDialogComponent, {
       width: '800px',
@@ -73,6 +83,7 @@ export class DashboardSelectionFiltersComponent {
     additionalFilter: DashboardAdditionalFilter
   ) {
     e.stopPropagation();
+    this.menu.closeMenu();
 
     const orgUnitDialog = this.dialog.open(AdditionalFilterDialogComponent, {
       width: '800px',
