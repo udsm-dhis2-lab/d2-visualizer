@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CHART_TYPES, DownloadFormat } from '@iapps/d2-visualizer';
+import { VISUALIZATION_TYPES, DownloadFormat } from '@iapps/d2-visualizer';
 
 @Component({
   selector: 'd2-dashboard-item-header',
@@ -10,16 +10,22 @@ export class DashboardItemHeaderComponent {
   @Input() fullScreen!: boolean;
   @Input() isChart!: boolean;
   @Input() hideChartTypes!: boolean | undefined;
-  chartTypes!: any[];
   @Input() visualizationTitle?: string;
   @Input() visualizationType!: any;
+  @Input() disableVisualizationChange!: boolean;
+  visualizationTypes!: any[];
+
+  showVisualizationTypes!: boolean;
   @Output()
   download: EventEmitter<DownloadFormat> = new EventEmitter<DownloadFormat>();
   @Output() fullscreenChange: EventEmitter<any> = new EventEmitter<any>();
-  @Output() typeChange: EventEmitter<any> = new EventEmitter<any>();
+  @Output() visualizationTypeChange: EventEmitter<any> =
+    new EventEmitter<any>();
 
   constructor() {
-    this.chartTypes = CHART_TYPES;
+    this.visualizationTypes = VISUALIZATION_TYPES.filter(
+      (visualizationType) => !visualizationType.hiddenInList
+    );
   }
 
   onDownload(event: MouseEvent, format: DownloadFormat) {
@@ -32,9 +38,14 @@ export class DashboardItemHeaderComponent {
     this.fullscreenChange.emit();
   }
 
-  updateChartType(chartType: string, event: MouseEvent) {
+  onVisualizationTypeChange(event: MouseEvent, visualizationType: string) {
     event.stopPropagation();
-    // this.currentChartType = chartType;
-    this.typeChange.emit(chartType);
+    this.showVisualizationTypes = false;
+    this.visualizationTypeChange.emit(visualizationType);
+  }
+
+  onToggleVisualizationType(event: MouseEvent) {
+    event.stopPropagation();
+    this.showVisualizationTypes = !this.showVisualizationTypes;
   }
 }

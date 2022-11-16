@@ -10,6 +10,7 @@ import {
 import {
   D2Visualizer,
   DownloadFormat,
+  VISUALIZATION_TYPES,
   VisualizerPlotOptions,
 } from '@iapps/d2-visualizer';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
@@ -33,22 +34,11 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   private _loading$: BehaviorSubject<boolean>;
   loading$: Observable<boolean>;
   error?: any;
-  visualizationContainerHeight!: string;
+  dashboardItemHeight!: string;
   fullScreen!: boolean;
   visualizationElement: any;
   hideVisualization?: boolean;
   visualizer!: D2Visualizer;
-
-  get dashboardContainerId(): string {
-    return (
-      (this.dashboardItem?.visualization?.id || 'visualization_id') +
-      '__container'
-    );
-  }
-
-  get dashboardVisualizationId(): string {
-    return this.dashboardItem?.visualization?.id || 'visualization_id';
-  }
 
   @HostListener('document:fullscreenchange', ['$event'])
   @HostListener('document:webkitfullscreenchange', ['$event'])
@@ -84,6 +74,38 @@ export class DashboardItemComponent implements OnInit, OnChanges {
         )[0]?.clientHeight || 400) + 'px';
   }
 
+  get currrentVisualizationType() {
+    return VISUALIZATION_TYPES.find(
+      (visualizationTypeObject) =>
+        visualizationTypeObject.type === this.visualizer?.visualizationType
+    );
+  }
+
+  get disableVisualizationChange() {
+    return ['TRACKED_ENTITY_LAYER', 'MAP'].includes(
+      this.currrentVisualizationType?.type || ''
+    );
+  }
+
+  get dashboardContainerId(): string {
+    return (
+      (this.dashboardItem?.visualization?.id || 'visualization_id') +
+      '__container'
+    );
+  }
+
+  get dashboardVisualizationId(): string {
+    return this.dashboardItem?.visualization?.id || 'visualization_id';
+  }
+
+  get visualizationContainerHeight(): string {
+    const offsetHeight = this.currrentVisualizationType ? '50px' : '16px';
+
+    return `calc(${
+      this.fullScreen ? '100vh' : this.dashboardItemHeight
+    } - ${offsetHeight})`;
+  }
+
   constructor(
     private dashboardItemService: DashboardItemService,
     private trackerDashboardService: TrackerDashboardService
@@ -99,7 +121,7 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   }
 
   async ngOnInit() {
-    this.visualizationContainerHeight =
+    this.dashboardItemHeight =
       (document.getElementsByClassName(
         'dashboard-item-' + this.dashboardItem.id
       )[0]?.clientHeight || 400) + 'px';

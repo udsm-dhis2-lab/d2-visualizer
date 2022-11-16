@@ -7,29 +7,44 @@
     <!-- visualization configuration section -->
     <ng-container>
       <div class="d2-dashboard__visualization-title-block">
-        <button type="button" class="d2-dashboard__visualization-icon">
-          <img [src]="chartTypes[0].icon" alt="" />
+        <button
+          type="button"
+          class="d2-dashboard__visualization-icon"
+          (click)="onToggleVisualizationType($event)"
+          [disabled]="disableVisualizationChange"
+        >
+          <img [src]="visualizationType?.icon" alt="" />
         </button>
         <div class="d2-dashboard__visualization-title">
           {{ visualizationTitle }}
         </div>
       </div>
 
-      <div class="d2-dashboard__visualization-types-container">
+      <div
+        class="d2-dashboard__visualization-types-container"
+        *ngIf="showVisualizationTypes"
+      >
         <div class="d2-dashboard__visualization-types">
-          <button class="d2-dashboard__visualization-type-close-btn">
+          <button
+            class="d2-dashboard__visualization-type-close-btn"
+            [matTooltip]="'Close'"
+            (click)="onToggleVisualizationType($event)"
+          >
             <mat-icon inline>close</mat-icon>
           </button>
-          <div *ngFor="let chartType of chartTypes">
+          <div *ngFor="let visualizationTypeObject of visualizationTypes">
             <button
-              [matTooltip]="chartType.description"
+              [matTooltip]="visualizationTypeObject.description"
               class="d2-dashboard__visualization-type-icon {{
-                chartType.type === chartTypes[0].type
+                visualizationTypeObject.type === visualizationType?.type
                   ? 'd2-dashboard__visualization-type-icon-selected'
                   : ''
               }}"
+              (click)="
+                onVisualizationTypeChange($event, visualizationTypeObject.type)
+              "
             >
-              <img [src]="chartType.icon" alt="" />
+              <img [src]="visualizationTypeObject.icon" alt="" />
             </button>
           </div>
         </div>

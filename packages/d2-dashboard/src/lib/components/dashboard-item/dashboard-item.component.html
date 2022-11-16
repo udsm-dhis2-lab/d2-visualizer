@@ -1,26 +1,28 @@
-<div class="d2-dashboard__visualization-container" [id]="dashboardContainerId">
+<div
+  class="d2-dashboard__visualization-container"
+  [id]="dashboardContainerId"
+  *ngIf="{ loading: loading$ | async } as params"
+>
   <d2-dashboard-item-header
+    *ngIf="!params.loading && currrentVisualizationType"
     [fullScreen]="fullScreen"
     [isChart]="isChart"
-    [visualizationType]="visualizer?.visualizationType"
+    [visualizationType]="currrentVisualizationType"
     [visualizationTitle]="visualizer?.config?.title"
+    [disableVisualizationChange]="disableVisualizationChange"
     (download)="onDownload($event)"
     (fullscreenChange)="onFullScreenAction()"
-    (typeChange)="onTypeChange($event)"
+    (visualizationTypeChange)="onTypeChange($event)"
   ></d2-dashboard-item-header>
   <div
     [id]="dashboardItem?.visualization?.id || 'visualization_id'"
-    [style.height]="
-      'calc(' +
-      (fullScreen ? '100vh' : visualizationContainerHeight) +
-      ' - 16px)'
-    "
+    [style.height]="visualizationContainerHeight"
     class="d2-dashboard__visualization-content"
   ></div>
 
   <div
     class="d2-dashboard__visualization-loading-overlay"
-    *ngIf="loading$ | async"
+    *ngIf="params.loading"
   >
     <mat-spinner [strokeWidth]="2" [diameter]="30"></mat-spinner>
   </div>

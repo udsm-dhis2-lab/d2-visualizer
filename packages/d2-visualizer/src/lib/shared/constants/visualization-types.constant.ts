@@ -1,4 +1,4 @@
-export const CHART_TYPES = [
+export const VISUALIZATION_TYPES = [
   {
     type: 'COLUMN',
     description: 'Column chart',
@@ -53,5 +53,17 @@ export const CHART_TYPES = [
     type: 'REPORT_TABLE',
     description: 'Pivot Table',
     icon: 'assets/icons/table.png',
+  },
+  {
+    type: 'MAP',
+    description: 'Map',
+    icon: 'assets/icons/map.png',
+    hiddenInList: true,
+  },
+  {
+    type: 'TRACKED_ENTITY_LAYER',
+    description: 'Tracked entity layer',
+    icon: 'assets/icons/map.png',
+    hiddenInList: true,
   },
 ];

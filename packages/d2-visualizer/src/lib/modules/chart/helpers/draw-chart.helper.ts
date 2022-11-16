@@ -1106,7 +1106,7 @@ function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
   if (
     _.has(xAxisOptions, 'categories') &&
     xAxisOptions.categories.length > 10 &&
-    xAxisOptions.categories[0].name.length > 5
+    xAxisOptions.categories[0]?.name?.length > 5
   ) {
     return {
       ...xAxisOptions,
@@ -1118,7 +1118,7 @@ function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
   } else if (
     _.has(xAxisOptions, 'categories') &&
     xAxisOptions.categories.length > 10 &&
-    xAxisOptions.categories[0].name.length <= 5
+    xAxisOptions.categories[0]?.name?.length <= 5
   ) {
     return {
       ...xAxisOptions,
@@ -1130,7 +1130,7 @@ function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
   } else if (
     _.has(xAxisOptions, 'categories') &&
     xAxisOptions.categories.length <= 10 &&
-    xAxisOptions.categories[0].name.length <= 5
+    xAxisOptions.categories[0]?.name?.length <= 5
   ) {
     return {
       ...xAxisOptions,
@@ -1142,7 +1142,7 @@ function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
   } else if (
     _.has(xAxisOptions, 'categories') &&
     xAxisOptions.categories.length <= 10 &&
-    xAxisOptions.categories[0].name.length > 5
+    xAxisOptions.categories[0]?.name?.length > 5
   ) {
     return {
       ...xAxisOptions,

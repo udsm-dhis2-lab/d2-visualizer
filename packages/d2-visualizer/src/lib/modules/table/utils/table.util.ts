@@ -184,7 +184,7 @@ export class TableUtil {
     <style>
       .custom-table-container {
         overflow: auto;
-        padding: 8px;
+        padding: 8px 8px 24px 8px;
       }
      .custom-table {
         font-family: arial, sans-serif;
