@@ -1,3 +1,5 @@
+import { PeriodInterface } from '@iapps/period-utilities';
+
 export interface VisualizationDataSelection {
   dimension: string;
   name?: string;
@@ -7,7 +9,7 @@ export interface VisualizationDataSelection {
   legendSet?: string;
   changed?: boolean;
   lowestPeriodType?: string;
-  items: VisualizationDataSelectionItem[];
+  items: VisualizationDataSelectionItem[] | PeriodInterface[];
   groups?: Array<{
     id: string;
     name: string;

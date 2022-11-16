@@ -2,6 +2,7 @@ import { PeriodType } from '@iapps/period-utilities';
 import { KtdGridLayout } from '@katoid/angular-grid-layout';
 import { DashboardAccess } from './dashboard-access.model';
 import { DashboardAdditionalFilter } from './dashboard-additional-filter.model';
+import { DashboardSelectionConfig } from './dashboard-config.model';
 import { DashboardItem, DashboardItemObject } from './dashboard-item.model';
 
 export interface DashboardObject {
@@ -36,6 +37,7 @@ export interface DashboardObject {
   user?: {
     id: string;
   };
+  selectionConfig?: DashboardSelectionConfig;
 }
 
 export class Dashboard {
@@ -70,6 +72,9 @@ export class Dashboard {
       additionalFilters: this.dashboardResponse[
         'additionalFilters'
       ] as DashboardAdditionalFilter[],
+      selectionConfig: this.dashboardResponse[
+        'selectionConfig'
+      ] as DashboardSelectionConfig,
     };
   }
 }

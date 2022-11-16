@@ -90,7 +90,29 @@ export class DashboardService {
         ? this._findByIdFromDataStore(id, config)
         : this._findByIdFromApi(id)
     ).pipe(
-      tap(() => {
+      tap(async (dashboard: DashboardObject) => {
+        if (dashboard && dashboard.selectionConfig) {
+          const dataSelections = this._getStartUpDataSelections({
+            rootUrl: '',
+            selectionConfig: dashboard.selectionConfig,
+          });
+
+          const dashboardStore = await firstValueFrom(
+            this._dashboardStoreObservable$.pipe(take(1))
+          );
+
+          this._dashboardStore$.next({
+            ...dashboardStore,
+            globalSelections: {
+              ...dashboardStore.globalSelections,
+              [dashboard.id]: {
+                default: true,
+                dataSelections,
+              },
+            },
+          });
+        }
+
         this._detachOverlay();
         if (!this._firstTimeLoad) {
           this._snackBarRef.dismiss();
@@ -277,7 +299,10 @@ export class DashboardService {
 
     const periodInstance = (new Period()
       .setType(selectionConfig.startUpPeriodType)
-      .setPreferences({ openFuturePeriods: 1 })
+      .setPreferences({
+        openFuturePeriods:
+          selectionConfig?.periodConfig?.openFuturePeriods || 0,
+      })
       .get()
       .list() || [])[0];
 
