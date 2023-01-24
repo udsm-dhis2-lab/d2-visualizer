@@ -4,7 +4,6 @@
   top: 0;
   position: sticky;
   z-index: 1000;
-  padding: 8px 16px 8px 16px;
   background-color: #fff;
 }
 
@@ -15,7 +14,7 @@
 
 .d2-dashboard__menu-list {
   display: flex;
-  align-items: center;
+  height: 40px;
 }
 
 .d2-dashboard__action-container {

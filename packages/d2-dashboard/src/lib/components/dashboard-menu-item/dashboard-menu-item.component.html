@@ -1,10 +1,17 @@
-<ng-container *ngIf="dashboardMenuItem">
-  <mat-chip
-    color="primary"
-    [selected]="isCurrentDashboard"
-    [id]="dashboardMenuItem?.id"
-    (click)="onSetDashboard($event)"
-    class="d2-dashboard__menu-item"
-    >{{ dashboardMenuItem?.name }}</mat-chip
-  >
-</ng-container>
+<div
+  *ngIf="dashboardMenuItem"
+  [id]="dashboardMenuItem.id"
+  [ngClass]="{
+    'd2-dashboard__menu-item': true,
+    'd2-dashboard__menu-item-active': isCurrentDashboard
+  }"
+  (click)="onSetDashboard($event)"
+>
+  <div class="d2-dashboard__menu-item-text">
+    {{ dashboardMenuItem?.name }}
+    <div
+      *ngIf="isCurrentDashboard"
+      class="d2-dashboard__menu-item-selected-block"
+    ></div>
+  </div>
+</div>

@@ -1,3 +1,48 @@
 ::ng-deep mat-chip {
   font-weight: normal !important;
 }
+
+.d2-dashboard__menu-item {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-right: solid 1px #efefef;
+  border-left: solid 1px #efefef;
+  position: relative;
+  cursor: pointer;
+  height: 100%;
+  font-size: 14px;
+  color: #212934;
+  &:hover {
+    background-color: #e8edf2;
+    cursor: pointer;
+  }
+  &:nth-child(odd) {
+    border-left: none;
+  }
+}
+
+.d2-dashboard__menu-item-active {
+  color: #00695c;
+  font-weight: 500;
+}
+
+.d2-dashboard__menu-item-text {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  padding: 8px;
+  height: 100%;
+}
+
+.d2-dashboard__menu-item-selected-block {
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  left: 8px;
+  right: 8px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  background-color: #00695c;
+}

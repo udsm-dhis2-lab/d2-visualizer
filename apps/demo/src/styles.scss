@@ -1,6 +1,5 @@
-@import '~bootstrap/scss/bootstrap.scss';
-@import '~@angular/material/theming';
-// @import '../../../node_modules/bootstrap/scss/bootstrap';
+@import 'bootstrap/scss/bootstrap.scss';
+@import '@angular/material/theming';
 
 @include mat-core();
 
