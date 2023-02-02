@@ -1,8 +1,8 @@
 <div class="d2-dashboard__current-dashboard-header" *ngIf="dashboard">
   <div class="d2-dashboard__current-dashboard-title-container">
-    <h2 class="d2-dashboard__current-dashboard-title" [id]="dashboard?.id">
+    <h3 class="d2-dashboard__current-dashboard-title" [id]="dashboard?.id">
       {{ dashboard?.name }}
-    </h2>
+    </h3>
     <div class="d2-dashboard__dashboard-filters d-print-none">
       <d2-dashboard-selection-filters
         [additionalFilters]="dashboard.additionalFilters"

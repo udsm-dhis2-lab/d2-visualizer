@@ -77,7 +77,8 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   get currrentVisualizationType() {
     return VISUALIZATION_TYPES.find(
       (visualizationTypeObject) =>
-        visualizationTypeObject.type === this.visualizer?.visualizationType
+        visualizationTypeObject.type ===
+        this.visualizer?.visualizationType?.toUpperCase()
     );
   }
 
