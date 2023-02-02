@@ -799,18 +799,18 @@ function getAxisItems(
 }
 
 function getChartTitleObject(chartConfiguration: any): any {
-  if (chartConfiguration.hideTitle) {
-    return null;
-  }
-
-  return {
-    text: chartConfiguration.title,
-    align: 'center',
-    style: {
-      fontWeight: '500',
-      fontSize: '14px',
-    },
-  };
+  // if (chartConfiguration.hideTitle) {
+  //   return null;
+  // }
+  // return {
+  //   text: chartConfiguration.title,
+  //   align: 'center',
+  //   style: {
+  //     fontWeight: '500',
+  //     fontSize: '14px',
+  //   },
+  // };
+  return null;
 }
 
 function getChartSubtitleObject(
@@ -835,7 +835,7 @@ function getChartSubtitleObject(
     text: subtitle,
     align: 'center',
     style: {
-      fontWeight: '500',
+      fontWeight: '400',
       fontSize: '12px',
     },
   };

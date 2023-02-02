@@ -3,64 +3,71 @@
     fullScreen ? 'd2-dashboard__fullscreen-header' : ''
   }}"
 >
-  <div>
-    <!-- visualization configuration section -->
-    <ng-container>
-      <div class="d2-dashboard__visualization-title-block">
-        <button
-          type="button"
-          class="d2-dashboard__visualization-icon"
-          (click)="onToggleVisualizationType($event)"
-          [disabled]="disableVisualizationChange"
-        >
-          <img [src]="visualizationType?.icon" alt="" />
-        </button>
-        <div class="d2-dashboard__visualization-title">
-          {{ visualizationTitle }}
-        </div>
-      </div>
+  <div class="d2-dashboard__visualization-title-block">
+    <button
+      class="d2-dashboard__visualization-icon"
+      (click)="onToggleVisualizationType($event)"
+      [disabled]="disableVisualizationChange"
+      *ngIf="visualizationType"
+    >
+      <img [src]="visualizationType.icon" alt="visualization" />
+      <span class="d2-dashboard__visualization-type-label">{{
+        visualizationType.label
+      }}</span>
+      <mat-icon inline>expand_more</mat-icon>
+    </button>
+    <div class="d2-dashboard__visualization-title">
+      {{ visualizationTitle }}
+    </div>
+  </div>
 
-      <div
-        class="d2-dashboard__visualization-types-container"
-        *ngIf="showVisualizationTypes"
+  <div
+    class="d2-dashboard__visualization-types-container"
+    *ngIf="showVisualizationTypes"
+  >
+    <div class="d2-dashboard__visualization-types">
+      <button
+        class="d2-dashboard__visualization-type-close-btn"
+        [matTooltip]="'Close'"
+        (click)="onToggleVisualizationType($event)"
       >
-        <div class="d2-dashboard__visualization-types">
-          <button
-            class="d2-dashboard__visualization-type-close-btn"
-            [matTooltip]="'Close'"
-            (click)="onToggleVisualizationType($event)"
-          >
-            <mat-icon inline>close</mat-icon>
-          </button>
-          <div *ngFor="let visualizationTypeObject of visualizationTypes">
-            <button
-              [matTooltip]="visualizationTypeObject.description"
-              class="d2-dashboard__visualization-type-icon {{
-                visualizationTypeObject.type === visualizationType?.type
-                  ? 'd2-dashboard__visualization-type-icon-selected'
-                  : ''
-              }}"
-              (click)="
-                onVisualizationTypeChange($event, visualizationTypeObject.type)
-              "
-            >
-              <img [src]="visualizationTypeObject.icon" alt="" />
-            </button>
+        <mat-icon inline>close</mat-icon>
+      </button>
+      <ng-container *ngFor="let visualizationTypeObject of visualizationTypes">
+        <div
+          [matTooltip]="visualizationTypeObject.description"
+          class="d2-dashboard__visualization-type-icon {{
+            visualizationTypeObject.type === visualizationType?.type
+              ? 'd2-dashboard__visualization-type-icon-selected'
+              : ''
+          }}"
+          (click)="
+            onVisualizationTypeChange($event, visualizationTypeObject.type)
+          "
+        >
+          <img [src]="visualizationTypeObject.icon" alt="" />
+          <div class="d2-dashboard__visualization-type-details">
+            <div class="d2-dashboard__visualization-type-label">
+              {{ visualizationTypeObject.label }}
+            </div>
+            <div class="d2-dashboard__visualization-type-description">
+              {{ visualizationTypeObject.description }}
+            </div>
           </div>
         </div>
-      </div>
-    </ng-container>
+      </ng-container>
+    </div>
   </div>
-  <div>
+
+  <div class="d2-dashboard__visualization-actions">
     <!-- Download section -->
     <ng-container>
       <button
-        mat-stroked-button
         [matTooltip]="'More'"
         [matMenuTriggerFor]="downloadMenu"
-        class="d-print-none bg-white d2-dashboard__more-btn mr-1"
+        class="d-print-none button button-sm mr-1"
       >
-        <mat-icon inline>download</mat-icon>
+        <mat-icon>download</mat-icon>
       </button>
       <mat-menu #downloadMenu="matMenu" xPosition="before">
         <button
@@ -83,12 +90,11 @@
     <!-- Fullscreen section -->
     <ng-container>
       <button
-        mat-stroked-button
         [matTooltip]="fullScreen ? 'Hide fullscreen' : 'View in fullscreen'"
+        class="d-print-none button button-sm"
         (click)="onFullScreenAction($event)"
-        class="d2-dashboard__more-btn"
       >
-        <mat-icon inline>{{
+        <mat-icon>{{
           fullScreen ? 'close_fullscreen' : 'open_in_full'
         }}</mat-icon>
       </button>

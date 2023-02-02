@@ -99,7 +99,7 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   }
 
   get visualizationContainerHeight(): string {
-    const offsetHeight = this.currrentVisualizationType ? '50px' : '16px';
+    const offsetHeight = this.currrentVisualizationType ? '70px' : '16px';
 
     return `calc(${
       this.fullScreen ? '100vh' : this.dashboardItemHeight
