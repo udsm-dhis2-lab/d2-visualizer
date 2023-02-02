@@ -38,7 +38,7 @@ export class VisualizationConfiguration {
   }
 
   get type(): VisualizationType {
-    return this.config?.type?.toLowerCase();
+    return this.config?.type;
   }
 
   get hideEmptyColumns(): boolean {

@@ -130,8 +130,10 @@ export class DashboardItemComponent implements OnInit, OnChanges {
   }
 
   async setVisualization() {
+    const visualizationId = this.dashboardItem?.visualization?.id;
     this._loading$.next(true);
-    if (this.dashboardItem?.visualization?.id) {
+
+    if (visualizationId) {
       try {
         this.visualizationConfig =
           this.visualizationConfig ||
@@ -152,7 +154,7 @@ export class DashboardItemComponent implements OnInit, OnChanges {
           .setId(this.visualizationConfig?.id)
           .setConfig(this.visualizationConfig)
           .setSelections(this.dataSelections || [])
-          .setType(this.visualizationConfig.type)
+          .setType(this.visualizationConfig.type?.toUpperCase())
           .setChartType(this.visualizationConfig.type)
           .setPlotOptions(
             new VisualizerPlotOptions().setHeight(this.visualizationHeight)

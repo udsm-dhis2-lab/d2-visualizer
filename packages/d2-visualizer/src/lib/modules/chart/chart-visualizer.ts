@@ -59,7 +59,9 @@ export class ChartVisualizer extends BaseVisualizer implements Visualizer {
     if (this._config) {
       this._config.config.type = this._type.toLowerCase();
     }
+
     const chartObject = drawChart(this._data, this._config);
+
     setTimeout(() => {
       this._chart = Highcharts.chart(chartObject);
     }, 20);
