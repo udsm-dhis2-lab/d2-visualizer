@@ -40,6 +40,7 @@ export class DashboardSelectionFiltersComponent {
 
     const periodDialog = this.dialog.open(PeriodFilterDialogComponent, {
       width: '800px',
+
       data: {
         periodConfig: this.selectionConfig?.periodConfig,
       },

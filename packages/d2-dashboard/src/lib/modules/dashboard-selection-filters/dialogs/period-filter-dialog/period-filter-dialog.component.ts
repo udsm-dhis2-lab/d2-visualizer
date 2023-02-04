@@ -9,7 +9,7 @@ export interface PeridFilterDialogData {
 @Component({
   selector: 'd2-period-filter-dialog',
   templateUrl: './period-filter-dialog.component.html',
-  styleUrls: ['./period-filter-dialog.component.css'],
+  styleUrls: ['./period-filter-dialog.component.scss'],
 })
 export class PeriodFilterDialogComponent implements OnInit {
   periodFilterConfig: PeriodFilterConfig = {

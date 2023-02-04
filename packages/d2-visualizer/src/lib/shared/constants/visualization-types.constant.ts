@@ -60,7 +60,7 @@ export const VISUALIZATION_TYPES = [
     icon: 'assets/icons/radar.png',
   },
   {
-    type: 'REPORT_TABLE',
+    type: 'PIVOT_TABLE',
     description: 'Pivot Table',
     label: 'Pivot Table',
     icon: 'assets/icons/table.png',
