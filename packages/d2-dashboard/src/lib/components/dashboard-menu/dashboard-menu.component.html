@@ -1,4 +1,4 @@
-<div class="d2-dashboard__menu-container mat-elevation-z1">
+<div class="d2-dashboard__menu-container">
   <div class="d2-dashboard__menu-list">
     <!-- <button mat-icon-button color="light" class="">
       <mat-icon>search</mat-icon>
@@ -6,12 +6,19 @@
     <iapps-dashboard-menu-item
       *ngFor="
         let dashboardMenuItem of dashboardMenuItems
-          | filterDashboardBy: 'name':searchTerm
+          | filterDashboardBy : 'name' : searchTerm
       "
       [dashboardMenuItem]="dashboardMenuItem"
       [isCurrentDashboard]="dashboardMenuItem?.id === currentDashboardId"
       (setDashboard)="onSetCurrentDashboard($event)"
     ></iapps-dashboard-menu-item>
   </div>
-  <!-- <div class="d2-dashboard__action-container">show more</div> -->
+  <div class="d2-dashboard__menu-actions">
+    <button class="button button-sm" matTooltip="Previous">
+      <mat-icon>keyboard_double_arrow_left</mat-icon>
+    </button>
+    <button class="button button-sm" matTooltip="Forward">
+      <mat-icon>keyboard_double_arrow_right</mat-icon>
+    </button>
+  </div>
 </div>

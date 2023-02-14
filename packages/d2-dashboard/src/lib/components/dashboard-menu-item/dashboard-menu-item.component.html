@@ -7,11 +7,5 @@
   }"
   (click)="onSetDashboard($event)"
 >
-  <div class="d2-dashboard__menu-item-text">
-    {{ dashboardMenuItem?.name }}
-    <div
-      *ngIf="isCurrentDashboard"
-      class="d2-dashboard__menu-item-selected-block"
-    ></div>
-  </div>
+  {{ dashboardMenuItem?.name }}
 </div>
