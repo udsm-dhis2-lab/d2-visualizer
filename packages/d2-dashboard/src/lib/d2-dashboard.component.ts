@@ -26,7 +26,6 @@ export class D2DashboardComponent implements OnInit {
         this.loading = false;
       }),
       catchError((error) => {
-        console.log(error);
         this.loading = false;
         this.error = error;
         return of([]);

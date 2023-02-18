@@ -1,11 +1,11 @@
 <div class="d2-dashboard__container">
   <ng-container *ngIf="dashboardMenuList$ | async as dashboardMenuList">
     <ng-container *ngIf="dashboardMenuLoaded">
-      <iapps-dashboard-menu
+      <d2-dashboard-menu
         [dashboardMenuItems]="dashboardMenuList"
         [currentDashboardId]="(currentDashboardId$ | async) || ''"
         (setCurrentDashboard)="onSetCurrentDashboard($event)"
-      ></iapps-dashboard-menu>
+      ></d2-dashboard-menu>
     </ng-container>
     <ng-container *ngIf="error"> There is an error here </ng-container>
   </ng-container>

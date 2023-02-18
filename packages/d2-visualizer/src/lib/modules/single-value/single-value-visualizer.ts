@@ -3,6 +3,7 @@ import {
   BaseVisualizer,
   Visualizer,
 } from '../../shared/models/base-visualizer.model';
+import { VisualizerUtil } from '../../shared/utilities/visualizer.utilities';
 
 export class SingleValueVisualizer
   extends BaseVisualizer
@@ -13,10 +14,17 @@ export class SingleValueVisualizer
       find(this._data.headers, ['name', 'value'])
     );
 
-    const dataLabel = this._data?.metaData?.names
-      ? this._data?.metaData?.names[this._data.metaData.dx[0]] ?? ''
-      : '';
-    const value = (this._data?.rows || []).reduce(
+    const filterLabel = VisualizerUtil.getDimensionNames(
+      ['pe', 'ou'],
+      this._data.metaData
+    ).join(' - ');
+
+    const dataLabel =
+      this._data?.metaData?.names && this._data.metaData?.dx
+        ? this._data?.metaData?.names[this._data.metaData?.dx[0]] ?? ''
+        : '';
+
+    const value: number = (this._data?.rows || []).reduce(
       (valueSum: number, row: string[]) => {
         return valueSum + parseFloat(row[valueIndex] ?? 0);
       },
@@ -35,10 +43,14 @@ export class SingleValueVisualizer
         justify-content: center;
         height: 100%;
       }
-      #single-value-label-${this._id} {
+      #single-value-title-${this._id} {
         font-size: 12px; 
         color: #666;
-        margin-bottom: 16px;
+      }
+
+      #single-value-filter-${this._id} {
+        font-size: 8px; 
+        color: #666;
       }
 
       #single-value-${this._id} {
@@ -48,8 +60,11 @@ export class SingleValueVisualizer
       </style>
       <div id="single-value-container-${this._id}">
         <div style="text-align: center">
-            <div id="single-value-label-${this._id}">${dataLabel}</div>
-            <div id="single-value-${this._id}">${value}</div>
+            <div id="single-value-title-${this._id}">${dataLabel}</div>
+            <div id="single-value-filter-${this._id}">${filterLabel}</div>
+            <div id="single-value-${
+              this._id
+            }">${VisualizerUtil.toCommaSeparated(value)}</div>
         </div>
       </div>`;
     }

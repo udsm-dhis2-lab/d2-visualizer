@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DashboardMenuObject } from '../../models';
 
 @Component({
-  selector: 'iapps-dashboard-menu-item',
+  selector: 'd2-dashboard-menu-item',
   templateUrl: './dashboard-menu-item.component.html',
   styleUrls: ['./dashboard-menu-item.component.scss'],
 })
