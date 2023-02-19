@@ -15,7 +15,7 @@ import { DashboardMenuObject } from '../../models';
 })
 export class DashboardMenuComponent implements AfterViewInit {
   @Input() dashboardMenuItems!: DashboardMenuObject[];
-  @Input() currentDashboardId?: string;
+  @Input() currentDashboardMenu?: DashboardMenuObject;
 
   searchTerm?: string;
   dashboardMenuWidth?: number;

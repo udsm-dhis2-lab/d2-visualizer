@@ -3,7 +3,7 @@
     <ng-container *ngIf="dashboardMenuLoaded$ | async">
       <d2-dashboard-menu
         [dashboardMenuItems]="dashboardMenuList"
-        [currentDashboardId]="(currentDashboardId$ | async) || ''"
+        [currentDashboardMenu]="(currentDashboardMenu$ | async) || undefined"
         (setCurrentDashboard)="onSetCurrentDashboard($event)"
       ></d2-dashboard-menu>
     </ng-container>

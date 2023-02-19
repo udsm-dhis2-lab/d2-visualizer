@@ -41,6 +41,13 @@ export const d2DashboardMenuFeature = createFeature({
     on(
       DashboardMenuActions.loadDashboardMenusFailed,
       (state, { loadingError }) => ({ ...state, loadingError, loading: false })
+    ),
+    on(
+      DashboardMenuActions.setCurrentDashboardMenu,
+      (state, { selectedDashboardMenu }) => ({
+        ...state,
+        selectedDashboardMenuId: selectedDashboardMenu.id,
+      })
     )
   ),
 });

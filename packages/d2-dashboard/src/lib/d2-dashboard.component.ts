@@ -6,10 +6,12 @@ import { DashboardMenuObject } from './models';
 import { DashboardService } from './services';
 import {
   D2DashboardMenuState,
+  DashboardMenuActions,
   getAllDashboardMenus,
   getDashboardMenuLoadedStatus,
   getDashboardMenuLoadingStatus,
   getDashboardMenuLoadingStatusErrorMessage,
+  getSelectedDashboardMenu,
 } from './store';
 
 @Component({
@@ -23,12 +25,9 @@ export class D2DashboardComponent implements OnInit {
   dashboardMenuLoaded$!: Observable<boolean>;
   dashboardMenuLoading$!: Observable<boolean>;
   dashboardMenuLoadingError$!: Observable<ErrorMessage>;
-  currentDashboardId$?: Observable<string | undefined>;
+  currentDashboardMenu$?: Observable<DashboardMenuObject | undefined>;
 
-  constructor(
-    private dashboardService: DashboardService,
-    private d2DashboardMenuStore: Store<D2DashboardMenuState>
-  ) {}
+  constructor(private d2DashboardMenuStore: Store<D2DashboardMenuState>) {}
 
   ngOnInit() {
     this.dashboardMenuList$ = this.d2DashboardMenuStore.pipe(
@@ -43,20 +42,14 @@ export class D2DashboardComponent implements OnInit {
     this.dashboardMenuLoadingError$ = this.d2DashboardMenuStore.pipe(
       select(getDashboardMenuLoadingStatusErrorMessage)
     );
-    // this.dashboardMenuList$ = this.dashboardService.getMenuList().pipe(
-    //   tap(() => {
-    //     this.loading = false;
-    //   }),
-    //   catchError((error) => {
-    //     this.loading = false;
-    //     this.error = error;
-    //     return of([]);
-    //   })
-    // );
-    this.currentDashboardId$ = this.dashboardService.getCurrentDashboardId();
+    this.currentDashboardMenu$ = this.d2DashboardMenuStore.pipe(
+      select(getSelectedDashboardMenu)
+    );
   }
 
-  onSetCurrentDashboard(dashboardMenuItem: DashboardMenuObject) {
-    this.dashboardService.setCurrentDashboard(dashboardMenuItem);
+  onSetCurrentDashboard(selectedDashboardMenu: DashboardMenuObject) {
+    this.d2DashboardMenuStore.dispatch(
+      DashboardMenuActions.setCurrentDashboardMenu({ selectedDashboardMenu })
+    );
   }
 }

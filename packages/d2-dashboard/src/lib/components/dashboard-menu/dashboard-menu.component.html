@@ -10,7 +10,9 @@
             | filterDashboardBy : 'name' : searchTerm
         "
         [dashboardMenuItem]="dashboardMenuItem"
-        [isCurrentDashboard]="dashboardMenuItem?.id === currentDashboardId"
+        [isCurrentDashboard]="
+          dashboardMenuItem?.id === currentDashboardMenu?.id
+        "
         (setDashboard)="onSetCurrentDashboard($event)"
       ></d2-dashboard-menu-item>
     </div>

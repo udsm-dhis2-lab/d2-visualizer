@@ -1,4 +1,5 @@
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { DashboardMenuObject } from '../../models';
 import {
   d2DashboardMenuAdapter,
   d2DashboardMenuFeature,
@@ -21,3 +22,9 @@ export const {
   selectAll: getAllDashboardMenus,
   selectTotal: getTotalDashboardMenus,
 } = d2DashboardMenuAdapter.getSelectors(selectDashboardMenuState);
+
+export const getSelectedDashboardMenu = createSelector(
+  getSelectedDashboardMenuId,
+  getDashboardMenuEntities,
+  (id, entities) => (entities ? entities[id as string] : undefined)
+);

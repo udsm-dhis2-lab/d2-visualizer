@@ -8,5 +8,8 @@ export const DashboardMenuActions = createActionGroup({
     'Load dashboard menus': emptyProps(),
     'Load dashboard menus failed': props<{ loadingError: ErrorMessage }>(),
     'Save dashboard menus': props<{ dashboardMenus: DashboardMenuObject[] }>(),
+    'Set current dashboard menu': props<{
+      selectedDashboardMenu: DashboardMenuObject;
+    }>(),
   },
 });
