@@ -61,25 +61,6 @@ export class DashboardService {
     this._dashboardStoreObservable$ = this._dashboardStore$.asObservable();
   }
 
-  getMenuList(): Observable<DashboardMenuObject[]> {
-    const config: DashboardConfig = this.dashboardConfigService.getConfig();
-    this._detachOverlay();
-    this._attachOverlay();
-    return this._findMenuList(config as DashboardConfig).pipe(
-      tap((dashboardMenuItems: DashboardMenuObject[]) => {
-        this._detachOverlay();
-        const splitedUrl = (window.location.href || '').split('/');
-        const currentDashboard =
-          find(dashboardMenuItems, [
-            'id',
-            splitedUrl[splitedUrl.indexOf('dashboard') + 1],
-          ]) || dashboardMenuItems[0];
-
-        this.setCurrentDashboard(currentDashboard);
-      })
-    );
-  }
-
   getCurrentDashboard(id: string): Observable<DashboardObject> {
     const config: DashboardConfig = this.dashboardConfigService.getConfig();
     this._detachOverlay();
@@ -224,35 +205,6 @@ export class DashboardService {
       distinctUntilChanged(),
       map((dashboardStore) => dashboardStore?.currentDashboardMenu?.id)
     );
-  }
-
-  private _findMenuList(
-    config: DashboardConfig
-  ): Observable<DashboardMenuObject[]> {
-    return (
-      config?.useDataStore
-        ? this._findAllFromDataStore(config)
-        : this._findAllFromApi()
-    ).pipe(
-      map((res) => {
-        return (res?.dashboards || []).map(
-          (dashboard: { [key: string]: string | number | object }) =>
-            new DashboardMenu(dashboard).toObject()
-        );
-      })
-    );
-  }
-
-  private _findAllFromApi() {
-    return this.httpClient.get('dashboards.json?fields=id,name&paging=false');
-  }
-
-  private _findAllFromDataStore(config: DashboardConfig) {
-    return this.httpClient
-      .get(`dataStore/${config.dataStoreNamespace}/summary`)
-      .pipe(
-        map((dashboardResponse) => ({ dashboards: dashboardResponse || [] }))
-      );
   }
 
   private _findByIdFromApi(id: string) {

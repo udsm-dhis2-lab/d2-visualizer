@@ -17,6 +17,14 @@ import { d2DashboardServices } from './services';
 import { DASHBOARD_CONFIG } from './services/dashboard-config.service';
 import { d2DashboardMaterialModules } from './shared';
 import { NgxPrintModule } from 'ngx-print';
+import { StoreModule } from '@ngrx/store';
+import {
+  d2DashboardEffects,
+  d2DashboardFeature,
+  d2DashboardMenuFeature,
+  d2DashboardSelectionFeature,
+} from './store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   imports: [
@@ -27,6 +35,10 @@ import { NgxPrintModule } from 'ngx-print';
     NgxPrintModule,
     ...d2DashboardMaterialModules,
     ...d2DashboardModules,
+    StoreModule.forFeature(d2DashboardMenuFeature),
+    StoreModule.forFeature(d2DashboardFeature),
+    StoreModule.forFeature(d2DashboardSelectionFeature),
+    EffectsModule.forFeature(d2DashboardEffects),
   ],
   declarations: [
     D2DashboardComponent,

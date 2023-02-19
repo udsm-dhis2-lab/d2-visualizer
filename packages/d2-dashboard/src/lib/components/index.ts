@@ -6,9 +6,11 @@ import { DashboardLoaderComponent } from './dashboard-loader/dashboard-loader.co
 import { DashboardMenuItemComponent } from './dashboard-menu-item/dashboard-menu-item.component';
 import { DashboardMenuComponent } from './dashboard-menu/dashboard-menu.component';
 import { DashboardSelectionSummaryComponent } from './dashboard-selection-summary/dashboard-selection-summary.component';
+import { DashboardSubMenuComponent } from './dashboard-sub-menu/dashboard-sub-menu.component';
 
 export const d2DashboardComponents: any[] = [
   DashboardMenuComponent,
+  DashboardSubMenuComponent,
   CurrentDashboardHeaderComponent,
   DashboardItemsComponent,
   DashboardMenuItemComponent,

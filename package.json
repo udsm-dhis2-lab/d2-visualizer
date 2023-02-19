@@ -33,6 +33,10 @@
     "@iapps/ngx-dhis2-period-filter": "^2.0.0",
     "@iapps/period-utilities": "^1.0.1",
     "@katoid/angular-grid-layout": "^1.2.0",
+    "@ngrx/effects": "^15.3.0",
+    "@ngrx/entity": "^15.3.0",
+    "@ngrx/store": "^15.3.0",
+    "@ngrx/store-devtools": "^15.3.0",
     "@turf/collect": "^6.5.0",
     "@turf/turf": "^6.5.0",
     "axios": "^0.27.2",
@@ -91,4 +95,3 @@
     "typescript": "4.8.4"
   }
 }
-
