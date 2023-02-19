@@ -13,6 +13,15 @@ export class DashboardMenu {
     return {
       id: this.dashboard['id'] as string,
       name: this.dashboard['name'] as string,
+      subMenus: this.dashboard['subMenus']
+        ? (
+            this.dashboard['subMenus'] as Array<{
+              [key: string]: string | number | object;
+            }>
+          ).map((subMenu: { [key: string]: string | number | object }) =>
+            new DashboardMenu(subMenu).toObject()
+          )
+        : undefined,
     };
   }
 }

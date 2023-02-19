@@ -1,0 +1,26 @@
+.d2-dashboard__sub-menu-container {
+  display: flex;
+  align-items: center;
+}
+
+.d2-dashboard__sub-menu-item {
+  font-size: 10px;
+  background-color: #f1f9f9;
+  padding: 8px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  margin-left: 8px;
+  &:hover {
+    background-color: #00695c;
+    color: #fff;
+  }
+}
+
+.d2-dashboard__sub-menu-item:first-child {
+  margin-left: 0;
+}
+
+.d2-dashboard__sub-menu-item-selected {
+  background-color: #00695c;
+  color: #fff;
+}
