@@ -8,6 +8,7 @@ export interface D2DashboardMenuState extends EntityState<DashboardMenuObject> {
   loaded: boolean;
   loadingError: any | null;
   selectedDashboardMenuId: string | null;
+  selectedDashboardSubMenuId: string | null;
 }
 
 export const d2DashboardMenuAdapter: EntityAdapter<DashboardMenuObject> =
@@ -19,6 +20,7 @@ const initialState: D2DashboardMenuState =
     loaded: false,
     loadingError: null,
     selectedDashboardMenuId: null,
+    selectedDashboardSubMenuId: null,
   });
 
 export const d2DashboardMenuFeature = createFeature({
@@ -44,9 +46,17 @@ export const d2DashboardMenuFeature = createFeature({
     ),
     on(
       DashboardMenuActions.setCurrentDashboardMenu,
-      (state, { selectedDashboardMenu }) => ({
+      (state, { selectedDashboardMenu, selectedDashboardSubMenu }) => ({
         ...state,
         selectedDashboardMenuId: selectedDashboardMenu.id,
+        selectedDashboardSubMenuId: selectedDashboardSubMenu?.id || null,
+      })
+    ),
+    on(
+      DashboardMenuActions.setCurrentDashboardSubMenu,
+      (state, { selectedDashboardSubMenu }) => ({
+        ...state,
+        selectedDashboardSubMenuId: selectedDashboardSubMenu.id,
       })
     )
   ),

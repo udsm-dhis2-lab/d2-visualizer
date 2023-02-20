@@ -16,11 +16,15 @@ import { DashboardMenuObject } from '../../models';
 export class DashboardMenuComponent implements AfterViewInit {
   @Input() dashboardMenuItems!: DashboardMenuObject[];
   @Input() currentDashboardMenu?: DashboardMenuObject;
+  @Input() currentDashboardSubMenu?: DashboardMenuObject;
 
   searchTerm?: string;
   dashboardMenuWidth?: number;
 
   @Output() setCurrentDashboard: EventEmitter<DashboardMenuObject> =
+    new EventEmitter<DashboardMenuObject>();
+
+  @Output() setCurrentSubDashboard: EventEmitter<DashboardMenuObject> =
     new EventEmitter<DashboardMenuObject>();
 
   @HostListener('window:resize')
@@ -46,5 +50,9 @@ export class DashboardMenuComponent implements AfterViewInit {
   onSearchDashboard(e: KeyboardEvent) {
     e.stopPropagation();
     this.searchTerm = (e.target as any)?.value;
+  }
+
+  onSetCurrentDashboardSubMenu(dashboardSubMenu: DashboardMenuObject) {
+    this.setCurrentSubDashboard.emit(dashboardSubMenu);
   }
 }

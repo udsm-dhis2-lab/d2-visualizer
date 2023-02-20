@@ -4,7 +4,11 @@
       <d2-dashboard-menu
         [dashboardMenuItems]="dashboardMenuList"
         [currentDashboardMenu]="(currentDashboardMenu$ | async) || undefined"
+        [currentDashboardSubMenu]="
+          (currentDashboardSubMenu$ | async) || undefined
+        "
         (setCurrentDashboard)="onSetCurrentDashboard($event)"
+        (setCurrentSubDashboard)="onSetCurrentSubDashboard($event)"
       ></d2-dashboard-menu>
     </ng-container>
     <ng-container *ngIf="dashboardMenuLoadingError$ | async as error">

@@ -12,6 +12,7 @@ import {
   getDashboardMenuLoadingStatus,
   getDashboardMenuLoadingStatusErrorMessage,
   getSelectedDashboardMenu,
+  getSelectedDashboardSubMenu,
 } from './store';
 
 @Component({
@@ -26,6 +27,7 @@ export class D2DashboardComponent implements OnInit {
   dashboardMenuLoading$!: Observable<boolean>;
   dashboardMenuLoadingError$!: Observable<ErrorMessage>;
   currentDashboardMenu$?: Observable<DashboardMenuObject | undefined>;
+  currentDashboardSubMenu$?: Observable<DashboardMenuObject | undefined>;
 
   constructor(private d2DashboardMenuStore: Store<D2DashboardMenuState>) {}
 
@@ -45,11 +47,23 @@ export class D2DashboardComponent implements OnInit {
     this.currentDashboardMenu$ = this.d2DashboardMenuStore.pipe(
       select(getSelectedDashboardMenu)
     );
+
+    this.currentDashboardSubMenu$ = this.d2DashboardMenuStore.pipe(
+      select(getSelectedDashboardSubMenu)
+    );
   }
 
   onSetCurrentDashboard(selectedDashboardMenu: DashboardMenuObject) {
     this.d2DashboardMenuStore.dispatch(
       DashboardMenuActions.setCurrentDashboardMenu({ selectedDashboardMenu })
+    );
+  }
+
+  onSetCurrentSubDashboard(selectedDashboardSubMenu: DashboardMenuObject) {
+    this.d2DashboardMenuStore.dispatch(
+      DashboardMenuActions.setCurrentDashboardSubMenu({
+        selectedDashboardSubMenu,
+      })
     );
   }
 }

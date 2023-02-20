@@ -10,6 +10,10 @@ export const DashboardMenuActions = createActionGroup({
     'Save dashboard menus': props<{ dashboardMenus: DashboardMenuObject[] }>(),
     'Set current dashboard menu': props<{
       selectedDashboardMenu: DashboardMenuObject;
+      selectedDashboardSubMenu?: DashboardMenuObject;
+    }>(),
+    'Set current dashboard sub menu': props<{
+      selectedDashboardSubMenu: DashboardMenuObject;
     }>(),
   },
 });

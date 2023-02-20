@@ -1,3 +1,4 @@
+import { flatten } from 'lodash';
 export interface DashboardMenuObject {
   id: string;
   name: string;
@@ -8,6 +9,35 @@ export interface DashboardMenuObject {
 
 export class DashboardMenu {
   constructor(public dashboard: { [key: string]: string | number | object }) {}
+
+  static getCurrentDashboardMenu(
+    dashboardMenus: DashboardMenuObject[],
+    dashboardMenuIdFromUrl: string
+  ): {
+    selectedDashboardMenu: DashboardMenuObject;
+    selectedDashboardSubMenu?: DashboardMenuObject;
+  } {
+    const selectedDashboardMenu = dashboardMenus.find(
+      (dashboardMenuItem) => dashboardMenuItem.id === dashboardMenuIdFromUrl
+    );
+
+    if (selectedDashboardMenu) {
+      return { selectedDashboardMenu };
+    }
+
+    const dashboardSubMenus = flatten(
+      dashboardMenus.map((menu) => menu.subMenus || [])
+    );
+
+    const selectedDashboardSubMenu = dashboardSubMenus.find(
+      (dashboardMenuItem) => dashboardMenuItem.id === dashboardMenuIdFromUrl
+    );
+
+    return {
+      selectedDashboardMenu: selectedDashboardMenu || dashboardMenus[0],
+      selectedDashboardSubMenu,
+    };
+  }
 
   toObject(): DashboardMenuObject {
     return {

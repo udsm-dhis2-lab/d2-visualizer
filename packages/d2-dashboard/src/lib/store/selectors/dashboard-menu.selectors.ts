@@ -14,6 +14,7 @@ export const {
   selectLoaded: getDashboardMenuLoadedStatus,
   selectLoadingError: getDashboardMenuLoadingStatusErrorMessage,
   selectSelectedDashboardMenuId: getSelectedDashboardMenuId,
+  selectSelectedDashboardSubMenuId: getSelectedDashboardSubMenuId,
 } = d2DashboardMenuFeature;
 
 export const {
@@ -27,4 +28,14 @@ export const getSelectedDashboardMenu = createSelector(
   getSelectedDashboardMenuId,
   getDashboardMenuEntities,
   (id, entities) => (entities ? entities[id as string] : undefined)
+);
+
+export const getSelectedDashboardSubMenu = createSelector(
+  getSelectedDashboardMenu,
+  getSelectedDashboardSubMenuId,
+  (selectedDashboardMenu, subMenuId) => {
+    return (selectedDashboardMenu?.subMenus || []).find(
+      (subMenu) => subMenu.id === subMenuId
+    );
+  }
 );

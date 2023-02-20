@@ -31,6 +31,8 @@
   >
     <d2-dashboard-sub-menu
       [dashboardSubMenus]="dashboardSubMenus"
+      [curentDashboardSubMenu]="currentDashboardSubMenu"
+      (setCurrentDashboardSubMenu)="onSetCurrentDashboardSubMenu($event)"
     ></d2-dashboard-sub-menu>
   </div>
 </div>

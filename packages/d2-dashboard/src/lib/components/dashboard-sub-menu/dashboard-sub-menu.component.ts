@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DashboardMenuObject } from '../../models';
 
 @Component({
@@ -8,9 +8,19 @@ import { DashboardMenuObject } from '../../models';
 })
 export class DashboardSubMenuComponent implements OnInit {
   @Input() dashboardSubMenus!: DashboardMenuObject[];
+  @Input() curentDashboardSubMenu?: DashboardMenuObject;
+
+  @Output() setCurrentDashboardSubMenu: EventEmitter<DashboardMenuObject> =
+    new EventEmitter();
   constructor() {}
 
-  ngOnInit() {
-    console.log(this.dashboardSubMenus);
+  ngOnInit() {}
+
+  onSetCurrentDashboardSubMenu(
+    event: MouseEvent,
+    dashboardSubMenu: DashboardMenuObject
+  ) {
+    event.stopPropagation();
+    this.setCurrentDashboardSubMenu.emit(dashboardSubMenu);
   }
 }
