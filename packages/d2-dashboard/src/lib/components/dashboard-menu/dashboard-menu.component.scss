@@ -6,7 +6,7 @@
   width: 100%;
   position: sticky;
   z-index: 1000;
-  overflow: auto;
+
   background-color: #fff;
   box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
     0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
@@ -16,10 +16,8 @@
   justify-content: space-between;
   padding-left: 8px;
   padding-right: 8px;
-}
-
-.d2-dashboard__sub-menu {
-  padding: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .d2-dashboard__search {

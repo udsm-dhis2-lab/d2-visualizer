@@ -6,6 +6,7 @@
       'd2-dashboard__sub-menu-item-selected':
         dashboardSubMenu.id === curentDashboardSubMenu?.id
     }"
+    [matTooltip]="dashboardSubMenu.name"
     (click)="onSetCurrentDashboardSubMenu($event, dashboardSubMenu)"
   >
     {{ dashboardSubMenu.name }}
