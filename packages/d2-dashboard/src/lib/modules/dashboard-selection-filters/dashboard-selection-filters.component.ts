@@ -44,6 +44,9 @@ export class DashboardSelectionFiltersComponent {
 
       data: {
         periodConfig: this.selectionConfig?.periodConfig,
+        selectedPeriods:
+          this.dataSelections?.find((selection) => selection.dimension === 'pe')
+            ?.items || [],
       },
     });
 
@@ -67,7 +70,7 @@ export class DashboardSelectionFiltersComponent {
       width: '800px',
       data: {
         selectedOrgUnits:
-          this.dataSelections.find((selection) => selection.dimension === 'ou')
+          this.dataSelections?.find((selection) => selection.dimension === 'ou')
             ?.items || [],
       },
     });

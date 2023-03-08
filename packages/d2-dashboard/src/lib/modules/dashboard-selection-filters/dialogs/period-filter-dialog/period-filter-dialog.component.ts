@@ -4,6 +4,7 @@ import { PeriodFilterConfig } from '@iapps/ngx-dhis2-period-filter';
 
 export interface PeridFilterDialogData {
   periodConfig: PeriodFilterConfig;
+  selectedPeriods: any[];
 }
 
 @Component({

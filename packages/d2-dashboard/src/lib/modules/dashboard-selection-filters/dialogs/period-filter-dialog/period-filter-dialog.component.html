@@ -1,7 +1,7 @@
 <div mat-dialog-title class="d2-dashboard__filter-dialog-label">Period</div>
 <mat-dialog-content>
   <ngx-dhis2-period-filter
-    [selectedPeriods]="[]"
+    [selectedPeriods]="data.selectedPeriods || []"
     [selectedPeriodFilterType]="'FIXED'"
     [periodFilterConfig]="periodFilterConfig"
     (update)="onPeriodUpdate($event, 'UPDATE')"

@@ -58,7 +58,7 @@ export class SingleValueVisualizer
       }
 
       #single-value-${this._id} {
-        font-size: 3em;
+        font-size: 2.5em;
         font-weight: 300;
         line-height: .8em;
       }
