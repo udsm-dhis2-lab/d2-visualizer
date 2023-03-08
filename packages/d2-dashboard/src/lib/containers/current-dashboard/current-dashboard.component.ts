@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { select, Store } from '@ngrx/store';
 
 import { catchError, Observable, of, switchMap, tap } from 'rxjs';
 import {
@@ -7,8 +8,14 @@ import {
   DashboardSelectionConfig,
   VisualizationDataSelection,
 } from '../../models';
-import { GlobalSelection } from '../../models/global-selection.model';
+import {
+  GlobalSelection,
+  IGlobalSelection,
+} from '../../models/global-selection.model';
 import { DashboardConfigService, DashboardService } from '../../services';
+import { D2DashboardSelectionState } from '../../store';
+import { DashboardSelectionActions } from '../../store/actions/dashboard-selection.actions';
+import { getDashboardSelectionById } from '../../store/selectors/dashboard-selection.selectors';
 
 @Component({
   selector: 'd2-current-dashboard',
@@ -17,19 +24,21 @@ import { DashboardConfigService, DashboardService } from '../../services';
 })
 export class CurrentDashboardComponent implements OnInit {
   currentDashboard$?: Observable<DashboardObject | undefined>;
-  globalSelection$!: Observable<GlobalSelection>;
+  globalSelection$!: Observable<IGlobalSelection | undefined>;
   error?: object;
   loading = true;
   selectionConfig?: DashboardSelectionConfig;
   constructor(
     private dashboardService: DashboardService,
-    private activateRoute: ActivatedRoute,
-    private dashboardConfig: DashboardConfigService
+    private activatedRoute: ActivatedRoute,
+    private dashboardConfig: DashboardConfigService,
+    private dashboardSelectionStore: Store<D2DashboardSelectionState>
   ) {}
 
   ngOnInit() {
     this.selectionConfig = this.dashboardConfig.getConfig()?.selectionConfig;
-    this.currentDashboard$ = this.activateRoute.params.pipe(
+
+    this.currentDashboard$ = this.activatedRoute.params.pipe(
       switchMap(({ id }) => {
         this.loading = true;
         return this.dashboardService.getCurrentDashboard(id);
@@ -43,10 +52,20 @@ export class CurrentDashboardComponent implements OnInit {
         return of(undefined);
       })
     );
-    this.globalSelection$ = this.dashboardService.getGlobalSelection();
+
+    this.globalSelection$ = this.activatedRoute.params.pipe(
+      switchMap(({ id }) =>
+        this.dashboardSelectionStore.pipe(select(getDashboardSelectionById(id)))
+      )
+    );
   }
 
   onSetGlobalFilter(dataSelections: VisualizationDataSelection[], id: string) {
-    this.dashboardService.setGlobalSelections(dataSelections, id);
+    this.dashboardSelectionStore.dispatch(
+      DashboardSelectionActions.setDashboardSelection({
+        dataSelections,
+        dashboardId: id,
+      })
+    );
   }
 }

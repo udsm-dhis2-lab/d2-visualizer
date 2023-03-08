@@ -1,19 +1,60 @@
-import { createFeature, createReducer } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
+import { VisualizationDataSelection } from '../../models';
+import {
+  GlobalSelection,
+  IGlobalSelection,
+} from '../../models/global-selection.model';
+import { DashboardSelectionActions } from '../actions/dashboard-selection.actions';
 
-interface D2DashboardSelectionState {
-  dashboardSelections: any;
+export interface D2DashboardSelectionState {
   loading: boolean;
+  dashboardSelections: {
+    [id: string]: IGlobalSelection;
+  };
+  startUpDataSelections: VisualizationDataSelection[];
 }
 
 const initialState: D2DashboardSelectionState = {
   dashboardSelections: {},
   loading: false,
+  startUpDataSelections: [],
 };
 
 export const d2DashboardSelectionFeature = createFeature({
   name: 'dashboardSelections',
-  reducer: createReducer(initialState),
-});
+  reducer: createReducer(
+    initialState,
+    on(
+      DashboardSelectionActions.setStartupSelections,
+      (state, { startUpDataSelections }) => ({
+        ...state,
+        startUpDataSelections,
+      })
+    ),
+    on(
+      DashboardSelectionActions.setDashboardSelection,
+      (state, { dashboardId, dataSelections }) => {
+        const selections =
+          dataSelections.length > 0
+            ? {
+                default: false,
+                dataSelections,
+              }
+            : state.startUpDataSelections.length > 0
+            ? {
+                default: true,
+                dataSelections: state.startUpDataSelections,
+              }
+            : { default: false, dataSelections: [] };
 
-export const { selectDashboardSelectionsState, selectDashboardSelections } =
-  d2DashboardSelectionFeature;
+        return {
+          ...state,
+          dashboardSelections: {
+            ...state.dashboardSelections,
+            [dashboardId]: new GlobalSelection(selections),
+          },
+        };
+      }
+    )
+  ),
+});

@@ -1,8 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { find } from 'lodash';
 import { DIMENSION_LABELS } from '../../constants/selection-dimension-label.constant';
 import { VisualizationDataSelection } from '../../models';
-import { GlobalSelection } from '../../models/global-selection.model';
+import { IGlobalSelection } from '../../models/global-selection.model';
 
 @Component({
   selector: 'd2-dashboard-selection-summary',
@@ -10,7 +10,7 @@ import { GlobalSelection } from '../../models/global-selection.model';
   styleUrls: ['./dashboard-selection-summary.component.scss'],
 })
 export class DashboardSelectionSummaryComponent {
-  @Input() globalSelection?: GlobalSelection;
+  @Input() globalSelection?: IGlobalSelection;
 
   @Output() removeSelection: EventEmitter<VisualizationDataSelection[]> =
     new EventEmitter<VisualizationDataSelection[]>();

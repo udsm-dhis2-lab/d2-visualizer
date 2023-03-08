@@ -6,10 +6,9 @@ import {
   MatSnackBarRef,
   TextOnlySnackBar,
 } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Period } from '@iapps/period-utilities';
-import { find } from 'lodash';
 import { BehaviorSubject, firstValueFrom, Observable, tap } from 'rxjs';
 import { distinctUntilChanged, map, take } from 'rxjs/operators';
 import { DashboardLoaderComponent } from '../components/dashboard-loader/dashboard-loader.component';
@@ -17,13 +16,15 @@ import { DIMENSION_LABELS } from '../constants/selection-dimension-label.constan
 import {
   Dashboard,
   DashboardConfig,
-  DashboardMenu,
   DashboardMenuObject,
   DashboardObject,
   DashboardSelectionConfig,
   VisualizationDataSelection,
 } from '../models';
-import { GlobalSelection } from '../models/global-selection.model';
+import {
+  GlobalSelection,
+  IGlobalSelection,
+} from '../models/global-selection.model';
 import { DashboardConfigService } from './dashboard-config.service';
 
 interface DashboardStore {
@@ -137,67 +138,6 @@ export class DashboardService {
       },
     });
     this.router.navigate([config.rootUrl, currentDashboardMenu.id]);
-  }
-
-  async setGlobalSelections(
-    dataSelections: VisualizationDataSelection[],
-    id: string
-  ) {
-    const dashboardStore = await firstValueFrom(
-      this._dashboardStoreObservable$.pipe(take(1))
-    );
-
-    const newGlobalSelection =
-      dataSelections.length > 0
-        ? {
-            default: false,
-            dataSelections,
-          }
-        : dashboardStore.startUpDataSelections
-        ? {
-            default: true,
-            dataSelections: dashboardStore.startUpDataSelections,
-          }
-        : { default: false, dataSelections: [] };
-
-    this._dashboardStore$.next({
-      ...dashboardStore,
-      globalSelections: {
-        ...dashboardStore.globalSelections,
-        [id]: newGlobalSelection,
-      },
-    });
-  }
-
-  getGlobalSelection(): Observable<GlobalSelection> {
-    return this._dashboardStoreObservable$.pipe(
-      distinctUntilChanged(),
-      map((dashboardStore) => {
-        const globalSelection = (dashboardStore?.globalSelections || {})[
-          dashboardStore?.currentDashboardMenu?.id as string
-        ];
-
-        const selectionSummary = (globalSelection?.dataSelections || [])
-          .map(
-            (dataSelection: any) =>
-              ((DIMENSION_LABELS || {})[dataSelection.dimension] ||
-                dataSelection.label ||
-                'Dimension') +
-              ': ' +
-              dataSelection.items
-                .map((item: any) => item.name || item.id)
-                .join(',')
-          )
-          .join(' - ');
-
-        return {
-          ...globalSelection,
-          summary: selectionSummary
-            ? 'Showing data for ' + selectionSummary
-            : undefined,
-        };
-      })
-    );
   }
 
   getCurrentDashboardId(): Observable<string | undefined> {

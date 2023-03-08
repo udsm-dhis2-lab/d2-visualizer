@@ -46,16 +46,21 @@ export class SingleValueVisualizer
       #single-value-title-${this._id} {
         font-size: 12px; 
         color: #666;
+        line-height: 12px;
+        margin-bottom: 8px;
       }
 
       #single-value-filter-${this._id} {
         font-size: 8px; 
         color: #666;
+        line-height: 8px;
+        margin-bottom: 8px;
       }
 
       #single-value-${this._id} {
         font-size: 3em;
         font-weight: 300;
+        line-height: .8em;
       }
       </style>
       <div id="single-value-container-${this._id}">
