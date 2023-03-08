@@ -27,6 +27,7 @@ export class DashboardSelectionFiltersComponent {
   @Input() dataSelections!: VisualizationDataSelection[];
   @Input() additionalFilters?: DashboardAdditionalFilter[];
   @Input() selectionConfig?: DashboardSelectionConfig;
+
   selectionEntities: { [key: string]: object } = {};
   @Output() setFilterSelection = new EventEmitter<
     VisualizationDataSelection[]
@@ -64,7 +65,11 @@ export class DashboardSelectionFiltersComponent {
 
     const orgUnitDialog = this.dialog.open(OrgUnitFilterDialogComponent, {
       width: '800px',
-      data: {},
+      data: {
+        selectedOrgUnits:
+          this.dataSelections.find((selection) => selection.dimension === 'ou')
+            ?.items || [],
+      },
     });
 
     orgUnitDialog.afterClosed().subscribe((res) => {

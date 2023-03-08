@@ -8,10 +8,7 @@ import {
   DashboardSelectionConfig,
   VisualizationDataSelection,
 } from '../../models';
-import {
-  GlobalSelection,
-  IGlobalSelection,
-} from '../../models/global-selection.model';
+import { IGlobalSelection } from '../../models/global-selection.model';
 import { DashboardConfigService, DashboardService } from '../../services';
 import { D2DashboardSelectionState } from '../../store';
 import { DashboardSelectionActions } from '../../store/actions/dashboard-selection.actions';

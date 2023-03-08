@@ -4,7 +4,7 @@
 <mat-dialog-content>
   <ngx-dhis2-org-unit-filter
     [orgUnitFilterConfig]="orgUnitFilterConfig"
-    [selectedOrgUnitItems]="[]"
+    [selectedOrgUnitItems]="data.selectedOrgUnits || []"
     (orgUnitUpdate)="onOrgUnitUpdate($event, 'UPDATE')"
     (orgUnitClose)="onOrgUnitUpdate($event, 'CLOSE')"
   ></ngx-dhis2-org-unit-filter>

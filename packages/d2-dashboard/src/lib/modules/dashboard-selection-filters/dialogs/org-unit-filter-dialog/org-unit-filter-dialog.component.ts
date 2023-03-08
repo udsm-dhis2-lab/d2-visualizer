@@ -18,7 +18,7 @@ export class OrgUnitFilterDialogComponent implements OnInit {
   firstAction?: string;
   constructor(
     private dialogRef: MatDialogRef<OrgUnitFilterDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: object
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   ngOnInit() {}

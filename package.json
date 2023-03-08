@@ -31,7 +31,7 @@
     "@iapps/ngx-dhis2-http-client": "^2.0.8",
     "@iapps/ngx-dhis2-org-unit-filter": "^1.1.32",
     "@iapps/ngx-dhis2-period-filter": "^2.0.0",
-    "@iapps/period-utilities": "^1.0.1",
+    "@iapps/period-utilities": "^1.0.2",
     "@katoid/angular-grid-layout": "^1.2.0",
     "@ngrx/effects": "^15.3.0",
     "@ngrx/entity": "^15.3.0",

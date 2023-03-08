@@ -50,7 +50,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
       selectionConfig: {
         allowSelectionOnStartUp: false,
         startUpPeriodType: 'Monthly',
-        periodConfig: { openFuturePeriods: 1 },
+        periodConfig: { openFuturePeriods: 2 },
       },
     }),
     StoreModule.forRoot({}),

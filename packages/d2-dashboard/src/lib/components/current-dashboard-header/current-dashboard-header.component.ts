@@ -20,6 +20,7 @@ import {
 export class CurrentDashboardHeaderComponent {
   @Input() dashboard!: Partial<DashboardObject>;
   @Input() selectionConfig?: DashboardSelectionConfig;
+  @Input() dataSelections: VisualizationDataSelection[] = [];
 
   @Output() setGlobalFilter = new EventEmitter<VisualizationDataSelection[]>();
 
