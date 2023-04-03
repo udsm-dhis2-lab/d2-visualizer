@@ -9,7 +9,7 @@ Development Team from [UDSM](https://dhis2.udsm.ac.tz) develop and maintain this
 
 ## Installation & Usage
 
-To install the [d2-visualizer](https://www.npmjs.com/package/@iapps/d2-visualizer) run the following npm command [@npm i @iapps/visualization](https://www.npmjs.com/package/@iapps/visualization)
+To install the [d2-visualizer](https://www.npmjs.com/package/@iapps/d2-visualizer) run the following
 
 ### Install
 
