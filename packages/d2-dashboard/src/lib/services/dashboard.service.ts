@@ -9,8 +9,8 @@ import {
 import { Router } from '@angular/router';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Period } from '@iapps/period-utilities';
-import { BehaviorSubject, firstValueFrom, Observable, tap } from 'rxjs';
-import { distinctUntilChanged, map, take } from 'rxjs/operators';
+import { BehaviorSubject, firstValueFrom, Observable, of, tap } from 'rxjs';
+import { catchError, distinctUntilChanged, map, take } from 'rxjs/operators';
 import { DashboardLoaderComponent } from '../components/dashboard-loader/dashboard-loader.component';
 import { DIMENSION_LABELS } from '../constants/selection-dimension-label.constant';
 import {
@@ -62,7 +62,7 @@ export class DashboardService {
     this._dashboardStoreObservable$ = this._dashboardStore$.asObservable();
   }
 
-  getCurrentDashboard(id: string): Observable<DashboardObject> {
+  getCurrentDashboard(id: string): Observable<DashboardObject | undefined> {
     const config: DashboardConfig = this.dashboardConfigService.getConfig();
     this._detachOverlay();
     this._attachOverlay();
@@ -99,6 +99,14 @@ export class DashboardService {
         if (!this._firstTimeLoad) {
           this._snackBarRef.dismiss();
         }
+      }),
+      catchError((error) => {
+        this._detachOverlay();
+        this._snackBarRef = this._snackBar.open(
+          `There was a problem loading dashboard of ID: ${id}`,
+          'OK'
+        );
+        return of(undefined);
       })
     );
   }

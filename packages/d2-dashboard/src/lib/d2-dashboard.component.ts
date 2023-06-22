@@ -32,6 +32,9 @@ export class D2DashboardComponent implements OnInit {
   constructor(private d2DashboardMenuStore: Store<D2DashboardMenuState>) {}
 
   ngOnInit() {
+    this.d2DashboardMenuStore.dispatch(
+      DashboardMenuActions.loadDashboardMenus()
+    );
     this.dashboardMenuList$ = this.d2DashboardMenuStore.pipe(
       select(getAllDashboardMenus)
     );

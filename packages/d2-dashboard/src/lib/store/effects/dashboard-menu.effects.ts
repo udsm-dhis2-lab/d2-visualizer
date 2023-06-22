@@ -15,7 +15,7 @@ import { DashboardMenuActions } from '../actions';
 import { D2DashboardMenuState } from '../reducers';
 
 @Injectable()
-export class DashboardMenuEffects implements OnInitEffects {
+export class DashboardMenuEffects {
   loadDashboardMenus$ = createEffect(() =>
     this.actions$.pipe(
       ofType(DashboardMenuActions.loadDashboardMenus),
@@ -113,7 +113,7 @@ export class DashboardMenuEffects implements OnInitEffects {
     private _snackBarRef: MatSnackBarRef<TextOnlySnackBar>
   ) {}
 
-  ngrxOnInitEffects(): Action {
-    return DashboardMenuActions.loadDashboardMenus();
-  }
+  // ngrxOnInitEffects(): Action {
+  //   return
+  // }
 }
