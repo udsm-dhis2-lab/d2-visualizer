@@ -11,8 +11,8 @@ export function drawChart(
 
   let chartObject: any = {
     chart: getChartAttributeOptions(chartConfiguration),
-    title: getChartTitleObject(chartConfiguration),
-    subtitle: getChartSubtitleObject(chartConfiguration, analyticsObject),
+    title: getChartTitleObject(chartConfiguration, analyticsObject),
+    subtitle: '',
     credits: getChartCreditsOptions(),
     colors: getChartColors(),
     plotOptions: getPlotOptions(chartConfiguration),
@@ -798,19 +798,31 @@ function getAxisItems(
   return items;
 }
 
-function getChartTitleObject(chartConfiguration: any): any {
-  // if (chartConfiguration.hideTitle) {
-  //   return null;
-  // }
-  // return {
-  //   text: chartConfiguration.title,
-  //   align: 'center',
-  //   style: {
-  //     fontWeight: '500',
-  //     fontSize: '14px',
-  //   },
-  // };
-  return null;
+function getChartTitleObject(
+  chartConfiguration: any,
+  analyticsObject: any
+): any {
+  if (chartConfiguration.hideTitle) {
+    return null;
+  }
+
+  const metaData = analyticsObject?.metaData || {};
+  const subtitle = chartConfiguration.zAxisType
+    .map((dimension: any) => {
+      return (metaData[dimension] || [])
+        .map((item: any) => (metaData?.names || {})[item])
+        .join(',');
+    })
+    .filter((item: any) => item)
+    .join(' - ');
+  return {
+    text: subtitle,
+    align: 'center',
+    style: {
+      fontWeight: '400',
+      fontSize: '11px',
+    },
+  };
 }
 
 function getChartSubtitleObject(
@@ -1173,7 +1185,7 @@ function getYAxisOptions(chartConfiguration: any) {
             style: {
               color: '#000000',
               fontWeight: 'normal',
-              fontSize: '14px',
+              fontSize: '12px',
             },
           },
         },
@@ -1187,7 +1199,7 @@ function getYAxisOptions(chartConfiguration: any) {
         max: chartConfiguration.rangeAxisMaxValue,
         title: {
           text: yAxis.name,
-          style: { color: '#000000', fontWeight: 'normal', fontSize: '14px' },
+          style: { color: '#000000', fontWeight: 'normal', fontSize: '12px' },
         },
         opposite: yAxis.orientation === 'left' ? false : true,
       };

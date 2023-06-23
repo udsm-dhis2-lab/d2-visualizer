@@ -1533,12 +1533,12 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@iapps/ngx-dhis2-http-client@^2.0.8":
-  "integrity" "sha512-/5MP74q66v3vZiX98+05YsgizXc9ovEUxUKow2+STdSfi1BlkWXCYEEfAZbAxgyJdQF8cO725dCrSrFrzhBYdw=="
-  "resolved" "https://registry.npmjs.org/@iapps/ngx-dhis2-http-client/-/ngx-dhis2-http-client-2.0.8.tgz"
-  "version" "2.0.8"
+"@iapps/ngx-dhis2-http-client@^3.0.0-alpha.2":
+  "integrity" "sha512-v8uJNn39lxPFdqucw4Po/nCS25dD9chT2WGgP9Ste0TeXAAqwRfFDKm8e0DhBCcfX9OcvfnF3c3sFXVrF0sNog=="
+  "resolved" "https://registry.npmjs.org/@iapps/ngx-dhis2-http-client/-/ngx-dhis2-http-client-3.0.0-alpha.2.tgz"
+  "version" "3.0.0-alpha.2"
   dependencies:
-    "tslib" "^1.10.0"
+    "tslib" "^2.0.0"
 
 "@iapps/ngx-dhis2-org-unit-filter@^1.1.32":
   "integrity" "sha512-GciRjIdgAMDRXYDWoahtL7ExbUH94QblGV7fqC81gf78keu2Rea29WjxxrvzdkJEKF35fxsU0DKe5EimMu6/HQ=="

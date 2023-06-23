@@ -28,7 +28,7 @@
     "@angular/router": "15.1.1",
     "@iapps/function-analytics": "^1.0.0-beta.24",
     "@iapps/ngx-d2-table": "^1.7.1",
-    "@iapps/ngx-dhis2-http-client": "^2.0.8",
+    "@iapps/ngx-dhis2-http-client": "^3.0.0-alpha.2",
     "@iapps/ngx-dhis2-org-unit-filter": "^1.1.32",
     "@iapps/ngx-dhis2-period-filter": "^2.0.0",
     "@iapps/period-utilities": "^1.0.2",
