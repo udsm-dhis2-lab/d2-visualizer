@@ -40,7 +40,6 @@ export class DashboardMenuComponent implements AfterViewInit {
     this.dashboardMenuWidth = document.getElementById(
       'd2_dashboard__menu_list'
     )?.clientWidth;
-    // console.log(this.dashboardMenuWidth);
   }
 
   onSetCurrentDashboard(dashboardMenuItem: DashboardMenuObject) {

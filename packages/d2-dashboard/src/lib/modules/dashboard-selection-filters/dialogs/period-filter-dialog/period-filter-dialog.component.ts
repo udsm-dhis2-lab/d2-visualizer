@@ -21,6 +21,7 @@ export class PeriodFilterDialogComponent implements OnInit {
     allowRelativePeriodSelection: true,
     allowFixedPeriodSelection: true,
     contentHeight: '300px',
+    openFuturePeriods: 1,
   };
   constructor(
     private dialogRef: MatDialogRef<PeriodFilterDialogComponent>,
