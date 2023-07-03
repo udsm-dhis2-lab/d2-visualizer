@@ -3,7 +3,6 @@ import { each, findIndex, map, uniq } from 'lodash';
 export function tableCreate(id: string, analytics: any, configs: any) {
   //   var body = document.getElementsByTagName('body')[0];
 
-
   var body = document.getElementById(id);
   var tbl = document.createElement('table');
   tbl.style.width = '100%';
@@ -82,14 +81,16 @@ export function tableCreate(id: string, analytics: any, configs: any) {
       : rawDataObjectItem;
   });
 
-  console.log(dataObject);
-
   each(analytics?.metaData?.dimensions?.dx, (dx) => {
     var dxTableRow = document.createElement('tr');
 
     var dxNameTableData = document.createElement('td');
     dxNameTableData.appendChild(
-      document.createTextNode(analytics?.metaData?.names? analytics?.metaData?.names[dx]  : analytics?.metaData?.items[dx]['name'])
+      document.createTextNode(
+        analytics?.metaData?.names
+          ? analytics?.metaData?.names[dx]
+          : analytics?.metaData?.items[dx]['name']
+      )
     );
     dxNameTableData.style.backgroundColor = '#afc9e3';
 
@@ -186,14 +187,15 @@ export function tableCreate(id: string, analytics: any, configs: any) {
 }
 
 function findOuName(analytics: any): string {
- 
   let ouIndex = findIndex(analytics.headers, (headerObject: any) => {
     return headerObject['name'] == 'ou';
   });
 
   let ousArray = uniq(
     map(analytics?.rows, (analyticsRow) => {
-      return analytics?.metaData?.names? analytics?.metaData?.names[analyticsRow[ouIndex]] : analytics?.metaData?.items[analyticsRow[ouIndex]]['name'];
+      return analytics?.metaData?.names
+        ? analytics?.metaData?.names[analyticsRow[ouIndex]]
+        : analytics?.metaData?.items[analyticsRow[ouIndex]]['name'];
     })
   );
 
