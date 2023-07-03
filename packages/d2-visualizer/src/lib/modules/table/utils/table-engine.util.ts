@@ -140,20 +140,6 @@ export class D2TableEngine extends TableDrawable {
       table['title'] = visualizationTitle.getTitle();
     }
 
-    // Subtitle
-    // table['subtitle'] = _.map(tableConfiguration.filters, (filter: string) =>
-    //   _.map(
-    //     analyticsObject && analyticsObject.metaData
-    //       ? analyticsObject.metaData[filter] || []
-    //       : [],
-    //     (itemId: string) =>
-    //       analyticsObject &&
-    //       analyticsObject.metaData &&
-    //       analyticsObject.metaData.names
-    //         ? analyticsObject.metaData.names[itemId] || []
-    //         : []
-    //   ).join(', ')
-    // ).join(' - ');
     table['subtitle'] = visualizationTitle.getSubtitle();
 
     if (tableConfiguration.displayList) {
