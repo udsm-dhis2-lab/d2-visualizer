@@ -66,23 +66,17 @@
         [matTooltip]="'More'"
         [matMenuTriggerFor]="downloadMenu"
         class="d-print-none button button-sm mr-1"
+        *ngIf="downloadOptions.length > 0"
       >
         <mat-icon>download</mat-icon>
       </button>
       <mat-menu #downloadMenu="matMenu" xPosition="before">
         <button
           mat-menu-item
-          (click)="onDownload($event, 'PNG')"
-          *ngIf="isChart"
+          (click)="onDownload($event, downloadOption.format)"
+          *ngFor="let downloadOption of downloadOptions"
         >
-          <span>Download in png</span>
-        </button>
-        <button
-          mat-menu-item
-          (click)="onDownload($event, 'CSV')"
-          *ngIf="isChart"
-        >
-          <span>Download data in csv</span>
+          <span>{{downloadOption.label}}</span>
         </button>
       </mat-menu>
     </ng-container>

@@ -1,5 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { VISUALIZATION_TYPES, DownloadFormat } from '@iapps/d2-visualizer';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  DownloadFormat,
+  VISUALIZATION_TYPES,
+  VisualizationDownloadOption,
+  VisualizationDownloadOptionUtil,
+} from '@iapps/d2-visualizer';
 
 @Component({
   selector: 'd2-dashboard-item-header',
@@ -16,6 +21,7 @@ export class DashboardItemHeaderComponent {
   visualizationTypes!: any[];
 
   showVisualizationTypes!: boolean;
+  downloadOptions: VisualizationDownloadOption[] = [];
   @Output()
   download: EventEmitter<DownloadFormat> = new EventEmitter<DownloadFormat>();
   @Output() fullscreenChange: EventEmitter<any> = new EventEmitter<any>();
@@ -25,6 +31,12 @@ export class DashboardItemHeaderComponent {
   constructor() {
     this.visualizationTypes = VISUALIZATION_TYPES.filter(
       (visualizationType) => !visualizationType.hiddenInList
+    );
+  }
+
+  ngOnInit() {
+    this.downloadOptions = VisualizationDownloadOptionUtil.get(
+      this.visualizationType.type
     );
   }
 

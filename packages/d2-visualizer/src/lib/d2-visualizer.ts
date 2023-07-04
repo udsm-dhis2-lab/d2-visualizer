@@ -1,28 +1,26 @@
 import { Fn } from '@iapps/function-analytics';
+import * as _ from 'lodash';
 import { ChartVisualizer } from './modules/chart/chart-visualizer';
 import { CustomVisualizer } from './modules/custom/custom-visualizer';
 import { MapLayer } from './modules/map/layers/map-layer.model';
 import { TrackedEntityLayer } from './modules/map/layers/tracked-entity-layer.model';
 import { MapVisualizer } from './modules/map/map-visualizer';
 import { LegendSet } from './modules/map/models/legend-set.model';
-import { MapAnalytics } from './modules/map/models/map-analytic.model';
 import { D2VisualizerMapControl } from './modules/map/models/map-control.model';
 import { MapDashboardExtensionItem } from './modules/map/models/map-dashboard-extension.model';
 import { MapDashboardItem } from './modules/map/models/map-dashboard-item.model';
-import { MapUtil } from './modules/map/utils/map.util';
 import { SingleValueVisualizer } from './modules/single-value/single-value-visualizer';
 import { TableAnalytics } from './modules/table/models/table-analytics.model';
 import { TableConfiguration } from './modules/table/models/table-config.model';
 import { TableDashboardItem } from './modules/table/models/table-dashboard-item.model';
 import { TableUtil } from './modules/table/utils/table.util';
 import { getSelectionDimensionsFromFavorite } from './shared/helpers';
+import { Visualizer, VisualizerPlotOptions } from './shared/models';
 import { VisualizationConfiguration } from './shared/models/visualization-configuration.model';
 import {
   ChartType,
   VisualizationType,
 } from './shared/models/visualization-type.model';
-import * as _ from 'lodash';
-import { Visualizer, VisualizerPlotOptions } from './shared/models';
 
 export class D2Visualizer {
   dataSelections!: any[];
@@ -409,13 +407,15 @@ export class D2Visualizer {
       }
       case 'REPORT_TABLE':
       case 'PIVOT_TABLE':
-        new TableUtil()
+        this.visualizer = new TableUtil()
+          .setId(this.id)
           .setTableDashboardItem(this.tableDashboardItem)
           .setTableConfiguration(this.config.toTableConfig())
           .setTableAnalytics(data)
           .setLegendSet(this.legendSets)
-          .setPlotOptions(this.plotOptions)
-          .draw();
+          .setPlotOptions(this.plotOptions);
+
+        this.visualizer.draw();
         return this;
       case 'SINGLE_VALUE':
         new SingleValueVisualizer().setId(this.id).setData(data).draw();

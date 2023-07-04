@@ -11,10 +11,21 @@ export class VisualizationDownloader {
   htmlTable?: any;
   csvContent?: string;
   downloadFormat?: DownloadFormat;
+  elementId!: string;
   constructor(config?: IVisualizationDownloader) {
     this.filename = config?.filename || 'filename';
     this.htmlTable = config?.htmlTable;
     this.csvContent = config?.csvContent;
+  }
+
+  setElementId(id: string) {
+    this.elementId = id;
+    return this;
+  }
+
+  setFormat(format: DownloadFormat) {
+    this.downloadFormat = format;
+    return this;
   }
 
   setFilename(filename: string): VisualizationDownloader {
@@ -30,18 +41,21 @@ export class VisualizationDownloader {
 
   download() {
     switch (this.downloadFormat) {
-      case 'CSV':
+      case 'CSV': {
+        const tableElement = document?.getElementById(this.elementId);
+        this.csvContent = this._tableToCSV(tableElement);
         this.toCsv();
         break;
+      }
       default:
         break;
     }
   }
   toCsv() {
-    // const csvString = csv ? csv : this._tableToCSV(htmlTable);
     if (!this.csvContent) {
       throw new Error('CSV content is not supplied');
     }
+
     const blob = new Blob([this.csvContent], { type: 'text/csv' });
 
     if ((navigator as any).msSaveOrOpenBlob) {

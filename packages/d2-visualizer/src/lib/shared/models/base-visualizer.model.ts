@@ -62,5 +62,11 @@ export class BaseVisualizer {
     return this;
   }
 
-  download(downloadFormat: DownloadFormat) {}
+  /**
+   *
+   * @param downloadFormat
+   */
+  download(downloadFormat: DownloadFormat) {
+    const filename = this._config?.title || 'chart-data';
+  }
 }

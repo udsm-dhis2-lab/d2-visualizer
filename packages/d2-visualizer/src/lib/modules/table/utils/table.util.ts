@@ -1,4 +1,10 @@
-import { VisualizerPlotOptions } from '../../../shared';
+import {
+  BaseVisualizer,
+  DownloadFormat,
+  VisualizationDownloader,
+  Visualizer,
+  VisualizerPlotOptions,
+} from '../../../shared';
 import { TablePayload } from '../../map/models/table-object.model';
 import { LegendSet } from '../models/legend-set.model';
 import { TableAnalytics } from '../models/table-analytics.model';
@@ -6,7 +12,7 @@ import { TableConfiguration } from '../models/table-config.model';
 import { TableDashboardItem } from '../models/table-dashboard-item.model';
 import { D2TableEngine } from './table-engine.util';
 
-export class TableUtil {
+export class TableUtil extends BaseVisualizer implements Visualizer {
   /**
    *
    */
@@ -20,6 +26,7 @@ export class TableUtil {
    *
    */
   constructor() {
+    super();
     this.tableAnalytics = {};
     this.tableConfiguration = {};
     this.legendSets = [];
@@ -246,9 +253,8 @@ export class TableUtil {
       this._plotOptions?.height
     } - 24px)" >
      <table class="table table-bordered table-condensed custom-table"
-        #table
-        [id]="tableConfiguration?.id"
-        *ngIf="tablePayload?.rows?.length !== 0">
+        id="pivot_table__${this._id}"
+       >
           <thead>
           <!--title-->
           <tr class="table-title">
@@ -266,9 +272,6 @@ export class TableUtil {
     </div>`;
   }
 
-  /**
-   *
-   */
   public draw() {
     const d2TableEngine = new D2TableEngine();
 
@@ -288,6 +291,23 @@ export class TableUtil {
         const tableHTML = this.getTableHTML(tableData);
         renderingElement.innerHTML = tableHTML;
       }
+    }
+  }
+
+  /**
+   *
+   * @param downloadFormat
+   */
+  override download(downloadFormat: DownloadFormat) {
+    const filename = this._config?.title || 'table-data';
+    switch (downloadFormat) {
+      case 'CSV':
+        new VisualizationDownloader()
+          .setFilename(filename)
+          .setElementId(`pivot_table__${this._id}`)
+          .setFormat(downloadFormat)
+          .download();
+        break;
     }
   }
 }
