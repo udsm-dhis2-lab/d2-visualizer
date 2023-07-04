@@ -1,1 +1,1 @@
-export type DownloadFormat = 'PNG' | 'CSV';
+export type DownloadFormat = 'PNG' | 'CSV' | 'XLS';

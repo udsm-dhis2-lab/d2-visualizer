@@ -299,9 +299,10 @@ export class TableUtil extends BaseVisualizer implements Visualizer {
    * @param downloadFormat
    */
   override download(downloadFormat: DownloadFormat) {
-    const filename = this._config?.title || 'table-data';
+    const filename = this.tableConfiguration?.title || 'table-data';
     switch (downloadFormat) {
       case 'CSV':
+      case 'XLS':
         new VisualizationDownloader()
           .setFilename(filename)
           .setElementId(`pivot_table__${this._id}`)

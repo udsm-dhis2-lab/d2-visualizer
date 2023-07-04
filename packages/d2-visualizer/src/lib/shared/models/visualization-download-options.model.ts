@@ -29,6 +29,12 @@ export const VISUALIZATION_DOWNLOAD_OPTIONS: VisualizationDownloadOption[] = [
     format: 'CSV',
     allowedVisualizations: ['PIVOT_TABLE'],
   },
+  {
+    label: 'Download data in XLS',
+    icon: '',
+    format: 'XLS',
+    allowedVisualizations: ['PIVOT_TABLE'],
+  },
 ];
 export class VisualizationDownloadOptionUtil {
   static get(
