@@ -43,7 +43,7 @@ export class VisualizationDownloader {
     switch (this.downloadFormat) {
       case 'CSV': {
         const tableElement = document?.getElementById(this.elementId);
-        this.content = this._tableToCSV(tableElement);
+        this.content = this.content ?? this._tableToCSV(tableElement);
         this.toCsv();
         break;
       }
