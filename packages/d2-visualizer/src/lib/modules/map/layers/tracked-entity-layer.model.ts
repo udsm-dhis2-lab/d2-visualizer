@@ -1,11 +1,11 @@
-import { BaseVisualizer } from '../../../shared/models/base-visualizer.model';
-declare let mapboxgl: any;
-import { flatten, startCase } from 'lodash';
 import { format } from 'date-fns';
+import { flatten } from 'lodash';
+import { BaseVisualizer } from '../../../shared/models/base-visualizer.model';
 import {
   SelectionFilterUtil,
   TrackedEntityFilterUtil,
 } from '../../../shared/utilities';
+declare let mapboxgl: any;
 
 export class TrackedEntityLayer extends BaseVisualizer {
   private map: any;
