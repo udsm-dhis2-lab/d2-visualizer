@@ -1,6 +1,7 @@
 import { BaseVisualizer } from '../../../shared/models/base-visualizer.model';
 declare let mapboxgl: any;
-import { flatten } from 'lodash';
+import { flatten, startCase } from 'lodash';
+import { format } from 'date-fns';
 import {
   SelectionFilterUtil,
   TrackedEntityFilterUtil,
@@ -58,13 +59,32 @@ export class TrackedEntityLayer extends BaseVisualizer {
   }
 
   getPopupContent(marker: any) {
-    let htmlContent = this._config?.popUpTemplate || '';
-
+    // let htmlContent = this._config?.popUpTemplate || '';
+    const htmlContent = `<div>
+      <h6>${this._program.name || 'Report details'}</h6>
+      ${(marker?.properties?.reportAttributes || [])
+        .map(
+          (reportAttribute: { label: any; value: any }) =>
+            `<div><span style="color: gray">${reportAttribute.label}</span>:&nbsp;${reportAttribute.value}</div>`
+        )
+        .join('')}
+        <div style="border-bottom: 1px rgba(0,0,0,0.1) solid; margin-top: 8px; margin-bottom: 8px"></div>
+       ${(marker?.properties.attributes || [])
+         .map(
+           (
+             attribute: any
+           ) => ` <div style="display: flex; justify-content: space-between">
+       <div style="color: gray">${attribute.label}</div>
+       <div>${attribute.value}</div>
+     </div>`
+         )
+         .join('')}
+    </div>`;
     // TODO: Find best way to handle custom templates
-    htmlContent = htmlContent.replace(
-      new RegExp('A<' + marker?.properties?.dimensionItem + '>', 'g'),
-      marker?.properties?.value
-    );
+    // htmlContent = htmlContent.replace(
+    //   new RegExp('A<' + marker?.properties?.dimensionItem + '>', 'g'),
+    //   marker?.properties?.value
+    // );
 
     return htmlContent;
   }
@@ -86,7 +106,8 @@ export class TrackedEntityLayer extends BaseVisualizer {
         ).map((trackedEntityInstance) => {
           return flatten(
             (trackedEntityInstance.enrollments || []).map((enrollment: any) => {
-              const { geometry, orgUnitName } = enrollment;
+              const { geometry, orgUnitName, enrollmentDate, incidentDate } =
+                enrollment;
 
               if (!geometry) {
                 return [];
@@ -105,12 +126,66 @@ export class TrackedEntityLayer extends BaseVisualizer {
                 (symbol: any) => symbol.value === attributeValue?.value
               );
 
+              const reportAttributes = [
+                {
+                  value: orgUnitName,
+                  label: 'Reporting unit',
+                },
+                {
+                  value: format(new Date(enrollmentDate), 'MMM dd, yyyy'),
+                  label: this._program.enrollmentDateLabel || 'Enrollment date',
+                },
+                {
+                  value: format(new Date(incidentDate), 'MMM dd, yyyy'),
+                  label: this._program.enrollmentDateLabel || 'Incident date',
+                },
+              ];
+
+              const attributes = (trackedEntityInstance.attributes || [])
+                .map((attribute: any, index: number) => {
+                  const programTrackedEntityAttribute = (
+                    this._program.programTrackedEntityAttributes || []
+                  ).find(
+                    (programTrackedEntityAttribute: any) =>
+                      programTrackedEntityAttribute.trackedEntityAttribute
+                        ?.id === attribute.attribute
+                  );
+
+                  if (!programTrackedEntityAttribute) {
+                    return null;
+                  }
+
+                  const codedValue =
+                    programTrackedEntityAttribute?.trackedEntityAttribute.optionSet?.options?.find(
+                      (option: { code: any }) => option.code === attribute.value
+                    );
+
+                  return {
+                    label:
+                      programTrackedEntityAttribute?.trackedEntityAttribute
+                        ?.formName ||
+                      programTrackedEntityAttribute?.trackedEntityAttribute
+                        ?.name,
+                    value: codedValue?.name || attribute.value,
+                    sortOrder:
+                      programTrackedEntityAttribute?.sortOrder || index,
+                    displayInList: programTrackedEntityAttribute?.displayInList,
+                  };
+                })
+                .filter((attribute: any) => attribute?.displayInList)
+                .sort(
+                  (a: { sortOrder: number }, b: { sortOrder: number }) =>
+                    a.sortOrder - b.sortOrder
+                );
+
               return {
                 type: 'Feature',
                 geometry,
                 properties: {
                   title: orgUnitName,
                   orgUnitName: orgUnitName,
+                  reportAttributes,
+                  attributes,
                   symbol:
                     markerSymbol?.symbol || './assets/images/marker-dot.svg',
                   value: attributeValue?.value,

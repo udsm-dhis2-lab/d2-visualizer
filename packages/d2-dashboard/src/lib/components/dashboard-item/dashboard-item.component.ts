@@ -145,7 +145,7 @@ export class DashboardItemComponent implements OnInit, OnChanges {
             )
           ));
 
-        const trackedEntityInstances = this.visualizationConfig
+        const trackedEntityInstanceResponse = this.visualizationConfig
           .isTrackerVisualization
           ? await this._getTrackedEntityInstances()
           : undefined;
@@ -159,7 +159,10 @@ export class DashboardItemComponent implements OnInit, OnChanges {
           .setPlotOptions(
             new VisualizerPlotOptions().setHeight(this.visualizationHeight)
           )
-          .setTrackedEntityInstances(trackedEntityInstances as any[])
+          .setTrackedEntityInstances(
+            trackedEntityInstanceResponse?.trackedEntityInstances as any[]
+          )
+          .setProgram(trackedEntityInstanceResponse?.program as any)
           .draw();
       } catch (error) {
         this._loading$.next(false);

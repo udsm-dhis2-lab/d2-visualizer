@@ -1,17 +1,9 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import { Period } from '@iapps/period-utilities';
-import {
-  catchError,
-  firstValueFrom,
-  map,
-  Observable,
-  of,
-  switchMap,
-} from 'rxjs';
-import { DashboardObject, VisualizationDataSelection } from '../models';
+import { catchError, map, Observable, of, switchMap, zip } from 'rxjs';
+import { VisualizationDataSelection } from '../models';
 import { DashboardConfigService } from './dashboard-config.service';
-import * as moment from 'moment';
 
 @Injectable()
 export class TrackerDashboardService {
@@ -29,16 +21,24 @@ export class TrackerDashboardService {
 
     return this._getOrgUnit(dataSelections).pipe(
       switchMap((orgUnit) =>
-        this.httpClient
-          .get(
-            `trackedEntityInstances.json?fields=attributes[attribute,value],enrollments[enrollment,orgUnit,orgUnitName,geometry,events[event,programStage,dataValues[dataElement, value]]]&ou=${
-              orgUnit.id
-            }&ouMode=DESCENDANTS&&order=created:desc&program=${program}&skipPaging=true&programStartDate=${
-              period.startDate || period.startdate
-            }&programEndDate=${period.endDate || period.enddate}`
+        zip(
+          this.httpClient
+            .get(
+              `trackedEntityInstances.json?fields=attributes[attribute,code,value],enrollments[enrollment,enrollmentDate,incidentDate,orgUnit,orgUnitName,geometry,events[event,programStage,dataValues[dataElement,value]]]&ou=${
+                orgUnit.id
+              }&ouMode=DESCENDANTS&&order=created:desc&program=${program}&skipPaging=true&programStartDate=${
+                period.startDate || period.startdate
+              }&programEndDate=${period.endDate || period.enddate}`
+            )
+            .pipe(map((res) => res?.trackedEntityInstances || [])),
+          this.httpClient.get(
+            `programs/${program}.json?fields=id,name,enrollmentDateLabel,incidentDateLabel,programTrackedEntityAttributes[displayInList,sortOrder,trackedEntityAttribute[id,name,formName,optionSet[id,name,options[id,code,name]]]]`
           )
-          .pipe(map((res) => res?.trackedEntityInstances || []))
+        )
       ),
+      map((results: any[]) => {
+        return { trackedEntityInstances: results[0], program: results[1] };
+      }),
       catchError(() => of(undefined))
     );
   }

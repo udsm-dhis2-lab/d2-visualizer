@@ -37,6 +37,7 @@ export class D2Visualizer {
   dataAnalytics: unknown = null;
   layerStyle = 'default';
   trackedEntityInstances?: any[];
+  program: any;
   data!: any;
   visualizer!: Visualizer;
   plotOptions!: VisualizerPlotOptions;
@@ -174,11 +175,21 @@ export class D2Visualizer {
 
   /**
    *
-   * @param analytics
+   * @param tracked entity instances
    * @returns
    */
   setTrackedEntityInstances(trackedEntityInstances: any[]) {
     this.trackedEntityInstances = trackedEntityInstances;
+    return this;
+  }
+
+  /**
+   *
+   * @param program
+   * @returns
+   */
+  setProgram(program: any) {
+    this.program = program;
     return this;
   }
 
@@ -446,6 +457,7 @@ export class D2Visualizer {
           .setConfig(this.config)
           .setSelections(dataSelections)
           .setTrackedEntityInstances(this.trackedEntityInstances)
+          .setProgram(this.program)
           .draw();
         return this;
       }

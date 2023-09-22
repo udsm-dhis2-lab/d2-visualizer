@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { D2Visualizer } from '@iapps/d2-visualizer';
 import { Fn } from '@iapps/function-analytics';
 
 @Component({

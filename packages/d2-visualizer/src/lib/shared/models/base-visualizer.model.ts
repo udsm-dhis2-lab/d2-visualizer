@@ -12,6 +12,7 @@ export class BaseVisualizer {
   protected _config?: VisualizationConfiguration;
   protected _dataSelections: any;
   protected _trackedEntityInstances?: any[];
+  protected _program: any;
   /**
    *
    * @param id
@@ -39,6 +40,16 @@ export class BaseVisualizer {
    */
   setTrackedEntityInstances(trackedEntityInstances?: any[]) {
     this._trackedEntityInstances = trackedEntityInstances;
+    return this;
+  }
+
+  /**
+   *
+   * @param program
+   * @returns
+   */
+  setProgram(program: any) {
+    this._program = program;
     return this;
   }
 
