@@ -45,7 +45,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     }),
     D2DashboardModule.forRoot({
       useDataStore: true,
-      dataStoreNamespace: 'eidsr-dashboard',
+      dataStoreNamespace: 'afyamsafiri-dashboard',
       rootUrl: 'dashboard',
       selectionConfig: {
         allowSelectionOnStartUp: false,

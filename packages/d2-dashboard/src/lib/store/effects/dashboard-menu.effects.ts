@@ -72,7 +72,7 @@ export class DashboardMenuEffects {
                 selectedDashboardSubMenu: currentDashboardSubMenu,
               })
             );
-          } else {
+          } else if (selectedDashboardMenu) {
             this._snackBarRef = this._snackBar.open(
               `Loading ${selectedDashboardMenu.name} Dashboard`,
               '',
