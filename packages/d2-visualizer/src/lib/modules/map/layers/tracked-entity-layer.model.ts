@@ -6,6 +6,10 @@ import {
   TrackedEntityFilterUtil,
 } from '../../../shared/utilities';
 declare let mapboxgl: any;
+import { StylesControl } from 'mapbox-gl-controls';
+import { MapboxStyleSwitcherControl } from 'mapbox-gl-style-switcher';
+// import 'mapbox-gl-controls/lib/controls.css';
+// import 'mapbox-gl-style-switcher/styles.css';
 
 export class TrackedEntityLayer extends BaseVisualizer {
   private map: any;
@@ -28,7 +32,10 @@ export class TrackedEntityLayer extends BaseVisualizer {
         center: this._config?.mapCenter,
         zoom: this._config?.zoom || 5,
       });
+
       this.map.addControl(new mapboxgl.NavigationControl());
+      // this.map.addControl(new StylesControl(), 'top-left');
+      this.map.addControl(new MapboxStyleSwitcherControl());
 
       const geojson = this.getGeoJSON();
 

@@ -13,7 +13,10 @@
         "polyfills": "apps/demo/src/polyfills.ts",
         "tsConfig": "apps/demo/tsconfig.app.json",
         "assets": ["apps/demo/src/favicon.ico", "apps/demo/src/assets"],
-        "styles": ["apps/demo/src/styles.scss"],
+        "styles": [
+          "apps/demo/src/styles.scss",
+          "node_modules/mapbox-gl-style-switcher/styles.css"
+        ],
         "scripts": []
       },
       "configurations": {
