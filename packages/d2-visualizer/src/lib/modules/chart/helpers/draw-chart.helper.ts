@@ -325,19 +325,13 @@ function extendOtherChartOptions(
     (color: any) => color
   );
 
-  const xAxisCategories = getXAxisOptions(
-    getRefinedXAxisCategories(series),
-    chartConfiguration.type
-  );
-
-  const categories = xAxisCategories.categories.map(
-    (item: { name: any }) => item?.name || ''
-  );
-
   return {
     ...initialChartObject,
     yAxis: getYAxisOptions(chartConfiguration),
-    xAxis: { categories: categories },
+    xAxis: getXAxisOptions(
+      getRefinedXAxisCategories(series),
+      chartConfiguration
+    ),
     colors: newColors.length > 0 ? newColors : initialChartObject.colors,
     series,
   };
@@ -972,9 +966,12 @@ function getLegendOptions(chartConfiguration: any) {
 
 function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
   let xAxisOptions: any = {};
-  const xAxisCategoriesNames = xAxisCategories.map(
-    (category) => category?.name || ''
+
+  const xAxisConfig: any = chartConfiguration.axes?.find(
+    (axis: Record<string, unknown>) => axis['type'] === 'DOMAIN'
   );
+
+  const allowDecimals = xAxisConfig?.decimals !== undefined;
 
   switch (chartConfiguration.type) {
     case 'radar':
@@ -992,24 +989,48 @@ function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
         {},
         {
           categories: xAxisCategories,
+          allowDecimals,
           labels: {
+            format: allowDecimals
+              ? `{value:.${xAxisConfig.decimals ?? 1}f}`
+              : undefined,
             y: 10,
             rotation: 90,
             useHTML: true,
             allowOverlap: true,
             style: {
-              color: '#000000',
-              fontWeight: 'normal',
-              fontSize: '12px',
+              color: xAxisConfig?.label?.fontStyle?.textColor || '#000000',
+              fontWeight: xAxisConfig?.label?.fontStyle?.bold
+                ? 'bold'
+                : 'normal',
+              fontSize: xAxisConfig?.label?.fontStyle?.fontSize || '11px',
               wordBreak: 'break-all',
               textAlign: 'center',
               textOverflow: 'allow',
+            },
+          },
+          title: {
+            text: xAxisConfig?.title?.text,
+            margin: 16,
+            align: ChartAxisUtil.sanitizeYAxisTextAlignment(
+              xAxisConfig?.title?.fontStyle?.textAlign
+            ),
+            style: {
+              color: xAxisConfig?.title?.fontStyle?.textColor || '#000000',
+              fontWeight: xAxisConfig?.title?.fontStyle?.bold
+                ? 'bold'
+                : 'normal',
+              fontStyle: xAxisConfig?.title?.fontStyle?.italic
+                ? 'italic'
+                : 'normal',
+              fontSize: xAxisConfig?.title?.fontStyle?.fontSize || '13px',
             },
           },
         }
       );
       break;
   }
+
   if (
     _.has(xAxisOptions, 'categories') &&
     xAxisOptions.categories.length > 10 &&
@@ -1090,13 +1111,16 @@ function getYAxisOptions(chartConfiguration: any) {
     );
   } else {
     newYAxes = _.map(yAxes, (yAxis: any, yAxisIndex: any) => {
+      const allowDecimals = yAxis.decimals !== undefined;
       return {
         reversedStacks: false,
         min: chartConfiguration.rangeAxisMinValue,
         max: chartConfiguration.rangeAxisMaxValue,
-        allowDecimals: yAxis.decimals !== 0,
+        allowDecimals,
         labels: {
-          format: `{value:.${yAxis.decimals ?? 1}f}`,
+          format: allowDecimals
+            ? `{value:.${yAxis.decimals ?? 1}f}`
+            : undefined,
           style: {
             color: yAxis?.label?.fontStyle?.textColor || '#000000',
             fontWeight: yAxis?.label?.fontStyle?.bold ? 'bold' : 'normal',
