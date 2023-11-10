@@ -1090,16 +1090,28 @@ function getYAxisOptions(chartConfiguration: any) {
     );
   } else {
     newYAxes = _.map(yAxes, (yAxis: any, yAxisIndex: any) => {
+      console.log(
+        ChartAxisUtil.sanitizeYAxisTextAlignment(
+          yAxis?.title?.fontStyle?.textAlign
+        )
+      );
       return {
         reversedStacks: false,
         min: chartConfiguration.rangeAxisMinValue,
         max: chartConfiguration.rangeAxisMaxValue,
+        labels: {
+          style: {
+            color: yAxis?.label?.fontStyle?.textColor || '#000000',
+            fontWeight: yAxis?.label?.fontStyle?.bold ? 'bold' : 'normal',
+            fontSize: yAxis?.label?.fontStyle?.fontSize || '11px',
+          },
+        },
         title: {
           text: yAxis?.title?.text,
-          textAlign: ChartAxisUtil.sanitizeYAxisTextAlignment(
+          margin: 24,
+          align: ChartAxisUtil.sanitizeYAxisTextAlignment(
             yAxis?.title?.fontStyle?.textAlign
           ),
-          margin: 0,
           style: {
             color: yAxis?.title?.fontStyle?.textColor || '#000000',
             fontWeight: yAxis?.title?.fontStyle?.bold ? 'bold' : 'normal',
@@ -1136,9 +1148,6 @@ function getYAxisOptions(chartConfiguration: any) {
         };
         break;
       default:
-        yAxis['labels'] = {
-          style: { color: '#000000', fontWeight: 'normal', fontSize: '14px' },
-        };
         yAxis['plotLines'] = [
           {
             color: '#000000',
