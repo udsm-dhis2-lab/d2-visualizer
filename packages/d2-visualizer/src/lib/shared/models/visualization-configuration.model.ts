@@ -170,7 +170,11 @@ export class VisualizationConfiguration {
   }
 
   get axes(): any[] {
-    return [];
+    return this.config.axes || [];
+  }
+
+  get seriesOptions(): any[] {
+    return this.config.series;
   }
 
   get xAxisType(): string[] {

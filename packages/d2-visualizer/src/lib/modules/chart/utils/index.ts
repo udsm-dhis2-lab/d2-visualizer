@@ -3,3 +3,4 @@
 // license that can be found in the LICENSE file.
 export * from './chart-axis.util';
 export * from './chart-series.util';
+export * from './chart-type.util';

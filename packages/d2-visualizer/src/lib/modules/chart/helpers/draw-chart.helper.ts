@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import { ChartAxisUtil } from '../utils';
+import { ChartSeries } from '../models';
 
 export function drawChart(
   incomingAnalyticsObject: any,
@@ -78,7 +79,7 @@ function extendSpiderWebChartOptions(
   chartConfiguration: any
 ) {
   const newChartObject = _.clone(initialChartObject);
-  const yAxisSeriesItems: any[] = getAxisItems(
+  const yAxisSeriesItems: any[] = ChartAxisUtil.getYAxisItems(
     analyticsObject,
     chartConfiguration.yAxisType
   );
@@ -99,7 +100,10 @@ function extendSpiderWebChartOptions(
   const sortedSeries = getSortableSeries(
     getChartSeries(
       analyticsObject,
-      ChartAxisUtil.getAxisItems(analyticsObject, chartConfiguration.xAxisType),
+      ChartAxisUtil.getXAxisItems(
+        analyticsObject,
+        chartConfiguration.xAxisType
+      ),
       yAxisSeriesItems,
       chartConfiguration
     ),
@@ -136,7 +140,7 @@ function extendPieChartOptions(
   chartConfiguration: any
 ) {
   const newChartObject = _.clone(initialChartObject);
-  const yAxisSeriesItems: any[] = getAxisItems(
+  const yAxisSeriesItems: any[] = ChartAxisUtil.getYAxisItems(
     analyticsObject,
     chartConfiguration.yAxisType
   );
@@ -147,7 +151,10 @@ function extendPieChartOptions(
   const sortedSeries = getSortableSeries(
     getChartSeries(
       analyticsObject,
-      ChartAxisUtil.getAxisItems(analyticsObject, chartConfiguration.xAxisType),
+      ChartAxisUtil.getXAxisItems(
+        analyticsObject,
+        chartConfiguration.xAxisType
+      ),
       yAxisSeriesItems,
       chartConfiguration
     ),
@@ -256,7 +263,7 @@ function extendSolidGaugeChartOptions(
 ) {
   // todo make gauge chart more understanble in analyisis
   const newChartObject = _.clone(initialChartObject);
-  const yAxisSeriesItems: any[] = getAxisItems(
+  const yAxisSeriesItems: any[] = ChartAxisUtil.getYAxisItems(
     analyticsObject,
     chartConfiguration.yAxisType
   );
@@ -277,7 +284,10 @@ function extendSolidGaugeChartOptions(
   const sortedSeries = getSortableSeries(
     getChartSeries(
       analyticsObject,
-      ChartAxisUtil.getAxisItems(analyticsObject, chartConfiguration.xAxisType),
+      ChartAxisUtil.getXAxisItems(
+        analyticsObject,
+        chartConfiguration.xAxisType
+      ),
       yAxisSeriesItems,
       chartConfiguration
     ),
@@ -292,47 +302,38 @@ function extendOtherChartOptions(
   analyticsObject: any,
   chartConfiguration: any
 ): any {
-  const yAxisSeriesItems: any[] = getAxisItems(
-    analyticsObject,
-    chartConfiguration.yAxisType
-  );
-
   /**
    * Sort the corresponding series
    */
-  const sortedSeries = getSortableSeries(
-    getChartSeries(
-      analyticsObject,
-      ChartAxisUtil.getAxisItems(analyticsObject, chartConfiguration.xAxisType),
-      yAxisSeriesItems,
-      chartConfiguration
-    ),
-    chartConfiguration.cumulativeValues ? -1 : chartConfiguration.sortOrder
-  );
 
-  /**
-   * Update series with axis options
-   */
-  const seriesWithAxisOptions = updateSeriesWithAxisOptions(
-    sortedSeries,
-    chartConfiguration.multiAxisTypes,
-    chartConfiguration.touched
-  );
+  const series = new ChartSeries({
+    analyticsObject,
+    xAxisItems: ChartAxisUtil.getXAxisItems(
+      analyticsObject,
+      chartConfiguration.xAxisType
+    ),
+    yAxisItems: ChartAxisUtil.getYAxisItems(
+      analyticsObject,
+      chartConfiguration.yAxisType
+    ),
+    chartConfiguration,
+  }).get();
 
   /**
    * Update colors by considering if series has data
    */
   const newColors: any[] = _.filter(
-    _.map(seriesWithAxisOptions, (seriesObject: { data: { color: any }[] }) =>
+    _.map(series, (seriesObject: { data: { color: any }[] }) =>
       seriesObject.data[0] ? seriesObject.data[0].color : undefined
     ),
     (color: any) => color
   );
 
   const xAxisCategories = getXAxisOptions(
-    getRefinedXAxisCategories(seriesWithAxisOptions),
+    getRefinedXAxisCategories(series),
     chartConfiguration.type
   );
+
   const categories = xAxisCategories.categories.map(
     (item: { name: any }) => item?.name || ''
   );
@@ -342,7 +343,7 @@ function extendOtherChartOptions(
     yAxis: getYAxisOptions(chartConfiguration),
     xAxis: { categories: categories },
     colors: newColors.length > 0 ? newColors : initialChartObject.colors,
-    series: seriesWithAxisOptions,
+    series,
   };
 }
 
@@ -742,27 +743,6 @@ function getDataLabelsOptions(chartConfiguration: any) {
   }
 
   return dataLabels;
-}
-
-function getAxisItems(
-  analyticsObject: any,
-  axisType: string,
-  isCategory = false
-) {
-  let items: any[] = [];
-  const metadataNames = analyticsObject.metaData.names;
-  const itemKeys = analyticsObject.metaData[axisType];
-
-  if (itemKeys) {
-    items = _.map(itemKeys, (itemKey: string | number) => {
-      return {
-        id: itemKey,
-        name: metadataNames[itemKey],
-      };
-    });
-  }
-
-  return items;
 }
 
 function getChartTitleObject(

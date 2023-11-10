@@ -4,7 +4,7 @@
 import * as _ from 'lodash';
 // TODO: Find best way to get axis items without using underscore
 export class ChartAxisUtil {
-  static getAxisItems(analyticsObject: any, axisTypeArray: any[]) {
+  static getXAxisItems(analyticsObject: any, axisTypeArray: any[]) {
     let items: any[] = [];
     const metadataNames = analyticsObject?.metaData?.names;
     axisTypeArray.forEach((axisType, axisIndex) => {
@@ -31,6 +31,23 @@ export class ChartAxisUtil {
         }
       }
     });
+
+    return items;
+  }
+
+  static getYAxisItems(analyticsObject: any, axisType: string) {
+    let items: any[] = [];
+    const metadataNames = analyticsObject.metaData.names;
+    const itemKeys = analyticsObject.metaData[axisType];
+
+    if (itemKeys) {
+      items = _.map(itemKeys, (itemKey: string | number) => {
+        return {
+          id: itemKey,
+          name: metadataNames[itemKey],
+        };
+      });
+    }
 
     return items;
   }
