@@ -48,7 +48,7 @@ export const d2DashboardMenuFeature = createFeature({
       DashboardMenuActions.setCurrentDashboardMenu,
       (state, { selectedDashboardMenu, selectedDashboardSubMenu }) => ({
         ...state,
-        selectedDashboardMenuId: selectedDashboardMenu.id,
+        selectedDashboardMenuId: selectedDashboardMenu?.id,
         selectedDashboardSubMenuId: selectedDashboardSubMenu?.id || null,
       })
     ),
@@ -56,7 +56,7 @@ export const d2DashboardMenuFeature = createFeature({
       DashboardMenuActions.setCurrentDashboardSubMenu,
       (state, { selectedDashboardSubMenu }) => ({
         ...state,
-        selectedDashboardSubMenuId: selectedDashboardSubMenu.id,
+        selectedDashboardSubMenuId: selectedDashboardSubMenu?.id,
       })
     )
   ),
