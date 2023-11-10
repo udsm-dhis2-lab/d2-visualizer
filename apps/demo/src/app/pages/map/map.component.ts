@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
 import { chartConfigurations } from '../chart/config/chart-viz.config';
 import { chartConfigs } from '../chart/config/chart.config';
-import { ChartConfiguration } from '../chart/models/chart-viz.model';
+import { ChartConfiguration } from '../chart/models/chart-configuration.model';
 import { Chart } from '../chart/models/chart.model';
 import { getQueryParamValue } from '../../shared/helpers/param.helper';
 import { MapCodeConfig } from './models/map-config.model';

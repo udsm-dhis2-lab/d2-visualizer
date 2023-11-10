@@ -158,7 +158,7 @@ export class D2Visualizer {
    * @param config {any}
    * @returns {D2Visualizer}
    */
-  setConfig(config: any) {
+  setConfig(config: Record<string, unknown>) {
     this.config = new VisualizationConfiguration(config);
     return this;
   }

@@ -1,3 +1,5 @@
+import { MultiAxisType } from './multi-axis-type.model';
+
 export interface ChartConfiguration {
   renderId: string;
   type: string;
@@ -22,12 +24,4 @@ export interface ChartConfiguration {
   yAxisType: string;
   zAxisType: string[];
   touched: boolean;
-}
-
-export interface MultiAxisType {
-  id: string;
-  axis: string;
-  name: string;
-  type: string;
-  color: string;
 }

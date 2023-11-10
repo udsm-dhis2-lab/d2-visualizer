@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import { ChartAxisUtil } from '../utils';
 
 export function drawChart(
   incomingAnalyticsObject: any,
@@ -98,7 +99,7 @@ function extendSpiderWebChartOptions(
   const sortedSeries = getSortableSeries(
     getChartSeries(
       analyticsObject,
-      getAxisItemsNew(analyticsObject, chartConfiguration.xAxisType, true),
+      ChartAxisUtil.getAxisItems(analyticsObject, chartConfiguration.xAxisType),
       yAxisSeriesItems,
       chartConfiguration
     ),
@@ -146,7 +147,7 @@ function extendPieChartOptions(
   const sortedSeries = getSortableSeries(
     getChartSeries(
       analyticsObject,
-      getAxisItemsNew(analyticsObject, chartConfiguration.xAxisType, true),
+      ChartAxisUtil.getAxisItems(analyticsObject, chartConfiguration.xAxisType),
       yAxisSeriesItems,
       chartConfiguration
     ),
@@ -276,7 +277,7 @@ function extendSolidGaugeChartOptions(
   const sortedSeries = getSortableSeries(
     getChartSeries(
       analyticsObject,
-      getAxisItemsNew(analyticsObject, chartConfiguration.xAxisType, true),
+      ChartAxisUtil.getAxisItems(analyticsObject, chartConfiguration.xAxisType),
       yAxisSeriesItems,
       chartConfiguration
     ),
@@ -302,7 +303,7 @@ function extendOtherChartOptions(
   const sortedSeries = getSortableSeries(
     getChartSeries(
       analyticsObject,
-      getAxisItemsNew(analyticsObject, chartConfiguration.xAxisType, true),
+      ChartAxisUtil.getAxisItems(analyticsObject, chartConfiguration.xAxisType),
       yAxisSeriesItems,
       chartConfiguration
     ),
@@ -388,6 +389,7 @@ function updateSeriesWithAxisOptions(
         return newDataObject;
       });
     }
+
     return newSeriesObject;
   });
 }
@@ -740,41 +742,6 @@ function getDataLabelsOptions(chartConfiguration: any) {
   }
 
   return dataLabels;
-}
-
-function getAxisItemsNew(
-  analyticsObject: any,
-  axisTypeArray: any[],
-  isCategory = false
-) {
-  let items: any[] = [];
-  const metadataNames = analyticsObject.metaData.names;
-  axisTypeArray.forEach((axisType, axisIndex) => {
-    const itemKeys = analyticsObject.metaData[axisType];
-    if (itemKeys) {
-      if (axisIndex > 0) {
-        const availableItems = _.assign([], items);
-        items = [];
-        itemKeys.forEach((itemKey: string) => {
-          availableItems.forEach((item: { id: string; name: string }) => {
-            items.push({
-              id: item.id + '_' + itemKey,
-              name: item.name + '_' + metadataNames[itemKey].trim(),
-            });
-          });
-        });
-      } else {
-        items = _.map(itemKeys, (itemKey: string | number) => {
-          return {
-            id: itemKey,
-            name: metadataNames[itemKey].trim(),
-          };
-        });
-      }
-    }
-  });
-
-  return items;
 }
 
 function getAxisItems(

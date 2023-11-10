@@ -1,4 +1,4 @@
-import { ChartConfiguration } from '../models/chart-viz.model';
+import { ChartConfiguration } from '../models/chart-configuration.model';
 
 export const chartConfigurations: ChartConfiguration = {
   renderId: 'visualization-container',
