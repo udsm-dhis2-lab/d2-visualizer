@@ -302,10 +302,6 @@ function extendOtherChartOptions(
   analyticsObject: any,
   chartConfiguration: any
 ): any {
-  /**
-   * Sort the corresponding series
-   */
-
   const series = new ChartSeries({
     analyticsObject,
     xAxisItems: ChartAxisUtil.getXAxisItems(
@@ -345,54 +341,6 @@ function extendOtherChartOptions(
     colors: newColors.length > 0 ? newColors : initialChartObject.colors,
     series,
   };
-}
-
-function updateSeriesWithAxisOptions(
-  series: any[],
-  multiAxisOptions: any[],
-  touched = false
-) {
-  return _.map(series, (seriesObject: any) => {
-    const newSeriesObject: any = _.clone(seriesObject);
-    const availableAxisOption: any = _.find(multiAxisOptions, [
-      'id',
-      newSeriesObject.id,
-    ]);
-    if (availableAxisOption) {
-      newSeriesObject.yAxis = availableAxisOption.axis
-        ? availableAxisOption.axis === 'left'
-          ? 0
-          : 1
-        : 0;
-
-      newSeriesObject.type =
-        availableAxisOption.type !== '' && !touched
-          ? getAllowedChartType(availableAxisOption.type)
-          : seriesObject.type;
-
-      if (availableAxisOption.type === 'dotted') {
-        newSeriesObject.lineWidth = 0;
-        newSeriesObject.states = {
-          hover: {
-            enabled: false,
-          },
-        };
-      }
-
-      /**
-       *Also apply colors on chart
-       */
-      newSeriesObject.data = _.map(newSeriesObject.data, (dataObject: any) => {
-        const newDataObject = _.clone(dataObject);
-        if (availableAxisOption.color !== '') {
-          newDataObject.color = availableAxisOption.color;
-        }
-        return newDataObject;
-      });
-    }
-
-    return newSeriesObject;
-  });
 }
 
 function getRearrangedSeries(series: any[], chartType: string) {
@@ -1116,7 +1064,9 @@ function getXAxisOptions(xAxisCategories: any[], chartConfiguration: any) {
 }
 
 function getYAxisOptions(chartConfiguration: any) {
-  const yAxes: any[] = chartConfiguration.axes;
+  const yAxes: any[] = chartConfiguration.axes?.filter(
+    (axis: Record<string, unknown>) => axis['type'] === 'RANGE'
+  );
   let newYAxes: any[] = [];
 
   if (yAxes.length === 0) {
@@ -1132,7 +1082,7 @@ function getYAxisOptions(chartConfiguration: any) {
             style: {
               color: '#000000',
               fontWeight: 'normal',
-              fontSize: '12px',
+              fontSize: '13px',
             },
           },
         },
@@ -1145,10 +1095,18 @@ function getYAxisOptions(chartConfiguration: any) {
         min: chartConfiguration.rangeAxisMinValue,
         max: chartConfiguration.rangeAxisMaxValue,
         title: {
-          text: yAxis.name,
-          style: { color: '#000000', fontWeight: 'normal', fontSize: '12px' },
+          text: yAxis?.title?.text,
+          textAlign: ChartAxisUtil.sanitizeYAxisTextAlignment(
+            yAxis?.title?.fontStyle?.textAlign
+          ),
+          margin: 0,
+          style: {
+            color: yAxis?.title?.fontStyle?.textColor || '#000000',
+            fontWeight: yAxis?.title?.fontStyle?.bold ? 'bold' : 'normal',
+            fontStyle: yAxis?.title?.fontStyle?.italic ? 'italic' : 'normal',
+            fontSize: yAxis?.title?.fontStyle?.fontSize || '13px',
+          },
         },
-        opposite: yAxis.orientation === 'left' ? false : true,
       };
     });
   }

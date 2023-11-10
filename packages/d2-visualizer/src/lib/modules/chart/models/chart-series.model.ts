@@ -147,8 +147,6 @@ export class ChartSeries implements IChartSeries {
       return seriesObject;
     });
 
-    console.log(this.series);
-
     return this;
   }
 
