@@ -1090,16 +1090,13 @@ function getYAxisOptions(chartConfiguration: any) {
     );
   } else {
     newYAxes = _.map(yAxes, (yAxis: any, yAxisIndex: any) => {
-      console.log(
-        ChartAxisUtil.sanitizeYAxisTextAlignment(
-          yAxis?.title?.fontStyle?.textAlign
-        )
-      );
       return {
         reversedStacks: false,
         min: chartConfiguration.rangeAxisMinValue,
         max: chartConfiguration.rangeAxisMaxValue,
+        allowDecimals: yAxis.decimals !== 0,
         labels: {
+          format: `{value:.${yAxis.decimals ?? 1}f}`,
           style: {
             color: yAxis?.label?.fontStyle?.textColor || '#000000',
             fontWeight: yAxis?.label?.fontStyle?.bold ? 'bold' : 'normal',
@@ -1108,7 +1105,7 @@ function getYAxisOptions(chartConfiguration: any) {
         },
         title: {
           text: yAxis?.title?.text,
-          margin: 24,
+          margin: 16,
           align: ChartAxisUtil.sanitizeYAxisTextAlignment(
             yAxis?.title?.fontStyle?.textAlign
           ),
