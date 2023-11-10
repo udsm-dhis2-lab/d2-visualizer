@@ -74,11 +74,11 @@ export class DashboardMenuEffects {
             );
           } else if (selectedDashboardMenu) {
             this._snackBarRef = this._snackBar.open(
-              `Loading ${selectedDashboardMenu.name} Dashboard`,
+              `Loading ${selectedDashboardMenu?.name} Dashboard`,
               '',
               { duration: 5000 }
             );
-            this.router.navigate([config.rootUrl, selectedDashboardMenu.id]);
+            this.router.navigate([config.rootUrl, selectedDashboardMenu?.id]);
           }
         })
       ),

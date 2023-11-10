@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
-import { map, Observable, of, tap } from 'rxjs';
+import { map, Observable, of, switchMap, tap, zip } from 'rxjs';
 import { DashboardConfig, DashboardMenu, DashboardMenuObject } from '../models';
 import { DashboardConfigService } from './dashboard-config.service';
+import { userAuthorizedDashboards } from '../utilities/access-control.util';
 
 @Injectable()
 export class DashboardMenuService {
@@ -49,10 +50,18 @@ export class DashboardMenuService {
   }
 
   private _findAllFromDataStore(config: DashboardConfig) {
-    return this.httpClient
-      .get(`dataStore/${config.dataStoreNamespace}/summary`)
-      .pipe(
-        map((dashboardResponse) => ({ dashboards: dashboardResponse || [] }))
-      );
+    return this.httpClient.me().pipe(
+      switchMap((user) => {
+        return zip(
+          this.httpClient.get(`dataStore/${config.dataStoreNamespace}/summary`)
+        ).pipe(
+          map((response) => {
+            return {
+              dashboards: userAuthorizedDashboards(response[0] || [], user),
+            };
+          })
+        );
+      })
+    );
   }
 }

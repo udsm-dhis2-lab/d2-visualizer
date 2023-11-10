@@ -56,7 +56,7 @@ export const d2DashboardMenuFeature = createFeature({
       DashboardMenuActions.setCurrentDashboardSubMenu,
       (state, { selectedDashboardSubMenu }) => ({
         ...state,
-        selectedDashboardSubMenuId: selectedDashboardSubMenu.id,
+        selectedDashboardSubMenuId: selectedDashboardSubMenu?.id,
       })
     )
   ),

@@ -1,10 +1,12 @@
 import { flatten } from 'lodash';
+import { SharingAccess } from './dashboard-access.model';
 export interface DashboardMenuObject {
   id: string;
   name: string;
   description?: string;
   icon?: string;
   subMenus?: DashboardMenuObject[];
+  sharing?: SharingAccess;
 }
 
 export class DashboardMenu {
