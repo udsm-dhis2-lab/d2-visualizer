@@ -1547,12 +1547,12 @@
   dependencies:
     tslib "^2.0.0"
 
-"@iapps/ngx-dhis2-org-unit-filter@^1.1.32":
-  version "1.1.32"
-  resolved "https://registry.npmjs.org/@iapps/ngx-dhis2-org-unit-filter/-/ngx-dhis2-org-unit-filter-1.1.32.tgz"
-  integrity sha512-GciRjIdgAMDRXYDWoahtL7ExbUH94QblGV7fqC81gf78keu2Rea29WjxxrvzdkJEKF35fxsU0DKe5EimMu6/HQ==
+"@iapps/ngx-dhis2-org-unit-filter@^1.1.37":
+  version "1.1.37"
+  resolved "https://registry.npmjs.org/@iapps/ngx-dhis2-org-unit-filter/-/ngx-dhis2-org-unit-filter-1.1.37.tgz"
+  integrity sha512-GxHvYGi9P1uDQSACjM04MEduwnGNMwdHVUqIQNGEczHUVtmsF2+JuKcqiNzhuBcXGbr8kdrG97z/Fs8TREfTtA==
   dependencies:
-    tslib "^2.2.0"
+    tslib "^2.3.0"
 
 "@iapps/ngx-dhis2-period-filter@^2.0.0":
   version "2.0.0"
@@ -12368,7 +12368,7 @@ tslib@^1.9.3:
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.0.0, tslib@^2.1.0, tslib@^2.2.0, tslib@^2.3.0, tslib@^2.3.1, tslib@^2.4.0, tslib@2.4.1:
+tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.3.1, tslib@^2.4.0, tslib@2.4.1:
   version "2.4.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.4.1.tgz"
   integrity sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==
