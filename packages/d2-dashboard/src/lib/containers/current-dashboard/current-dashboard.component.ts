@@ -64,5 +64,8 @@ export class CurrentDashboardComponent implements OnInit {
         dashboardId: id,
       })
     );
+    this.globalSelection$ = this.dashboardSelectionStore.pipe(
+      select(getDashboardSelectionById(id))
+    );
   }
 }

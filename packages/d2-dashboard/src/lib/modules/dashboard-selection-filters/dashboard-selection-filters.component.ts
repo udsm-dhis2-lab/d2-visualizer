@@ -39,6 +39,8 @@ export class DashboardSelectionFiltersComponent {
     e.stopPropagation();
     this.menu.closeMenu();
 
+    this._updateSelectionEntities();
+
     const periodDialog = this.dialog.open(PeriodFilterDialogComponent, {
       width: '800px',
 
@@ -65,6 +67,8 @@ export class DashboardSelectionFiltersComponent {
   onOpenOrgUnitDialog(e: MouseEvent) {
     e.stopPropagation();
     this.menu.closeMenu();
+
+    this._updateSelectionEntities();
 
     const orgUnitDialog = this.dialog.open(OrgUnitFilterDialogComponent, {
       width: '800px',
@@ -123,5 +127,17 @@ export class DashboardSelectionFiltersComponent {
         ] as VisualizationDataSelectionItem[],
       };
     });
+  }
+
+  private _updateSelectionEntities() {
+    this.selectionEntities = this.dataSelections.reduce(
+      (selectionEntity, dataSelection) => {
+        return {
+          ...selectionEntity,
+          [dataSelection.dimension]: dataSelection.items || [],
+        };
+      },
+      {}
+    );
   }
 }
