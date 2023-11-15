@@ -3,6 +3,10 @@
 // license that can be found in the LICENSE file.
 export class ChartTypeUtil {
   static getAllowedType(chartType: string): string | undefined {
+    if (!chartType) {
+      return undefined;
+    }
+
     let newChartType;
     const splitedChartType: string[] = chartType.split('_');
     switch (chartType) {

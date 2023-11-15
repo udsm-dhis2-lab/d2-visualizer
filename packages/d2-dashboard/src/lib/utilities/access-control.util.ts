@@ -64,6 +64,7 @@ export function userAuthorizedDashboards(
       // return dashboardObject;
     })
     .filter((item) => item);
+
   return authorizedDashboards;
   //   customDashboards.forEach((dashboardObject) => {
   //     if (dashboardObject?.sharing) {
