@@ -1,14 +1,11 @@
+import * as turf from '@turf/turf';
 import {
   BaseVisualizer,
   Visualizer,
 } from '../../shared/models/base-visualizer.model';
 import { MapLayer } from './layers/map-layer.model';
 import { BaseMap } from './models';
-import { MapDrawablePayload } from './models/map-drawable-payload.model';
-import { D2MapEngine } from './utils/map-engine.util';
 declare let mapboxgl: any;
-import * as turf from '@turf/turf';
-import { of } from 'rxjs';
 
 export class MapVisualizer extends BaseVisualizer implements Visualizer {
   basemap!: BaseMap;

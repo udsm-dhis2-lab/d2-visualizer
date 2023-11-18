@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { flatten } from 'lodash';
+import { flatten, uniqBy } from 'lodash';
 import { BaseVisualizer } from '../../../shared/models/base-visualizer.model';
 import {
   SelectionFilterUtil,
@@ -25,6 +25,8 @@ export class TrackedEntityLayer extends BaseVisualizer {
   }
 
   buildInitialMap() {
+    let legends: any[] = [];
+    let legendTitle: string;
     try {
       this.map = new mapboxgl.Map({
         container: this._id,
@@ -34,7 +36,6 @@ export class TrackedEntityLayer extends BaseVisualizer {
       });
 
       this.map.addControl(new mapboxgl.NavigationControl());
-      // this.map.addControl(new StylesControl(), 'top-left');
       this.map.addControl(new MapboxStyleSwitcherControl());
 
       const geojson = this.getGeoJSON();
@@ -59,10 +60,85 @@ export class TrackedEntityLayer extends BaseVisualizer {
         markerDiv.addEventListener('mouseleave', () =>
           markerElement.togglePopup()
         );
+
+        legendTitle = marker?.properties?.dimensionItemLabel;
+
+        legends = uniqBy(
+          [
+            ...legends,
+            {
+              symbol: marker?.properties?.symbol,
+              label: marker?.properties?.label,
+            },
+          ].filter((legend) => legend.label),
+          'label'
+        );
       });
     } catch (e) {
       console.warn('There ', e);
     }
+
+    class LegendControl {
+      private _map: any;
+      private _container!: HTMLDivElement;
+      private _legends: any[];
+      constructor(legends: any[]) {
+        this._legends = legends;
+      }
+      onAdd(map: any) {
+        this._map = map;
+        this._container = document.createElement('div');
+        this._container.className = 'mapboxgl-ctrl';
+        this._container.innerHTML = `
+        <style>
+       .legend-ctrl {
+            background: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            box-shadow: 0 0 0 2px rbg(0 0 0 / 10%);
+            max-width: 200px;
+          }
+
+          .legend-ctrl-items {
+            display: flex;
+            align-items: center;
+          }
+          .legend-ctrl-items img {
+            height: 24px;
+          }
+
+          .legend-ctrl-label {
+            margin-left: 8px
+          }
+
+          .legend-ctrl-title {
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 12px;
+          }
+
+        </style>
+        <div class="legend-ctrl">
+        <div class="legend-ctrl-title">${legendTitle}</div>
+        ${this._legends
+          .map(
+            (legend) => `<div class="legend-ctrl-items">
+        <img src="${legend.symbol}" />
+        <div class="legend-ctrl-label">${legend.label}</div>
+       </div>`
+          )
+          .join('')}
+        </div>`;
+        return this._container;
+      }
+
+      onRemove() {
+        this._container?.parentNode?.removeChild(this._container);
+        this._map = undefined;
+      }
+    }
+
+    this.map.addControl(new LegendControl(legends), 'bottom-right');
   }
 
   getPopupContent(marker: any) {
@@ -174,6 +250,7 @@ export class TrackedEntityLayer extends BaseVisualizer {
                       programTrackedEntityAttribute?.trackedEntityAttribute
                         ?.name,
                     value: codedValue?.name || attribute.value,
+                    code: attribute.value,
                     sortOrder:
                       programTrackedEntityAttribute?.sortOrder || index,
                     displayInList: programTrackedEntityAttribute?.displayInList,
@@ -184,6 +261,11 @@ export class TrackedEntityLayer extends BaseVisualizer {
                   (a: { sortOrder: number }, b: { sortOrder: number }) =>
                     a.sortOrder - b.sortOrder
                 );
+
+              const dimensionItemObject = attributes.find(
+                (attribute: { code: string; value: string }) =>
+                  attribute.code === attributeValue?.value
+              );
 
               return {
                 type: 'Feature',
@@ -196,8 +278,10 @@ export class TrackedEntityLayer extends BaseVisualizer {
                   symbol:
                     markerSymbol?.symbol || './assets/images/marker-dot.svg',
                   value: attributeValue?.value,
+                  label: dimensionItemObject?.value || attributeValue?.value,
                   dimensionItem: attributeValue?.attribute,
                   dimensionType: 'ATTRIBUTE',
+                  dimensionItemLabel: dimensionItemObject?.label,
                 },
               };
             })
