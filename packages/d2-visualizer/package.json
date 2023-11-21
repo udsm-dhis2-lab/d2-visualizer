@@ -1,6 +1,6 @@
 {
   "name": "@iapps/d2-visualizer",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "type": "commonjs",
   "peerDependencies": {
     "date-fns": "^2.30.0",
