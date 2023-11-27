@@ -32,7 +32,7 @@ export class TrackerDashboardService {
             )
             .pipe(map((res) => res?.trackedEntityInstances || [])),
           this.httpClient.get(
-            `programs/${program}.json?fields=id,name,enrollmentDateLabel,incidentDateLabel,programTrackedEntityAttributes[displayInList,sortOrder,trackedEntityAttribute[id,name,formName,optionSet[id,name,options[id,code,name]]]]`
+            `programs/${program}.json?fields=id,name,enrollmentDateLabel,incidentDateLabel,programTrackedEntityAttributes[displayInList,sortOrder,trackedEntityAttribute[id,name,formName,optionSet[id,name,options[id,code,name,style]]]]`
           )
         )
       ),

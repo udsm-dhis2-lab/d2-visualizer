@@ -42,10 +42,18 @@ export class TrackedEntityLayer extends BaseVisualizer {
 
       (geojson.features || []).forEach((marker: any) => {
         const markerEl = document.createElement('div');
-        markerEl.style.backgroundImage = `url(${marker?.properties?.symbol})`;
-        markerEl.style.width = '18px';
-        markerEl.style.height = '18px';
-        markerEl.style.backgroundSize = '100%';
+
+        if (!marker?.properties?.useBackgroundColor) {
+          markerEl.style.backgroundImage = `url(${marker?.properties?.symbol})`;
+          markerEl.style.width = '18px';
+          markerEl.style.height = '18px';
+          markerEl.style.backgroundSize = '100%';
+        } else if (marker?.properties?.useBackgroundColor) {
+          markerEl.style.backgroundColor = marker?.properties?.backgroundColor;
+          markerEl.style.width = '12px';
+          markerEl.style.height = '12px';
+          markerEl.style.borderRadius = '50%';
+        }
 
         const markerElement = new mapboxgl.Marker(markerEl)
           .setLngLat(marker.geometry.coordinates)
@@ -68,6 +76,8 @@ export class TrackedEntityLayer extends BaseVisualizer {
             ...legends,
             {
               symbol: marker?.properties?.symbol,
+              useBackgroundColor: marker?.properties?.useBackgroundColor,
+              backgroundColor: marker?.properties?.backgroundColor,
               label: marker?.properties?.label,
             },
           ].filter((legend) => legend.label),
@@ -89,7 +99,9 @@ export class TrackedEntityLayer extends BaseVisualizer {
         this._map = map;
         this._container = document.createElement('div');
         this._container.className = 'mapboxgl-ctrl';
-        this._container.innerHTML = `
+
+        if (this._legends?.length > 1) {
+          this._container.innerHTML = `
         <style>
        .legend-ctrl {
             background: white;
@@ -105,6 +117,12 @@ export class TrackedEntityLayer extends BaseVisualizer {
           }
           .legend-ctrl-items img {
             height: 24px;
+          }
+
+          .legend-ctrl-icon {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
           }
 
           .legend-ctrl-label {
@@ -123,12 +141,19 @@ export class TrackedEntityLayer extends BaseVisualizer {
         ${this._legends
           .map(
             (legend) => `<div class="legend-ctrl-items">
-        <img src="${legend.symbol}" />
+        ${
+          legend.useBackgroundColor
+            ? `<div class="legend-ctrl-icon" style="background-color: ${
+                legend.backgroundColor || 'gray'
+              }"></div>`
+            : `<img src="${legend.symbol}" />`
+        }
         <div class="legend-ctrl-label">${legend.label}</div>
        </div>`
           )
           .join('')}
         </div>`;
+        }
         return this._container;
       }
 
@@ -197,70 +222,24 @@ export class TrackedEntityLayer extends BaseVisualizer {
               }
 
               const symbols = this._config?.symbols;
-              const attributeValue =
-                symbols?.dimensionType === 'ATTRIBUTE'
-                  ? trackedEntityInstance.attributes.find(
-                      (attribute: any) =>
-                        attribute.attribute === symbols.dimensionItem
-                    )
-                  : null;
 
-              const markerSymbol = (symbols?.symbols || []).find(
-                (symbol: any) => symbol.value === attributeValue?.value
+              const attributeValue = this.getAttributeValue(
+                symbols,
+                trackedEntityInstance
               );
 
-              const reportAttributes = [
-                {
-                  value: orgUnitName,
-                  label: 'Reporting unit',
-                },
-                {
-                  value: format(new Date(enrollmentDate), 'MMM dd, yyyy'),
-                  label: this._program.enrollmentDateLabel || 'Enrollment date',
-                },
-                {
-                  value: format(new Date(incidentDate), 'MMM dd, yyyy'),
-                  label: this._program.enrollmentDateLabel || 'Incident date',
-                },
-              ];
+              const markerSymbol = this.getMarkerSymbol(
+                symbols,
+                attributeValue
+              );
 
-              const attributes = (trackedEntityInstance.attributes || [])
-                .map((attribute: any, index: number) => {
-                  const programTrackedEntityAttribute = (
-                    this._program.programTrackedEntityAttributes || []
-                  ).find(
-                    (programTrackedEntityAttribute: any) =>
-                      programTrackedEntityAttribute.trackedEntityAttribute
-                        ?.id === attribute.attribute
-                  );
+              const reportAttributes = this.setReportAttributes(
+                orgUnitName,
+                enrollmentDate,
+                incidentDate
+              );
 
-                  if (!programTrackedEntityAttribute) {
-                    return null;
-                  }
-
-                  const codedValue =
-                    programTrackedEntityAttribute?.trackedEntityAttribute.optionSet?.options?.find(
-                      (option: { code: any }) => option.code === attribute.value
-                    );
-
-                  return {
-                    label:
-                      programTrackedEntityAttribute?.trackedEntityAttribute
-                        ?.formName ||
-                      programTrackedEntityAttribute?.trackedEntityAttribute
-                        ?.name,
-                    value: codedValue?.name || attribute.value,
-                    code: attribute.value,
-                    sortOrder:
-                      programTrackedEntityAttribute?.sortOrder || index,
-                    displayInList: programTrackedEntityAttribute?.displayInList,
-                  };
-                })
-                .filter((attribute: any) => attribute?.displayInList)
-                .sort(
-                  (a: { sortOrder: number }, b: { sortOrder: number }) =>
-                    a.sortOrder - b.sortOrder
-                );
+              const attributes = this.getMapAttributes(trackedEntityInstance);
 
               const dimensionItemObject = attributes.find(
                 (attribute: { code: string; value: string }) =>
@@ -274,9 +253,13 @@ export class TrackedEntityLayer extends BaseVisualizer {
                   title: orgUnitName,
                   orgUnitName: orgUnitName,
                   reportAttributes,
-                  attributes,
+                  attributes: attributes.filter(
+                    (attribute: any) => attribute?.displayInList
+                  ),
                   symbol:
                     markerSymbol?.symbol || './assets/images/marker-dot.svg',
+                  useBackgroundColor: markerSymbol?.useBackgroundColor,
+                  backgroundColor: markerSymbol?.backgroundColor,
                   value: attributeValue?.value,
                   label: dimensionItemObject?.value || attributeValue?.value,
                   dimensionItem: attributeValue?.attribute,
@@ -289,6 +272,95 @@ export class TrackedEntityLayer extends BaseVisualizer {
         })
       ),
     };
+  }
+
+  private getMarkerSymbol(symbols: any, attributeValue: any) {
+    if (symbols.useOptionSet) {
+      const trackedEntityAttribute = this.findProgramTrackedEntityAttribute(
+        symbols.dimensionItem
+      )?.trackedEntityAttribute;
+
+      const codedValue = trackedEntityAttribute?.optionSet?.options?.find(
+        (option: { code: any }) => option.code === attributeValue?.value
+      );
+
+      return {
+        useBackgroundColor: true,
+        backgroundColor: codedValue?.style?.color,
+      };
+    }
+
+    return (symbols?.symbols || []).find(
+      (symbol: any) => symbol.value === attributeValue?.value
+    );
+  }
+
+  private getAttributeValue(symbols: any, trackedEntityInstance: any) {
+    return symbols?.dimensionType === 'ATTRIBUTE'
+      ? trackedEntityInstance.attributes.find(
+          (attribute: any) => attribute.attribute === symbols.dimensionItem
+        )
+      : null;
+  }
+
+  private getMapAttributes(trackedEntityInstance: any) {
+    return (trackedEntityInstance.attributes || [])
+      .map((attribute: any, index: number) => {
+        const programTrackedEntityAttribute =
+          this.findProgramTrackedEntityAttribute(attribute.attribute);
+
+        if (!programTrackedEntityAttribute) {
+          return null;
+        }
+
+        const codedValue =
+          programTrackedEntityAttribute?.trackedEntityAttribute.optionSet?.options?.find(
+            (option: { code: any }) => option.code === attribute.value
+          );
+
+        return {
+          label:
+            programTrackedEntityAttribute?.trackedEntityAttribute?.formName ||
+            programTrackedEntityAttribute?.trackedEntityAttribute?.name,
+          value: codedValue?.name || attribute.value,
+          code: attribute.value,
+          sortOrder: programTrackedEntityAttribute?.sortOrder || index,
+          displayInList: programTrackedEntityAttribute?.displayInList,
+        };
+      })
+      .filter((attribute: any) => attribute)
+      .sort(
+        (a: { sortOrder: number }, b: { sortOrder: number }) =>
+          a.sortOrder - b.sortOrder
+      );
+  }
+
+  private findProgramTrackedEntityAttribute(attributeId: string) {
+    return (this._program.programTrackedEntityAttributes || []).find(
+      (programTrackedEntityAttribute: any) =>
+        programTrackedEntityAttribute.trackedEntityAttribute?.id === attributeId
+    );
+  }
+
+  private setReportAttributes(
+    orgUnitName: any,
+    enrollmentDate: any,
+    incidentDate: any
+  ) {
+    return [
+      {
+        value: orgUnitName,
+        label: 'Reporting unit',
+      },
+      {
+        value: format(new Date(enrollmentDate), 'MMM dd, yyyy'),
+        label: this._program.enrollmentDateLabel || 'Enrollment date',
+      },
+      {
+        value: format(new Date(incidentDate), 'MMM dd, yyyy'),
+        label: this._program.enrollmentDateLabel || 'Incident date',
+      },
+    ];
   }
 
   draw(): void {
