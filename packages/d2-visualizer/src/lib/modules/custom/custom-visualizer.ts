@@ -67,12 +67,51 @@ export class CustomVisualizer extends BaseVisualizer implements Visualizer {
         'sortOrder'
       ).map((dimension) => dimension.value);
 
-      const variableValue = (this._data.rows || [])
-        .filter((row: string[]) => intersection(row, dataDimensions).length > 0)
-        .reduce((sum: number, row: string[]) => {
-          sum += parseFloat(row[rowIndex.value] || '0');
-          return sum;
-        }, 0);
+      const isPercentage = dataDimensions.some(
+        (dataDimension) => dataDimension?.indexOf('PERCENT') !== -1
+      );
+
+      let variableValue = '';
+      if (isPercentage) {
+        const percentageVariable = (dataDimensions[0] || '')
+          ?.replace(/(^PERCENT<)|(>$)/g, '')
+          ?.replace(/\s/g, '')
+          ?.split(',');
+        const numeratorVariable = percentageVariable[0];
+        const denominatorVariable = percentageVariable[1];
+
+        const numerator = (this._data.rows || [])
+          .filter(
+            (row: string[]) => intersection(row, [numeratorVariable]).length > 0
+          )
+          .reduce((sum: number, row: string[]) => {
+            sum += parseFloat(row[rowIndex.value] || '0');
+            return sum;
+          }, 0);
+        const denominator = (this._data.rows || [])
+          .filter(
+            (row: string[]) =>
+              intersection(row, [denominatorVariable]).length > 0
+          )
+          .reduce((sum: number, row: string[]) => {
+            sum += parseFloat(row[rowIndex.value] || '0');
+            return sum;
+          }, 0);
+
+        variableValue =
+          denominator === 0
+            ? '0'
+            : ((numerator / denominator) * 100).toFixed(1);
+      } else {
+        variableValue = (this._data.rows || [])
+          .filter(
+            (row: string[]) => intersection(row, dataDimensions).length > 0
+          )
+          .reduce((sum: number, row: string[]) => {
+            sum += parseFloat(row[rowIndex.value] || '0');
+            return sum;
+          }, 0);
+      }
 
       htmlContent = htmlContent.replace(
         new RegExp(dataVariable, 'g'),

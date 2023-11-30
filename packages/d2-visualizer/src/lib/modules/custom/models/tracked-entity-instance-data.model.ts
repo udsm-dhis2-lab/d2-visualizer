@@ -40,9 +40,12 @@ export class TrackedEntityInstanceData {
       /(?=,COUNT|SUM).*/g
     ) || [])[0]?.substring(1);
 
-    const numerator = this.getExpressionData(numeratorVariable, customFilter);
+    const numerator = this.getExpressionData(
+      numeratorVariable as string,
+      customFilter
+    );
     const denominator = this.getExpressionData(
-      denominatorVariable,
+      denominatorVariable as string,
       customFilter
     );
 
@@ -76,14 +79,14 @@ export class TrackedEntityInstanceData {
     /**
      * PERCENT EXPRESSION
      */
-    if (dataVariable.indexOf('PERCENT') === 0) {
+    if (dataVariable?.indexOf('PERCENT') === 0) {
       return this.getPercent(dataVariable, customFilter);
     }
 
     /**
      * COUNT EXPRESSION
      */
-    if (dataVariable.indexOf('COUNT') === 0) {
+    if (dataVariable?.indexOf('COUNT') === 0) {
       return this.getCount(dataVariable, customFilter);
     }
 
