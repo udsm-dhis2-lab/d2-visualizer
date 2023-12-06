@@ -354,7 +354,7 @@ export class D2Visualizer {
    */
   async draw(): Promise<any> {
     const data = !this.trackedEntityInstances
-      ? this.dataAnalytics || (await this._getData())._data
+      ? this.dataAnalytics || (await this._getData())?._data
       : undefined;
 
     switch (this.visualizationType) {
@@ -451,6 +451,23 @@ export class D2Visualizer {
         const dataSelections: any[] = this.config.dataSelections.filter(
           (dataSelection) => dataSelection.dimension === 'tea'
         );
+
+        // const mapVisualizer = new MapVisualizer()
+        //   .setId(this.id)
+        //   .setBaseMap(this.config?.config?.basemap);
+
+        // mapVisualizer.addLayer(
+        //   new MapLayer()
+        //     .setId(this.id)
+        //     .setType(this.config as any)
+        //     .setDataSelections(this.config.dataSelections)
+        // );
+
+        // console.log(this.config.dataSelections);
+
+        // mapVisualizer.draw();
+
+        console.log('WE HAVE CHANGED SOMETHING');
 
         new TrackedEntityLayer()
           .setId(this.id)

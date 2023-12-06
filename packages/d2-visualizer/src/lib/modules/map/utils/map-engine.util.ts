@@ -8,7 +8,7 @@ import {
 import { MapDashboardItem, MapView } from '../models/map-dashboard-item.model';
 import { MapDrawablePayload } from '../models/map-drawable-payload.model';
 import { GeoFeatureSnapshot } from '../models/map-geofeature-snapshot.model';
-import { GeoFeature } from '../models/geo-feature.model';
+import { MapGeoFeature } from '../models/map-geo-feature.model';
 import { MapUtil } from './map.util';
 
 /**
@@ -86,7 +86,7 @@ export class D2MapEngine extends ThematicDrawableMap {
 
     if (mapDashboardItemSanitized) {
       for (const mapItem of mapDashboardItemSanitized.map.mapViews) {
-        const sanitizedGeofeatures: GeoFeature[] =
+        const sanitizedGeofeatures: MapGeoFeature[] =
           mapItem &&
           mapItem.id &&
           geoFeatureObject &&

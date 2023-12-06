@@ -5,8 +5,11 @@ import {
   MapLayerType,
   MapRenderingStrategy,
   TitleOption,
+  GeoJSON,
 } from '../models';
 import { GeoFeature } from '../models/geo-feature.model';
+import { MapGeometry } from '../models/geometry.model';
+import { MapGeoFeature } from '../models/map-geo-feature.model';
 
 export class MapLayer {
   id!: string;
@@ -24,7 +27,8 @@ export class MapLayer {
   subtitleOption!: TitleOption;
   legendSet!: LegendSet;
   dataSelections!: any[];
-  geoFeatures!: GeoFeature[];
+  geoFeatures!: MapGeoFeature[];
+  features!: GeoJSON[];
   data!: any;
   mapSourceData!: any;
 
@@ -88,12 +92,26 @@ export class MapLayer {
     return this;
   }
 
+  setFeatures(features: GeoJSON[]): MapLayer {
+    this.features = features;
+    return this;
+  }
+
   async getGeoFeatures() {
-    this.geoFeatures = await new GeoFeature()
+    this.geoFeatures = await new MapGeoFeature()
       .setDataSelections(this.dataSelections)
       .get();
 
     this.setMapSourceData();
+    this.features = (this.geoFeatures || []).map((geoFeature) => {
+      return new GeoJSON()
+        .setType('Feature')
+        .setGeometry(
+          new MapGeometry()
+            .setType('Polygon')
+            .setCoordinates(JSON.parse(geoFeature.co))
+        );
+    });
     return this.geoFeatures;
   }
 
@@ -103,6 +121,13 @@ export class MapLayer {
         .setSelections(this.dataSelections)
         .getAnalytics()
     )?._data;
+  }
+
+  get featureCollection(): { type: 'FeatureCollection'; features: GeoJSON[] } {
+    return {
+      type: 'FeatureCollection',
+      features: this.features,
+    };
   }
 
   setMapSourceData() {

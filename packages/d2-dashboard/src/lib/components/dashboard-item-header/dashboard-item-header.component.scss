@@ -206,3 +206,18 @@
   display: flex;
   align-items: center;
 }
+
+.d2-dashboard__visualization-action-icon {
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  background-color: #f1f9f9;
+  color: rgba(0,0,0,.7);
+  padding: 4px 8px;
+  mat-icon {
+    height: 13px;
+    width: 13px;
+    font-size: 13px;
+  }
+}

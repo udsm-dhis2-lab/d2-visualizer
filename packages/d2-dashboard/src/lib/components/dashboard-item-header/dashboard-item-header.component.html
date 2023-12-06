@@ -63,9 +63,9 @@
     <!-- Download section -->
     <ng-container>
       <button
-        [matTooltip]="'More'"
+        [matTooltip]="'Download'"
         [matMenuTriggerFor]="downloadMenu"
-        class="d-print-none button button-sm mr-1"
+        class="d-print-none d2-dashboard__visualization-action-icon mr-1"
         *ngIf="downloadOptions.length > 0"
       >
         <mat-icon>download</mat-icon>
@@ -76,7 +76,7 @@
           (click)="onDownload($event, downloadOption.format)"
           *ngFor="let downloadOption of downloadOptions"
         >
-          <span>{{downloadOption.label}}</span>
+          <span>{{ downloadOption.label }}</span>
         </button>
       </mat-menu>
     </ng-container>
@@ -85,7 +85,7 @@
     <ng-container>
       <button
         [matTooltip]="fullScreen ? 'Hide fullscreen' : 'View in fullscreen'"
-        class="d-print-none button button-sm"
+        class="d-print-none d2-dashboard__visualization-action-icon"
         (click)="onFullScreenAction($event)"
       >
         <mat-icon>{{

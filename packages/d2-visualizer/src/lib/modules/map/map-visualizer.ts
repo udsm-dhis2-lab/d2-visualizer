@@ -5,11 +5,13 @@ import {
 } from '../../shared/models/base-visualizer.model';
 import { MapLayer } from './layers/map-layer.model';
 import { BaseMap } from './models';
+import { MapboxStyleSwitcherControl } from 'mapbox-gl-style-switcher';
 declare let mapboxgl: any;
 
 export class MapVisualizer extends BaseVisualizer implements Visualizer {
   basemap!: BaseMap;
   layers: MapLayer[] = [];
+  zoom = 5;
 
   style =
     'https://api.maptiler.com/maps/eef16200-c4cc-4285-9370-c71ca24bb42d/style.json?key=CH1cYDfxBV9ZBu1lHGqh';
@@ -24,6 +26,11 @@ export class MapVisualizer extends BaseVisualizer implements Visualizer {
 
   setBaseMap(basemap: BaseMap): MapVisualizer {
     this.basemap = basemap;
+    return this;
+  }
+
+  setZoom(zoom: number): MapVisualizer {
+    this.zoom = zoom;
     return this;
   }
 
@@ -46,20 +53,24 @@ export class MapVisualizer extends BaseVisualizer implements Visualizer {
     await this.getData();
 
     if (this.layers?.length > 0) {
-      const bbox = turf.bbox(this.layers[0].mapSourceData);
+      console.log(this.layers[0].featureCollection);
+      const bbox = turf.bbox(this.layers[0].featureCollection);
+
       const map = new mapboxgl.Map({
         container: this._id,
         style: this.style,
+        zoom: this.zoom,
       });
-      map.fitBounds(bbox, { padding: 40 });
 
+      map.fitBounds(bbox, { padding: 40 });
       map.addControl(new mapboxgl.NavigationControl());
+      map.addControl(new MapboxStyleSwitcherControl());
 
       map.on('load', () => {
         this.layers.forEach((layer: MapLayer) => {
           map.addSource(layer.id, {
             type: 'geojson',
-            data: layer.mapSourceData,
+            data: layer.featureCollection,
           });
 
           map.addLayer({

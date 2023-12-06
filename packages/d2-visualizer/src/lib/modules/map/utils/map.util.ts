@@ -2,7 +2,7 @@ import * as mapboxgl from 'mapbox-gl';
 import { Legend, LegendSet } from '../models/legend-set.model';
 import { MapAnalytics } from '../models/map-analytic.model';
 import { MapDrawablePayload } from '../models/map-drawable-payload.model';
-import { GeoFeature } from '../models/geo-feature.model';
+import { MapGeoFeature } from '../models/map-geo-feature.model';
 import * as _ from 'lodash';
 import { D2MapEngine } from './map-engine.util';
 import { MapDashboardItem } from '../models/map-dashboard-item.model';
@@ -1312,7 +1312,7 @@ export class MapUtil {
    *
    * @returns {MapAnalytics}
    */
-  getGeofeature(): GeoFeature {
+  getGeofeature(): MapGeoFeature {
     return this.geoFeatures;
   }
 
@@ -1321,7 +1321,7 @@ export class MapUtil {
    * @param geoFeature
    * @returns
    */
-  setGeofeature(geoFeature: GeoFeature): MapUtil {
+  setGeofeature(geoFeature: MapGeoFeature): MapUtil {
     this.geoFeatures = geoFeature;
     return this;
   }

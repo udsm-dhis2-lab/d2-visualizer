@@ -1,6 +1,6 @@
 import { MapAnalytics } from '../models/map-analytic.model';
 import { MapDrawablePayload } from '../models/map-drawable-payload.model';
-import { GeoFeature } from '../models/geo-feature.model';
+import { MapGeoFeature } from '../models/map-geo-feature.model';
 import { MapUtil } from '../utils/map.util';
 import { MapDrawable } from './map-drawable.class';
 import * as _ from 'lodash';
@@ -21,11 +21,11 @@ export class ThematicDrawableMap extends MapDrawable {
   public getMapFeaturePayload(
     mapUtil: MapUtil,
     mapView: MapView,
-    geoFeature: GeoFeature[],
+    geoFeature: MapGeoFeature[],
     mapAnalytic: MapAnalytics
   ): MapDrawablePayload | any {
     // CHange Array of GeoFeature to Object of GeoFeature
-    const geoFeatureObject: { [key: string]: GeoFeature } = _.keyBy(
+    const geoFeatureObject: { [key: string]: MapGeoFeature } = _.keyBy(
       geoFeature,
       'id'
     );

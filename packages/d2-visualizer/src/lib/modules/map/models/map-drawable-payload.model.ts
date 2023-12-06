@@ -14,13 +14,8 @@ export interface Data {
 export interface Feature {
   type: string;
   id: string | number;
-  geometry: Geometry;
+  // geometry: Geometry;
   properties: Properties;
-}
-
-export interface Geometry {
-  type: string;
-  coordinates: string | number[][][] | any;
 }
 
 export interface Properties {

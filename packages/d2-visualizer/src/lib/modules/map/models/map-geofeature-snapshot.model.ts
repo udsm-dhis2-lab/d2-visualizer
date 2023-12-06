@@ -1,6 +1,6 @@
-import { GeoFeature } from './geo-feature.model';
+import { MapGeoFeature } from './map-geo-feature.model';
 
 export interface GeoFeatureSnapshot {
   id: string;
-  geoFeatures: GeoFeature[];
+  geoFeatures: MapGeoFeature[];
 }
