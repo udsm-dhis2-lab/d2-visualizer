@@ -26,6 +26,9 @@ import {
   IGlobalSelection,
 } from '../models/global-selection.model';
 import { DashboardConfigService } from './dashboard-config.service';
+import { Store } from '@ngrx/store';
+import { D2DashboardSelectionState } from '../store';
+import { DashboardSelectionActions } from '../store/actions/dashboard-selection.actions';
 
 interface DashboardStore {
   currentDashboardMenu?: DashboardMenuObject;
@@ -51,7 +54,8 @@ export class DashboardService {
     private _snackBar: MatSnackBar,
     private _snackBarRef: MatSnackBarRef<TextOnlySnackBar>,
     private overlay: Overlay,
-    private dashboardConfigService: DashboardConfigService
+    private dashboardConfigService: DashboardConfigService,
+    private dashboardSelectionStore: Store<D2DashboardSelectionState>
   ) {
     const config: DashboardConfig = this.dashboardConfigService.getConfig();
     this._dashboardStore$ = new BehaviorSubject({
@@ -93,6 +97,13 @@ export class DashboardService {
               },
             },
           });
+
+          this.dashboardSelectionStore.dispatch(
+            DashboardSelectionActions.setStartupSelections({
+              startUpDataSelections: dataSelections,
+              dashboardId: id,
+            })
+          );
         }
 
         this._detachOverlay();

@@ -26,10 +26,26 @@ export const d2DashboardSelectionFeature = createFeature({
     initialState,
     on(
       DashboardSelectionActions.setStartupSelections,
-      (state, { startUpDataSelections }) => ({
-        ...state,
-        startUpDataSelections,
-      })
+      (state, { startUpDataSelections, dashboardId }) => {
+        if (dashboardId) {
+          return {
+            ...state,
+            startUpDataSelections,
+            dashboardSelections: {
+              ...state.dashboardSelections,
+              [dashboardId]: new GlobalSelection({
+                default: true,
+                dataSelections: startUpDataSelections,
+              }),
+            },
+          };
+        }
+
+        return {
+          ...state,
+          startUpDataSelections,
+        };
+      }
     ),
     on(
       DashboardSelectionActions.setDashboardSelection,

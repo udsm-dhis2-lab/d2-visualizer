@@ -38,16 +38,12 @@ export class CurrentDashboardComponent implements OnInit {
     this.currentDashboard$ = this.activatedRoute.params.pipe(
       switchMap(({ id }) => {
         this.loading = true;
-
+        this.globalSelection$ = this.dashboardSelectionStore.pipe(
+          select(getDashboardSelectionById(id))
+        );
         return this.dashboardService.getCurrentDashboard(id);
       }),
-      tap((dashboard: DashboardObject | undefined) => {
-        if (dashboard) {
-          this.globalSelection$ = this.dashboardSelectionStore.pipe(
-            select(getDashboardSelectionById(dashboard.id))
-          );
-        }
-
+      tap(() => {
         this.loading = false;
       }),
       catchError((error) => {
