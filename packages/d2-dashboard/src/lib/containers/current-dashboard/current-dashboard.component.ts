@@ -38,9 +38,16 @@ export class CurrentDashboardComponent implements OnInit {
     this.currentDashboard$ = this.activatedRoute.params.pipe(
       switchMap(({ id }) => {
         this.loading = true;
+
         return this.dashboardService.getCurrentDashboard(id);
       }),
-      tap(() => {
+      tap((dashboard: DashboardObject | undefined) => {
+        if (dashboard) {
+          this.globalSelection$ = this.dashboardSelectionStore.pipe(
+            select(getDashboardSelectionById(dashboard.id))
+          );
+        }
+
         this.loading = false;
       }),
       catchError((error) => {
@@ -48,12 +55,6 @@ export class CurrentDashboardComponent implements OnInit {
         this.loading = false;
         return of(undefined);
       })
-    );
-
-    this.globalSelection$ = this.activatedRoute.params.pipe(
-      switchMap(({ id }) =>
-        this.dashboardSelectionStore.pipe(select(getDashboardSelectionById(id)))
-      )
     );
   }
 

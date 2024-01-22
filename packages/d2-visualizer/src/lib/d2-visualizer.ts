@@ -467,8 +467,6 @@ export class D2Visualizer {
 
         // mapVisualizer.draw();
 
-        console.log('WE HAVE CHANGED SOMETHING');
-
         new TrackedEntityLayer()
           .setId(this.id)
           .setConfig(this.config)
